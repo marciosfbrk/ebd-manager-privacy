@@ -142,6 +142,7 @@ function App() {
           <div className="text-center">
             <p className="text-blue-200 text-lg">Ministério do Belém • São Paulo</p>
             <p className="text-blue-300 text-sm mt-1">Sistema de Gerenciamento da Escola Bíblica Dominical</p>
+            <p className="text-blue-400 text-xs mt-2">Desenvolvido por Márcio Ferreira</p>
           </div>
         </div>
 

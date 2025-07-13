@@ -333,11 +333,6 @@ function App() {
   const Relatorios = () => {
     const classesVencedoras = calcularClassesVencedoras();
 
-    // Garantir que dados sejam carregados com a data atual
-    useEffect(() => {
-      loadDashboard();
-    }, [selectedDate]);
-
     const formatarPorcentagem = (valor) => {
       return isNaN(valor) ? '0,00' : valor.toFixed(2).replace('.', ',');
     };

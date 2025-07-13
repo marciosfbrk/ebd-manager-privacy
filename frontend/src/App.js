@@ -22,6 +22,7 @@ function App() {
   const loadInitialData = async () => {
     try {
       await axios.post(`${API}/init-sample-data`);
+      await axios.post(`${API}/create-sample-attendance`);
       await loadTurmas();
       await loadStudents();
       await loadDashboard();

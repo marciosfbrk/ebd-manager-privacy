@@ -452,9 +452,174 @@ async def init_sample_data():
     
     return {"message": "Dados de exemplo criados com sucesso", "turmas": len(turmas), "alunos": len(students)}
 
-# Endpoint para criar dados de exemplo com ofertas
-@api_router.post("/create-sample-attendance")
-async def create_sample_attendance():
+# Endpoint para criar dados reais da igreja
+@api_router.post("/init-church-data")
+async def init_church_data():
+    """Limpar dados existentes e criar dados reais da igreja"""
+    try:
+        # Limpar dados existentes
+        await db.turmas.delete_many({})
+        await db.students.delete_many({})
+        await db.attendance.delete_many({})
+        
+        # Definir turmas e alunos conforme fornecido
+        turmas_data = [
+            {
+                "nome": "Professores e Oficiais",
+                "descricao": "Professores e Oficiais da Igreja",
+                "alunos": [
+                    "Pr. Henrique", "Pb Paulo", "Pb Elias", "Coop Carlos", "Coop Elias Filho", "Coop Jailton", 
+                    "Coop Santiago", "Irmã Dorcas", "Irmã Ester Carvalho", "Irmã Marry", "Irmã Renata", "Irmã Rosa", 
+                    "Irmão Rubens", "Izabelle", "Juliana Silva", "Kesia Ferreira", "Márcio Ferreira", "Pb Sebastião", 
+                    "Tia Ana Paula", "Tia Deise", "Tia Eliane", "Tia Evelyn", "Tia Flávia André", "Tia Kelly", 
+                    "Tia Lu", "Tia Natália", "Tia Riane", "Tio Italo", "Pb Carlinhos", "Sidney Custodio", 
+                    "Juliane Reis", "Vitória Ferreira"
+                ]
+            },
+            {
+                "nome": "Genesis",
+                "descricao": "Turma Genesis",
+                "alunos": [
+                    "Agatha Mirella Souza Martins", "Arthur Galvão Costa da Silva", "Benjamim Henrique de Carvalho André", 
+                    "Helena Marques Dantas", "Lara Heloíse Santos de Jesus", "Luiza Oliveira Reis", "Manuela de Azevedo Santos", 
+                    "Otton Gomes Santos Albuquerque", "Ayla Sophia Souza Martins", "Isadora de Oliveira Santos Alves", 
+                    "Leandro Pedro de Lima", "Mariana Rodrigues Augusto", "Miguel Silva dos Santos"
+                ]
+            },
+            {
+                "nome": "Primarios",
+                "descricao": "Turma dos Primários",
+                "alunos": [
+                    "Ana Beatriz Oliveira dos Santos", "Débora Nicole Galvão Costa da Silva", "Heloisa Santana de Moura", 
+                    "Melissa de Azevedo Santos", "Heloisa Fernandes Carvalho", "Davi Henrique de Carvalho André", 
+                    "Kaleb Henrique Gabriel Tavares", "Andre Felipe de Souza Viana", "Maria Ísis", "Raissa Reis Conti", 
+                    "Lorenzo Gomes Pedro Tavares", "Isaac de Oliveira Santos Alves", "Lívia Santos Silva", 
+                    "Laura Caroline Rodrigues", "Vítor Pedro de Lima", "Heitor Brito"
+                ]
+            },
+            {
+                "nome": "Juniores",
+                "descricao": "Turma dos Juniores",
+                "alunos": [
+                    "Beatriz Pedro de Lima", "Davi Afonso Lana", "Enzo Leonardo Bitencourt Souza", 
+                    "Felype Augusto Oliveira de Jesus", "Gustavo Lorenzo Ferreira", "Mariana Lima de Sousa", 
+                    "Isabelle Sophia Da Costa De Almeida", "Luíza (Suellen Tayrone)", "Hadassah Victoria Gabriel Tavares", 
+                    "Davi Caldeira Rodrigues", "Ana Luiza Santana de Moura", "Kemuel Brito"
+                ]
+            },
+            {
+                "nome": "Pré-Adolescentes",
+                "descricao": "Turma dos Pré-Adolescentes",
+                "alunos": [
+                    "Enzo Gabriel Guimarães Fernandes", "Lorena Gomes Pedro Tavares", "Maria Luiza Sousa Brito", 
+                    "Guilherme Santos Almeida", "Rebeca (filha do Rodrigo)", "Eduardo", "Anthony Isaac Santos de Jesus", 
+                    "Ellen Beatrice Caldeira Rodrigues", "Manoela Oliveira Reis", "Miguel Paulo dos Santos", 
+                    "Gabriel Santos Almeida"
+                ]
+            },
+            {
+                "nome": "Adolescentes",
+                "descricao": "Turma dos Adolescentes",
+                "alunos": [
+                    "Any", "Daniel", "Jhenifer", "Jhonwesley", "Josué", "Karol", "Kauã", "Naely", "Isa", "Paulo", 
+                    "Sofhia", "Victor Hugo", "Vitor Gabriel", "Vitória Ferreira", "Walacy", "Yasmin", "Ana Flávia", 
+                    "Gabriela", "Arthur", "Jamilly Costa"
+                ]
+            },
+            {
+                "nome": "Jovens",
+                "descricao": "Turma dos Jovens",
+                "alunos": [
+                    "Abmael", "Almir", "Ana", "Emanuel", "Gustavo", "Ingrid", "Janecelia", "Jhenniffer", "Júlio", 
+                    "Kessia", "Misma", "Natalia Silva", "Solange", "Vitória Soares", "Yan", "Abner", "Dannilo Duany", 
+                    "Lucas Brito", "Ana Carolina", "Danilo", "Matheus Assis", "Ademir Junior", "Pedro"
+                ]
+            },
+            {
+                "nome": "Dorcas (irmãs)",
+                "descricao": "Turma das Irmãs Dorcas",
+                "alunos": [
+                    "Ana Aleixo", "Angelica", "Bruna", "Carla", "Carla Santana", "Claudia", "Cristiane Gomes", 
+                    "Daiane Balleiro", "Denise Rodrigues", "Dirce dos Santos", "Eliane Cardoso", "Eliene Viana", 
+                    "Érica", "Ester Ferreira", "Eula", "Evanilda", "Geni", "Geovan Silva", "Geovanna Tavares", 
+                    "Gildete Dias dos Santos", "Graciete", "Graucia Campos", "Iraci", "Jô", "Jovina", "Jucileide", 
+                    "Kennye", "Lenilde", "Lilian", "Lourdes Oliveira", "Maria", "Maria de Loudes Ayala", 
+                    "Maria Helna Lourenço", "Marli de Paula", "Maya", "Nalva", "Neuza Guimarães", "Nilza Arcanjo", 
+                    "Raimunda da Conceição", "Rosenilda", "Rute Morete", "Sandra Assis", "Sara Ribeiro", "Sarah Reis", 
+                    "Simone Tavares", "Sandra Magalhães", "Tania", "Valdirene", "Vera Lucia Aparecida", "Vera Ricardo", 
+                    "Laudiceia", "Rosana", "Augusta", "Deise Farias", "Mirian Menezes", "Regiane", "Danieli", 
+                    "Gleyse", "Lucilene", "Tia Kesia", "Leicida", "Márcia Regina"
+                ]
+            },
+            {
+                "nome": "Ebenezer (Obreiros)",
+                "descricao": "Turma dos Obreiros Ebenezer",
+                "alunos": [
+                    "Coop Antônio", "Coop Denys", "Coop Elias Barbosa", "Coop Emanuel", "Coop Evandro", 
+                    "Coop Francisco", "Coop João Gregório", "Coop Roberto Dantas", "Coop Valdeci", "Diac Emílio", 
+                    "Diac Luiz Borges", "Diac Marcos", "Pb Almir", "Pb Bernardo", "Pb Cosmo", "Pb Geovane", 
+                    "Pb Ismael", "Pb Thiago Tavares", "Coop Walmir", "Coop Alessandro", "Pb Isaac", "Coop Edson"
+                ]
+            },
+            {
+                "nome": "Soldados de Cristo",
+                "descricao": "Turma dos Soldados de Cristo",
+                "alunos": [
+                    "Alexandre Tavares", "Amilton", "André Afonso Lana", "Daniel Corsine", "Elias Barbosa", 
+                    "Elizeu Barbosa", "Gerônimo", "Isaias Abreu", "Jair Benedito", "Jesiel José", "Jessé Araújo", 
+                    "Joedilson", "Joel Cruz", "José Arcanjo", "José Domingos", "Luiz Felipe", "Manoel Lopes", 
+                    "Messias Rodrigues", "Nylon", "Ronaldo Rabelo", "Tiago Henrique", "Fernando Paulo", "Gideão", 
+                    "Djalma", "José Maria", "Willian Medeiros Alves", "Diego Augusto", "Reginaldo", "Daniel José", 
+                    "Daniel Mousinho de Araújo", "Gabriel Lana"
+                ]
+            },
+            {
+                "nome": "Discipulados",
+                "descricao": "Turma de Discipulados",
+                "alunos": []
+            }
+        ]
+        
+        total_turmas = 0
+        total_alunos = 0
+        
+        # Criar turmas e alunos
+        for turma_data in turmas_data:
+            # Criar turma
+            turma_id = str(uuid.uuid4())
+            turma = {
+                "id": turma_id,
+                "nome": turma_data["nome"],
+                "descricao": turma_data["descricao"],
+                "ativa": True,
+                "criada_em": datetime.utcnow().isoformat()
+            }
+            await db.turmas.insert_one(turma)
+            total_turmas += 1
+            
+            # Criar alunos da turma
+            for nome_aluno in turma_data["alunos"]:
+                aluno = {
+                    "id": str(uuid.uuid4()),
+                    "nome_completo": nome_aluno,
+                    "data_nascimento": "2000-01-01",  # Data padrão, pode ser ajustada depois
+                    "contato": "",  # Vazio por enquanto
+                    "turma_id": turma_id,
+                    "ativo": True,
+                    "criado_em": datetime.utcnow().isoformat()
+                }
+                await db.students.insert_one(aluno)
+                total_alunos += 1
+        
+        return {
+            "message": "Dados da igreja criados com sucesso",
+            "turmas": total_turmas,
+            "alunos": total_alunos,
+            "detalhes": {turma_data["nome"]: len(turma_data["alunos"]) for turma_data in turmas_data}
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao criar dados da igreja: {str(e)}")
     """Criar dados de exemplo de chamada com ofertas para demonstrar relatórios"""
     try:
         # Buscar turmas e alunos

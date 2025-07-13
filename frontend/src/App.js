@@ -828,6 +828,19 @@ function App() {
                         {turmas.find(t => t.id === selectedTurma)?.nome}
                       </h3>
                       <p className="text-sm text-gray-600 mt-1">Clique nos nomes para marcar presença</p>
+                      <div className="flex space-x-6 mt-2 text-sm">
+                        <span className="text-green-700 font-medium">
+                          Presentes: {turmaAtendance.filter(att => att.presente).length}
+                        </span>
+                        <span className="text-red-700 font-medium">
+                          Ausentes: {turmaAtendance.filter(att => !att.presente).length}
+                        </span>
+                        <span className="text-blue-700 font-medium">
+                          Frequência: {turmaAtendance.length > 0 
+                            ? ((turmaAtendance.filter(att => att.presente).length / turmaAtendance.length) * 100).toFixed(1)
+                            : 0}%
+                        </span>
+                      </div>
                     </div>
                     <button
                       onClick={handleSave}

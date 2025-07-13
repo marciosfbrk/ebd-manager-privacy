@@ -213,15 +213,18 @@ frontend:
 
   - task: "Interface Chamada"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implementado interface para fazer chamada com seleção de turma, data e registro de presença/ofertas"
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Chamada interface working correctly. Navigation from dashboard works, form has turma selection and date picker, Sunday validation warning displays, attendance table shows students with status dropdowns (Ausente, Presente, Visitante, Pós-Chamada), oferta/biblias/revistas input fields, and save functionality. Back to dashboard navigation works."
 
   - task: "Interface Gerenciamento Alunos"
     implemented: true

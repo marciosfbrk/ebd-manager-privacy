@@ -263,68 +263,65 @@ function App() {
     </div>
   );
 
-  // Função para classificar turmas por departamento
-  const classificarPorDepartamento = (turma) => {
-    const nome = turma.turma_nome.toLowerCase();
-    
-    // Departamento Infantil
-    if (nome.includes('primário') || nome.includes('primarios') || nome.includes('infantil') || 
-        nome.includes('criança') || nome.includes('crianças') || nome.includes('maternal') ||
-        nome.includes('jardim') || nome.includes('berçário') || nome.includes('bercario')) {
-      return 'Infantil';
-    }
-    
-    // Departamento Jovens e Adolescentes
-    if (nome.includes('juvenil') || nome.includes('jovem') || nome.includes('jovens') ||
-        nome.includes('adolescent') || nome.includes('teen') || nome.includes('mocidade') ||
-        nome.includes('intermédio') || nome.includes('intermediario')) {
-      return 'Jovens e Adolescentes';
-    }
-    
-    // Departamento Adulto (padrão)
-    return 'Adulto';
-  };
-
-  // Função para calcular classes vencedoras
+  // Função para calcular classes vencedoras usando a mesma lógica do Excel
   const calcularClassesVencedoras = () => {
     if (!attendanceData || attendanceData.length === 0) return {};
 
-    const departamentos = {
-      'Infantil': [],
-      'Jovens e Adolescentes': [],
-      'Adulto': []
-    };
+    // Preparar dados com porcentagem de frequência (como decimal 0-1)
+    const turmasComFrequencia = attendanceData.map(turma => ({
+      ...turma,
+      porcentagem_frequencia_decimal: turma.matriculados > 0 ? (turma.presentes / turma.matriculados) : 0
+    }));
 
-    // Classificar turmas por departamento
-    attendanceData.forEach(turma => {
-      const dept = classificarPorDepartamento(turma);
-      departamentos[dept].push({
-        ...turma,
-        porcentagem_frequencia: turma.matriculados > 0 ? (turma.presentes / turma.matriculados) * 100 : 0
-      });
-    });
+    // Definir ranges como no Excel (baseado na ordem das turmas)
+    const ranges = {
+      'Infantil': {
+        start: 0, // Primeiras turmas (equivale às linhas 5-8 do Excel)
+        end: Math.min(4, turmasComFrequencia.length - 1)
+      },
+      'Jovens e Adolescentes': {
+        start: Math.min(4, turmasComFrequencia.length),
+        end: Math.min(6, turmasComFrequencia.length - 1)
+      },
+      'Adulto': {
+        start: Math.min(6, turmasComFrequencia.length),
+        end: turmasComFrequencia.length - 1
+      }
+    };
 
     const vencedores = {};
 
-    // Calcular vencedores para cada departamento
-    Object.keys(departamentos).forEach(dept => {
-      const turmas = departamentos[dept];
+    // Para cada departamento, aplicar lógica ÍNDICE + CORRESP + MÁXIMO
+    Object.keys(ranges).forEach(dept => {
+      const range = ranges[dept];
       
-      if (turmas.length > 0) {
-        // Vencedor em frequência (maior porcentagem)
-        const vencedorFrequencia = turmas.reduce((prev, current) => 
-          prev.porcentagem_frequencia > current.porcentagem_frequencia ? prev : current
-        );
+      if (range.start <= range.end && range.start < turmasComFrequencia.length) {
+        const turmasRange = turmasComFrequencia.slice(range.start, range.end + 1);
+        
+        if (turmasRange.length > 0) {
+          // CLASSE VENCEDORA EM FREQUÊNCIA
+          // Lógica: MÁXIMO(J5:J8) para encontrar maior frequência
+          const maxFrequencia = Math.max(...turmasRange.map(t => t.porcentagem_frequencia_decimal));
+          // ÍNDICE + CORRESP para encontrar nome da turma correspondente
+          const vencedorFrequencia = turmasRange.find(t => t.porcentagem_frequencia_decimal === maxFrequencia);
 
-        // Vencedor em oferta (maior valor)
-        const vencedorOferta = turmas.reduce((prev, current) => 
-          prev.total_ofertas > current.total_ofertas ? prev : current
-        );
+          // CLASSE VENCEDORA EM OFERTA  
+          // Lógica: MÁXIMO(G5:G8) para encontrar maior oferta
+          const maxOferta = Math.max(...turmasRange.map(t => t.total_ofertas));
+          // ÍNDICE + CORRESP para encontrar nome da turma correspondente
+          const vencedorOferta = turmasRange.find(t => t.total_ofertas === maxOferta);
 
-        vencedores[dept] = {
-          frequencia: vencedorFrequencia,
-          oferta: vencedorOferta
-        };
+          vencedores[dept] = {
+            frequencia: {
+              turma_nome: vencedorFrequencia.turma_nome,
+              porcentagem: Math.round(maxFrequencia * 100 * 100) / 100 // ARRED(*100;2)
+            },
+            oferta: {
+              turma_nome: vencedorOferta.turma_nome,
+              valor: Math.round(maxOferta * 100) / 100 // ARRED(;2)
+            }
+          };
+        }
       }
     });
 

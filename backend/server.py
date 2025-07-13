@@ -179,7 +179,7 @@ async def create_student(student: StudentCreate):
     
     student_dict = student.dict()
     student_obj = Student(**student_dict)
-    await db.students.insert_one(student_obj.dict())
+    await db.students.insert_one(prepare_for_mongo(student_obj.dict()))
     return student_obj
 
 @api_router.get("/students", response_model=List[Student])

@@ -628,12 +628,33 @@ function App() {
 
         {/* Botão de Entrada */}
         <div className="space-y-4">
-          <button
-            onClick={() => setCurrentView('dashboard')}
-            className="px-12 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 rounded-full text-xl font-bold hover:from-yellow-400 hover:to-yellow-500 transform hover:scale-105 transition-all duration-300 shadow-2xl"
-          >
-            🚀 Acessar Sistema
-          </button>
+          {isLoggedIn ? (
+            <div className="space-y-3">
+              <button
+                onClick={() => setCurrentView('dashboard')}
+                className="px-12 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 rounded-full text-xl font-bold hover:from-yellow-400 hover:to-yellow-500 transform hover:scale-105 transition-all duration-300 shadow-2xl"
+              >
+                🚀 Acessar Sistema
+              </button>
+              
+              <div className="flex items-center justify-center space-x-4 text-blue-200">
+                <span>Logado como: <strong>{currentUser?.nome}</strong></span>
+                <button 
+                  onClick={handleLogout}
+                  className="text-yellow-400 hover:text-yellow-300 underline"
+                >
+                  Sair
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowLogin(true)}
+              className="px-12 py-4 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-full text-xl font-bold hover:from-indigo-400 hover:to-blue-500 transform hover:scale-105 transition-all duration-300 shadow-2xl"
+            >
+              🔐 Fazer Login
+            </button>
+          )}
           
           <p className="text-blue-300 text-sm mt-4">
             Sistema desenvolvido por Márcio Ferreira

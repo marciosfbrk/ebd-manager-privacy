@@ -82,7 +82,7 @@ function App() {
   };
 
   const isSunday = (dateString) => {
-    const date = new Date(dateString);
+    const date = new Date(dateString + 'T00:00:00');
     return date.getDay() === 0;
   };
 

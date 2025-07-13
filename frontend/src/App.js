@@ -770,19 +770,18 @@ function App() {
                     <div>
                       <label className="block text-sm font-medium text-blue-700 mb-2">Oferta Total (R$)</label>
                       <input
-                        type="number"
-                        step="0.01"
-                        value={turmaDataGlobal.ofertas_total}
+                        type="text"
+                        value={turmaDataGlobal.ofertas_total || ''}
                         onChange={(e) => updateTurmaData('ofertas_total', e.target.value)}
                         className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="0,00"
+                        placeholder="0"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-blue-700 mb-2">Bíblias</label>
                       <input
-                        type="number"
-                        value={turmaDataGlobal.biblias_total}
+                        type="text"
+                        value={turmaDataGlobal.biblias_total || ''}
                         onChange={(e) => updateTurmaData('biblias_total', e.target.value)}
                         className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="0"
@@ -791,8 +790,8 @@ function App() {
                     <div>
                       <label className="block text-sm font-medium text-blue-700 mb-2">Revistas</label>
                       <input
-                        type="number"
-                        value={turmaDataGlobal.revistas_total}
+                        type="text"
+                        value={turmaDataGlobal.revistas_total || ''}
                         onChange={(e) => updateTurmaData('revistas_total', e.target.value)}
                         className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="0"
@@ -801,8 +800,8 @@ function App() {
                     <div>
                       <label className="block text-sm font-medium text-blue-700 mb-2">Visitantes</label>
                       <input
-                        type="number"
-                        value={turmaDataGlobal.visitantes_total}
+                        type="text"
+                        value={turmaDataGlobal.visitantes_total || ''}
                         onChange={(e) => updateTurmaData('visitantes_total', e.target.value)}
                         className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="0"
@@ -811,8 +810,8 @@ function App() {
                     <div>
                       <label className="block text-sm font-medium text-blue-700 mb-2">Pós-Chamada</label>
                       <input
-                        type="number"
-                        value={turmaDataGlobal.pos_chamada_total}
+                        type="text"
+                        value={turmaDataGlobal.pos_chamada_total || ''}
                         onChange={(e) => updateTurmaData('pos_chamada_total', e.target.value)}
                         className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="0"

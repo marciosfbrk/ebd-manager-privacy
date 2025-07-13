@@ -452,7 +452,144 @@ async def init_sample_data():
     
     return {"message": "Dados de exemplo criados com sucesso", "turmas": len(turmas), "alunos": len(students)}
 
-# Endpoint para criar dados reais da igreja
+# User Management Models
+class User(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    nome: str
+    email: str
+    senha_hash: str
+    tipo: str  # 'admin' ou 'professor'
+    turmas_permitidas: List[str] = []  # IDs das turmas que pode acessar (vazio = todas para admin)
+    ativo: bool = True
+    criado_em: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+class UserCreate(BaseModel):
+    nome: str
+    email: str
+    senha: str
+    tipo: str  # 'admin' ou 'professor'
+    turmas_permitidas: List[str] = []
+
+class UserLogin(BaseModel):
+    email: str
+    senha: str
+
+class LoginResponse(BaseModel):
+    user_id: str
+    nome: str
+    email: str
+    tipo: str
+    turmas_permitidas: List[str]
+    token: str
+
+# Simple password hashing (you should use bcrypt in production)
+def hash_password(password: str) -> str:
+    import hashlib
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def verify_password(password: str, hashed: str) -> bool:
+    return hash_password(password) == hashed
+
+# Routes - User Management
+@api_router.post("/login", response_model=LoginResponse)
+async def login(login_data: UserLogin):
+    # Buscar usuário por email
+    user = await db.users.find_one({"email": login_data.email, "ativo": True})
+    if not user:
+        raise HTTPException(status_code=401, detail="Email ou senha incorretos")
+    
+    # Verificar senha
+    if not verify_password(login_data.senha, user["senha_hash"]):
+        raise HTTPException(status_code=401, detail="Email ou senha incorretos")
+    
+    # Gerar token simples (você deveria usar JWT em produção)
+    token = str(uuid.uuid4())
+    
+    # Salvar sessão (simples)
+    await db.sessions.insert_one({
+        "token": token,
+        "user_id": user["id"],
+        "created_at": datetime.utcnow().isoformat(),
+        "expires_at": (datetime.utcnow() + timedelta(days=7)).isoformat()
+    })
+    
+    return LoginResponse(
+        user_id=user["id"],
+        nome=user["nome"],
+        email=user["email"],
+        tipo=user["tipo"],
+        turmas_permitidas=user["turmas_permitidas"],
+        token=token
+    )
+
+@api_router.post("/logout")
+async def logout(token: str):
+    await db.sessions.delete_one({"token": token})
+    return {"message": "Logout realizado com sucesso"}
+
+@api_router.post("/users", response_model=User)
+async def create_user(user: UserCreate):
+    # Verificar se email já existe
+    existing = await db.users.find_one({"email": user.email})
+    if existing:
+        raise HTTPException(status_code=400, detail="Email já está em uso")
+    
+    user_dict = user.dict()
+    user_dict["senha_hash"] = hash_password(user_dict.pop("senha"))
+    user_obj = User(**user_dict)
+    await db.users.insert_one(user_obj.dict())
+    return user_obj
+
+@api_router.get("/users", response_model=List[User])
+async def get_users():
+    users = await db.users.find({"ativo": True}).to_list(1000)
+    return [User(**user) for user in users]
+
+@api_router.delete("/users/{user_id}")
+async def delete_user(user_id: str):
+    result = await db.users.update_one(
+        {"id": user_id}, 
+        {"$set": {"ativo": False}}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    return {"message": "Usuário removido com sucesso"}
+
+# Middleware para verificar acesso
+async def verify_access(token: str, turma_id: str = None):
+    # Verificar sessão
+    session = await db.sessions.find_one({"token": token})
+    if not session:
+        raise HTTPException(status_code=401, detail="Token inválido")
+    
+    # Verificar se não expirou
+    expires_at = datetime.fromisoformat(session["expires_at"])
+    if datetime.utcnow() > expires_at:
+        await db.sessions.delete_one({"token": token})
+        raise HTTPException(status_code=401, detail="Sessão expirada")
+    
+    # Buscar usuário
+    user = await db.users.find_one({"id": session["user_id"], "ativo": True})
+    if not user:
+        raise HTTPException(status_code=401, detail="Usuário não encontrado")
+    
+    # Verificar acesso à turma (se especificada)
+    if turma_id and user["tipo"] == "professor":
+        if turma_id not in user["turmas_permitidas"]:
+            raise HTTPException(status_code=403, detail="Acesso negado a esta turma")
+    
+    return user
+
+# Endpoint para verificar acesso
+@api_router.get("/verify-access")
+async def check_access(token: str, turma_id: str = None):
+    user = await verify_access(token, turma_id)
+    return {
+        "user_id": user["id"],
+        "nome": user["nome"],
+        "tipo": user["tipo"],
+        "turmas_permitidas": user["turmas_permitidas"]
+    }
 @api_router.post("/init-church-data")
 async def init_church_data():
     """Limpar dados existentes e criar dados reais da igreja"""

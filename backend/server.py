@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, Query
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -6,11 +6,10 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime, date
 from enum import Enum
-import json
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -41,30 +40,33 @@ class UserRole(str, Enum):
 class Student(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     nome_completo: str
-    data_nascimento: date
+    data_nascimento: str  # Store as string to avoid MongoDB serialization issues
     contato: str
     turma_id: str
     ativo: bool = True
-    criado_em: datetime = Field(default_factory=datetime.utcnow)
+    criado_em: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
 
 class StudentCreate(BaseModel):
     nome_completo: str
-    data_nascimento: date
+    data_nascimento: str
     contato: str
     turma_id: str
 
 class StudentUpdate(BaseModel):
     nome_completo: Optional[str] = None
-    data_nascimento: Optional[date] = None
+    data_nascimento: Optional[str] = None
     contato: Optional[str] = None
     turma_id: Optional[str] = None
+
+class StudentTransfer(BaseModel):
+    nova_turma_id: str
 
 class Turma(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     nome: str
     descricao: Optional[str] = None
     ativa: bool = True
-    criada_em: datetime = Field(default_factory=datetime.utcnow)
+    criada_em: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
 
 class TurmaCreate(BaseModel):
     nome: str
@@ -74,17 +76,17 @@ class Attendance(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     aluno_id: str
     turma_id: str
-    data: date
+    data: str  # Store as string to avoid MongoDB serialization issues
     status: AttendanceStatus
     oferta: Optional[float] = 0.0
     biblias_entregues: Optional[int] = 0
     revistas_entregues: Optional[int] = 0
-    criado_em: datetime = Field(default_factory=datetime.utcnow)
+    criado_em: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
 
 class AttendanceCreate(BaseModel):
     aluno_id: str
     turma_id: str
-    data: date
+    data: str
     status: AttendanceStatus
     oferta: Optional[float] = 0.0
     biblias_entregues: Optional[int] = 0
@@ -99,7 +101,7 @@ class AttendanceUpdate(BaseModel):
 class AttendanceReport(BaseModel):
     turma_nome: str
     turma_id: str
-    data: date
+    data: str
     matriculados: int
     presentes: int
     ausentes: int
@@ -109,30 +111,28 @@ class AttendanceReport(BaseModel):
     total_biblias: int
     total_revistas: int
 
+class BulkAttendanceItem(BaseModel):
+    aluno_id: str
+    status: AttendanceStatus
+    oferta: Optional[float] = 0.0
+    biblias_entregues: Optional[int] = 0
+    revistas_entregues: Optional[int] = 0
+
 # Helper functions
-def is_sunday(date_obj: date) -> bool:
-    return date_obj.weekday() == 6  # Sunday is 6
-
-def serialize_date(obj):
-    """Convert date objects to string for MongoDB storage"""
-    if isinstance(obj, date):
-        return obj.isoformat()
-    elif isinstance(obj, datetime):
-        return obj.isoformat()
-    return obj
-
-def prepare_for_mongo(data):
-    """Prepare data for MongoDB insertion by converting dates to strings"""
-    if isinstance(data, dict):
-        return {k: serialize_date(v) for k, v in data.items()}
-    return data
+def is_sunday(date_str: str) -> bool:
+    """Check if a date string represents a Sunday"""
+    try:
+        date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+        return date_obj.weekday() == 6  # Sunday is 6
+    except:
+        return False
 
 # Routes - Turmas
 @api_router.post("/turmas", response_model=Turma)
 async def create_turma(turma: TurmaCreate):
     turma_dict = turma.dict()
     turma_obj = Turma(**turma_dict)
-    await db.turmas.insert_one(prepare_for_mongo(turma_obj.dict()))
+    await db.turmas.insert_one(turma_obj.dict())
     return turma_obj
 
 @api_router.get("/turmas", response_model=List[Turma])
@@ -179,7 +179,7 @@ async def create_student(student: StudentCreate):
     
     student_dict = student.dict()
     student_obj = Student(**student_dict)
-    await db.students.insert_one(prepare_for_mongo(student_obj.dict()))
+    await db.students.insert_one(student_obj.dict())
     return student_obj
 
 @api_router.get("/students", response_model=List[Student])
@@ -231,24 +231,26 @@ async def delete_student(student_id: str):
     return {"message": "Aluno removido com sucesso"}
 
 @api_router.post("/students/{student_id}/transfer")
-async def transfer_student(student_id: str, nova_turma_id: str):
+async def transfer_student(student_id: str, transfer_data: StudentTransfer):
     # Verificar se o aluno existe
     student = await db.students.find_one({"id": student_id, "ativo": True})
     if not student:
         raise HTTPException(status_code=404, detail="Aluno não encontrado")
     
     # Verificar se a nova turma existe
-    turma = await db.turmas.find_one({"id": nova_turma_id, "ativa": True})
+    turma = await db.turmas.find_one({"id": transfer_data.nova_turma_id, "ativa": True})
     if not turma:
         raise HTTPException(status_code=404, detail="Nova turma não encontrada")
     
     # Atualizar turma do aluno
     await db.students.update_one(
         {"id": student_id},
-        {"$set": {"turma_id": nova_turma_id}}
+        {"$set": {"turma_id": transfer_data.nova_turma_id}}
     )
     
-    return {"message": "Aluno transferido com sucesso"}
+    # Buscar aluno atualizado
+    updated_student = await db.students.find_one({"id": student_id})
+    return Student(**updated_student)
 
 # Routes - Attendance
 @api_router.post("/attendance", response_model=Attendance)
@@ -265,23 +267,23 @@ async def create_attendance(attendance: AttendanceCreate):
     # Verificar se já existe chamada para este aluno nesta data
     existing = await db.attendance.find_one({
         "aluno_id": attendance.aluno_id,
-        "data": attendance.data.isoformat()
+        "data": attendance.data
     })
     if existing:
         raise HTTPException(status_code=400, detail="Chamada já existe para este aluno nesta data")
     
     attendance_dict = attendance.dict()
     attendance_obj = Attendance(**attendance_dict)
-    await db.attendance.insert_one(prepare_for_mongo(attendance_obj.dict()))
+    await db.attendance.insert_one(attendance_obj.dict())
     return attendance_obj
 
 @api_router.get("/attendance", response_model=List[Attendance])
-async def get_attendance(turma_id: Optional[str] = None, data: Optional[date] = None):
+async def get_attendance(turma_id: Optional[str] = None, data: Optional[str] = None):
     filter_dict = {}
     if turma_id:
         filter_dict["turma_id"] = turma_id
     if data:
-        filter_dict["data"] = data.isoformat()
+        filter_dict["data"] = data
     
     attendance = await db.attendance.find(filter_dict).to_list(1000)
     return [Attendance(**att) for att in attendance]
@@ -312,9 +314,9 @@ async def delete_attendance(attendance_id: str):
 
 # Routes - Reports
 @api_router.get("/reports/dashboard", response_model=List[AttendanceReport])
-async def get_dashboard_report(data: Optional[date] = None):
+async def get_dashboard_report(data: Optional[str] = None):
     if not data:
-        data = datetime.now().date()
+        data = datetime.now().strftime("%Y-%m-%d")
     
     # Buscar todas as turmas ativas
     turmas = await db.turmas.find({"ativa": True}).to_list(1000)
@@ -330,7 +332,7 @@ async def get_dashboard_report(data: Optional[date] = None):
         # Buscar presenças do dia
         attendance_records = await db.attendance.find({
             "turma_id": turma["id"],
-            "data": data.isoformat()
+            "data": data
         }).to_list(1000)
         
         # Calcular estatísticas
@@ -362,7 +364,7 @@ async def get_dashboard_report(data: Optional[date] = None):
 
 # Routes - Bulk Attendance for a turma
 @api_router.post("/attendance/bulk/{turma_id}")
-async def bulk_attendance(turma_id: str, data: date, attendance_list: List[dict]):
+async def bulk_attendance(turma_id: str, data: str = Query(...), attendance_list: List[BulkAttendanceItem] = []):
     # Verificar se é domingo
     if not is_sunday(data):
         raise HTTPException(status_code=400, detail="Chamada só pode ser feita aos domingos")
@@ -373,21 +375,21 @@ async def bulk_attendance(turma_id: str, data: date, attendance_list: List[dict]
         raise HTTPException(status_code=404, detail="Turma não encontrada")
     
     # Remover registros existentes da data
-    await db.attendance.delete_many({"turma_id": turma_id, "data": data.isoformat()})
+    await db.attendance.delete_many({"turma_id": turma_id, "data": data})
     
     # Inserir novos registros
-    attendance_objects = []
-    for att_data in attendance_list:
-        att_dict = att_data.dict()
-        att_dict["data"] = data.isoformat()
-        att_dict["turma_id"] = turma_id
-        attendance_obj = Attendance(**att_dict)
-        attendance_objects.append(prepare_for_mongo(attendance_obj.dict()))
-    
-    if attendance_objects:
+    if attendance_list:
+        attendance_objects = []
+        for att_data in attendance_list:
+            att_dict = att_data.dict()
+            att_dict["data"] = data
+            att_dict["turma_id"] = turma_id
+            attendance_obj = Attendance(**att_dict)
+            attendance_objects.append(attendance_obj.dict())
+        
         await db.attendance.insert_many(attendance_objects)
     
-    return {"message": f"Chamada salva com sucesso para {len(attendance_objects)} registros"}
+    return {"message": f"Chamada salva com sucesso para {len(attendance_list)} registros"}
 
 # Initialize sample data
 @api_router.post("/init-sample-data")

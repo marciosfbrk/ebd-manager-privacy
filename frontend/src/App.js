@@ -70,12 +70,27 @@ function App() {
   const saveAttendance = async (turmaId, date, attendanceList) => {
     try {
       setLoading(true);
-      await axios.post(`${API}/attendance/bulk/${turmaId}?data=${date}`, attendanceList);
+      
+      // Prepare data for API
+      const attendanceData = attendanceList.map(att => ({
+        aluno_id: att.aluno_id,
+        status: att.status,
+        oferta: parseFloat(att.oferta) || 0,
+        biblias_entregues: parseInt(att.biblias_entregues) || 0,
+        revistas_entregues: parseInt(att.revistas_entregues) || 0
+      }));
+
+      const response = await axios.post(`${API}/attendance/bulk/${turmaId}?data=${date}`, attendanceData);
+      
       await loadDashboard();
       alert('Chamada salva com sucesso!');
     } catch (error) {
       console.error('Erro ao salvar chamada:', error);
-      alert('Erro ao salvar chamada');
+      if (error.response?.data?.detail) {
+        alert(`Erro: ${error.response.data.detail}`);
+      } else {
+        alert('Erro ao salvar chamada');
+      }
     } finally {
       setLoading(false);
     }

@@ -463,7 +463,7 @@ function App() {
           </button>
           
           <p className="text-blue-300 text-sm mt-4">
-            Sistema desenvolvido para o Ministério do Belém
+            Sistema desenvolvido por Márcio Ferreira
           </p>
         </div>
       </div>

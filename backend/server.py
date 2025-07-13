@@ -281,7 +281,7 @@ async def get_attendance(turma_id: Optional[str] = None, data: Optional[date] = 
     if turma_id:
         filter_dict["turma_id"] = turma_id
     if data:
-        filter_dict["data"] = data
+        filter_dict["data"] = data.isoformat()
     
     attendance = await db.attendance.find(filter_dict).to_list(1000)
     return [Attendance(**att) for att in attendance]

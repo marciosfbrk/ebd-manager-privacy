@@ -744,9 +744,14 @@ function App() {
         setShowForm(false);
         setEditingTurma(null);
         setFormData({ nome: '', descricao: '' });
+        alert('Turma salva com sucesso!');
       } catch (error) {
         console.error('Erro ao salvar turma:', error);
-        alert('Erro ao salvar turma');
+        if (error.response?.data?.detail) {
+          alert(`Erro: ${error.response.data.detail}`);
+        } else {
+          alert('Erro ao salvar turma');
+        }
       }
     };
 
@@ -764,9 +769,14 @@ function App() {
         try {
           await axios.delete(`${API}/turmas/${turmaId}`);
           await loadTurmas();
+          alert('Turma removida com sucesso!');
         } catch (error) {
           console.error('Erro ao remover turma:', error);
-          alert('Erro ao remover turma');
+          if (error.response?.data?.detail) {
+            alert(`Erro: ${error.response.data.detail}`);
+          } else {
+            alert('Erro ao remover turma');
+          }
         }
       }
     };

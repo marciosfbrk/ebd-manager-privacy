@@ -372,27 +372,54 @@ function App() {
                   <span className="text-xl mr-2">✅</span>
                   Fazer Chamada
                 </button>
-                <button
-                  onClick={() => setCurrentView('relatorios')}
-                  className="w-full px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
-                >
-                  <span className="text-xl mr-2">📊</span>
-                  Relatórios Detalhados
-                </button>
-                <button
-                  onClick={() => setCurrentView('alunos')}
-                  className="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-lg hover:from-blue-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
-                >
-                  <span className="text-xl mr-2">👥</span>
-                  Gerenciar Alunos
-                </button>
-                <button
-                  onClick={() => setCurrentView('turmas')}
-                  className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
-                >
-                  <span className="text-xl mr-2">🏫</span>
-                  Gerenciar Turmas
-                </button>
+                
+                {currentUser?.tipo === 'admin' && (
+                  <>
+                    <button
+                      onClick={() => setCurrentView('relatorios')}
+                      className="w-full px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
+                    >
+                      <span className="text-xl mr-2">📊</span>
+                      Relatórios Detalhados
+                    </button>
+                    <button
+                      onClick={() => setCurrentView('alunos')}
+                      className="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-lg hover:from-blue-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
+                    >
+                      <span className="text-xl mr-2">👥</span>
+                      Gerenciar Alunos
+                    </button>
+                    <button
+                      onClick={() => setCurrentView('turmas')}
+                      className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
+                    >
+                      <span className="text-xl mr-2">🏫</span>
+                      Gerenciar Turmas
+                    </button>
+                    <button
+                      onClick={() => setCurrentView('usuarios')}
+                      className="w-full px-6 py-4 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-lg hover:from-red-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
+                    >
+                      <span className="text-xl mr-2">🔐</span>
+                      Gerenciar Usuários
+                    </button>
+                  </>
+                )}
+                
+                {currentUser?.tipo === 'professor' && (
+                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <p className="text-sm text-blue-700">
+                      <strong>Suas turmas:</strong>
+                    </p>
+                    <div className="mt-2 space-y-1">
+                      {getFilteredTurmas().map(turma => (
+                        <span key={turma.id} className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mr-1">
+                          {turma.nome}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

@@ -195,8 +195,17 @@ backend:
         agent: "testing"
         comment: "TESTED: Bulk attendance working correctly. POST /api/attendance/bulk/{turma_id} saves multiple attendance records simultaneously. Validates Sunday-only dates. Replaces existing records for the same date/turma. Comprehensive workflow test confirms bulk operations replace individual records correctly."
 
-frontend:
-  - task: "Interface Dashboard"
+  - task: "Interface Relatórios Detalhados"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Relatórios Detalhados functionality working perfectly. ✅ Dashboard has 'Relatórios Detalhados' button with correct indigo styling. ✅ Navigation to reports page works correctly. ✅ Page shows title 'Relatórios Detalhados' and subtitle. ✅ Consolidation table identical to dashboard with all 9 headers. ✅ All 6 departamento blocks present: Infantil (Frequência: Primários 200%, Oferta: Primários R$30), Jovens e Adolescentes (Frequência: Juvenil 0%, Oferta: Juvenil R$0), Adulto (Frequência: Gênesis 200%, Oferta: Gênesis R$210). ✅ Correct format: 'Nome: <turma> – Porcentagem: <xx,xx%>' for frequency and 'Nome: <turma> – Máximo: <valor>' for offers. ✅ 'Voltar ao Dashboard' button works correctly. ✅ Department classification logic working (Primários→Infantil, Juvenil→Jovens e Adolescentes, Gênesis→Adulto). ✅ Winner calculations accurate based on attendance data."
     implemented: true
     working: true
     file: "/app/frontend/src/App.js"

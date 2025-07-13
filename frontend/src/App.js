@@ -16,7 +16,9 @@ function App() {
 
   // Carregar dados iniciais
   useEffect(() => {
-    loadInitialData();
+    loadTurmas();
+    loadStudents();
+    loadDashboard();
   }, []);
 
   const loadInitialData = async () => {

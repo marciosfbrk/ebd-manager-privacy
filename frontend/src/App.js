@@ -1815,19 +1815,27 @@ function App() {
 
   // Renderização condicional
   const renderCurrentView = () => {
+    // Se não está logado, mostrar apenas home
+    if (!isLoggedIn && currentView !== 'home') {
+      setCurrentView('home');
+      return <HomeCover />;
+    }
+
     switch(currentView) {
       case 'home':
         return <HomeCover />;
       case 'dashboard':
-        return <Dashboard />;
+        return isLoggedIn ? <Dashboard /> : <HomeCover />;
       case 'chamada':
-        return <Chamada />;
+        return isLoggedIn ? <Chamada /> : <HomeCover />;
       case 'relatorios':
-        return <Relatorios />;
+        return isLoggedIn && currentUser?.tipo === 'admin' ? <Relatorios /> : <Dashboard />;
       case 'alunos':
-        return <Alunos />;
+        return isLoggedIn && currentUser?.tipo === 'admin' ? <Alunos /> : <Dashboard />;
       case 'turmas':
-        return <Turmas />;
+        return isLoggedIn && currentUser?.tipo === 'admin' ? <Turmas /> : <Dashboard />;
+      case 'usuarios':
+        return isLoggedIn && currentUser?.tipo === 'admin' ? <Usuarios /> : <Dashboard />;
       default:
         return <HomeCover />;
     }
@@ -1836,6 +1844,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100">
       {renderCurrentView()}
+      {showLogin && <LoginModal />}
     </div>
   );
 }

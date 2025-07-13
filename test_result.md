@@ -243,15 +243,18 @@ frontend:
 
   - task: "Interface Gerenciamento Turmas"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implementado CRUD completo de turmas com formulário e tabela"
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Turma management interface working correctly. Navigation from dashboard works, shows turma list table with sample data (Gênesis, Primários, Juvenil), 'Nova Turma' button present, form has required fields (nome, descricao), edit/remove buttons functional, student count per turma displayed. Back to dashboard navigation works."
 
 metadata:
   created_by: "main_agent"

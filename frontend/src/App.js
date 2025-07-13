@@ -657,7 +657,7 @@ function App() {
     const updateTurmaData = (field, value) => {
       setTurmaDataGlobal(prev => ({
         ...prev,
-        [field]: parseFloat(value) || 0
+        [field]: value === '' ? 0 : (parseFloat(value.replace(',', '.')) || 0)
       }));
     };
 

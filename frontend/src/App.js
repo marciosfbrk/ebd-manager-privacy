@@ -262,7 +262,329 @@ function App() {
     </div>
   );
 
-  // Componente Chamada
+  // Função para classificar turmas por departamento
+  const classificarPorDepartamento = (turma) => {
+    const nome = turma.turma_nome.toLowerCase();
+    
+    // Departamento Infantil
+    if (nome.includes('primário') || nome.includes('primarios') || nome.includes('infantil') || 
+        nome.includes('criança') || nome.includes('crianças') || nome.includes('maternal') ||
+        nome.includes('jardim') || nome.includes('berçário') || nome.includes('bercario')) {
+      return 'Infantil';
+    }
+    
+    // Departamento Jovens e Adolescentes
+    if (nome.includes('juvenil') || nome.includes('jovem') || nome.includes('jovens') ||
+        nome.includes('adolescent') || nome.includes('teen') || nome.includes('mocidade') ||
+        nome.includes('intermédio') || nome.includes('intermediario')) {
+      return 'Jovens e Adolescentes';
+    }
+    
+    // Departamento Adulto (padrão)
+    return 'Adulto';
+  };
+
+  // Função para calcular classes vencedoras
+  const calcularClassesVencedoras = () => {
+    if (!attendanceData || attendanceData.length === 0) return {};
+
+    const departamentos = {
+      'Infantil': [],
+      'Jovens e Adolescentes': [],
+      'Adulto': []
+    };
+
+    // Classificar turmas por departamento
+    attendanceData.forEach(turma => {
+      const dept = classificarPorDepartamento(turma);
+      departamentos[dept].push({
+        ...turma,
+        porcentagem_frequencia: turma.matriculados > 0 ? (turma.presentes / turma.matriculados) * 100 : 0
+      });
+    });
+
+    const vencedores = {};
+
+    // Calcular vencedores para cada departamento
+    Object.keys(departamentos).forEach(dept => {
+      const turmas = departamentos[dept];
+      
+      if (turmas.length > 0) {
+        // Vencedor em frequência (maior porcentagem)
+        const vencedorFrequencia = turmas.reduce((prev, current) => 
+          prev.porcentagem_frequencia > current.porcentagem_frequencia ? prev : current
+        );
+
+        // Vencedor em oferta (maior valor)
+        const vencedorOferta = turmas.reduce((prev, current) => 
+          prev.total_ofertas > current.total_ofertas ? prev : current
+        );
+
+        vencedores[dept] = {
+          frequencia: vencedorFrequencia,
+          oferta: vencedorOferta
+        };
+      }
+    });
+
+    return vencedores;
+  };
+
+  // Componente Relatórios
+  const Relatorios = () => {
+    const classesVencedoras = calcularClassesVencedoras();
+
+    const formatarPorcentagem = (valor) => {
+      return isNaN(valor) ? '0,00' : valor.toFixed(2).replace('.', ',');
+    };
+
+    const formatarValor = (valor) => {
+      return isNaN(valor) ? '0,00' : valor.toFixed(2).replace('.', ',');
+    };
+
+    return (
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-6">
+            <button
+              onClick={() => setCurrentView('dashboard')}
+              className="mb-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              ← Voltar ao Dashboard
+            </button>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">Relatórios Detalhados</h1>
+            <p className="text-gray-600">Relatório consolidado e classes vencedoras por departamento</p>
+          </div>
+
+          {/* Controles de Data */}
+          <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-800">Relatório do Dia</h2>
+              <div className="flex items-center space-x-4">
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  onClick={loadDashboard}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  Atualizar
+                </button>
+              </div>
+            </div>
+
+            {!isSunday(selectedDate) && (
+              <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+                <strong>Aviso:</strong> A data selecionada não é um domingo.
+              </div>
+            )}
+
+            {/* Tabela de Consolidação */}
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-200">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-4 py-2 text-left">Turma</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">Matriculados</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">Presentes</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">Ausentes</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">Visitantes</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">Pós-Chamada</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">Ofertas</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">Bíblias</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">Revistas</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {attendanceData.map((row, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="border border-gray-300 px-4 py-2 font-medium">{row.turma_nome}</td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">{row.matriculados}</td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">{row.presentes}</td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">{row.ausentes}</td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">{row.visitantes}</td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">{row.pos_chamada}</td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">R$ {row.total_ofertas.toFixed(2)}</td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">{row.total_biblias}</td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">{row.total_revistas}</td>
+                    </tr>
+                  ))}
+                  {attendanceData.length > 0 && (
+                    <tr className="bg-blue-50 font-semibold">
+                      <td className="border border-gray-300 px-4 py-2">TOTAL GERAL</td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">
+                        {attendanceData.reduce((sum, row) => sum + row.matriculados, 0)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">
+                        {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">
+                        {attendanceData.reduce((sum, row) => sum + row.ausentes, 0)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">
+                        {attendanceData.reduce((sum, row) => sum + row.visitantes, 0)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">
+                        {attendanceData.reduce((sum, row) => sum + row.pos_chamada, 0)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">
+                        R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">
+                        {attendanceData.reduce((sum, row) => sum + row.total_biblias, 0)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">
+                        {attendanceData.reduce((sum, row) => sum + row.total_revistas, 0)}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Classes Vencedoras */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-6">Classes Vencedoras por Departamento</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Departamento Infantil */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-green-700 border-b-2 border-green-200 pb-2">
+                  Departamento Infantil
+                </h3>
+                
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-green-800 mb-2">
+                    Classe Vencedora em Frequência do departamento Infantil
+                  </h4>
+                  <p className="text-green-700">
+                    {classesVencedoras['Infantil']?.frequencia ? (
+                      <>
+                        Nome: <span className="font-semibold">{classesVencedoras['Infantil'].frequencia.turma_nome}</span> – 
+                        Porcentagem: <span className="font-semibold">{formatarPorcentagem(classesVencedoras['Infantil'].frequencia.porcentagem_frequencia)}%</span>
+                      </>
+                    ) : (
+                      'Nenhuma turma encontrada para este departamento'
+                    )}
+                  </p>
+                </div>
+
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-green-800 mb-2">
+                    Classe Vencedora em Oferta do departamento Infantil
+                  </h4>
+                  <p className="text-green-700">
+                    {classesVencedoras['Infantil']?.oferta ? (
+                      <>
+                        Nome: <span className="font-semibold">{classesVencedoras['Infantil'].oferta.turma_nome}</span> – 
+                        Máximo: <span className="font-semibold">R$ {formatarValor(classesVencedoras['Infantil'].oferta.total_ofertas)}</span>
+                      </>
+                    ) : (
+                      'Nenhuma turma encontrada para este departamento'
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              {/* Departamento Jovens e Adolescentes */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-blue-700 border-b-2 border-blue-200 pb-2">
+                  Departamento Jovens e Adolescentes
+                </h3>
+                
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-blue-800 mb-2">
+                    Classe Vencedora em Frequência do departamento Jovens e Adolescentes
+                  </h4>
+                  <p className="text-blue-700">
+                    {classesVencedoras['Jovens e Adolescentes']?.frequencia ? (
+                      <>
+                        Nome: <span className="font-semibold">{classesVencedoras['Jovens e Adolescentes'].frequencia.turma_nome}</span> – 
+                        Porcentagem: <span className="font-semibold">{formatarPorcentagem(classesVencedoras['Jovens e Adolescentes'].frequencia.porcentagem_frequencia)}%</span>
+                      </>
+                    ) : (
+                      'Nenhuma turma encontrada para este departamento'
+                    )}
+                  </p>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-blue-800 mb-2">
+                    Classe Vencedora em Oferta do departamento Jovens e Adolescentes
+                  </h4>
+                  <p className="text-blue-700">
+                    {classesVencedoras['Jovens e Adolescentes']?.oferta ? (
+                      <>
+                        Nome: <span className="font-semibold">{classesVencedoras['Jovens e Adolescentes'].oferta.turma_nome}</span> – 
+                        Máximo: <span className="font-semibold">R$ {formatarValor(classesVencedoras['Jovens e Adolescentes'].oferta.total_ofertas)}</span>
+                      </>
+                    ) : (
+                      'Nenhuma turma encontrada para este departamento'
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              {/* Departamento Adulto */}
+              <div className="space-y-4 md:col-span-2">
+                <h3 className="text-lg font-medium text-purple-700 border-b-2 border-purple-200 pb-2">
+                  Departamento Adulto
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-purple-800 mb-2">
+                      Classe Vencedora em Frequência do departamento Adulto
+                    </h4>
+                    <p className="text-purple-700">
+                      {classesVencedoras['Adulto']?.frequencia ? (
+                        <>
+                          Nome: <span className="font-semibold">{classesVencedoras['Adulto'].frequencia.turma_nome}</span> – 
+                          Porcentagem: <span className="font-semibold">{formatarPorcentagem(classesVencedoras['Adulto'].frequencia.porcentagem_frequencia)}%</span>
+                        </>
+                      ) : (
+                        'Nenhuma turma encontrada para este departamento'
+                      )}
+                    </p>
+                  </div>
+
+                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-purple-800 mb-2">
+                      Classe Vencedora em Oferta do departamento Adulto
+                    </h4>
+                    <p className="text-purple-700">
+                      {classesVencedoras['Adulto']?.oferta ? (
+                        <>
+                          Nome: <span className="font-semibold">{classesVencedoras['Adulto'].oferta.turma_nome}</span> – 
+                          Máximo: <span className="font-semibold">R$ {formatarValor(classesVencedoras['Adulto'].oferta.total_ofertas)}</span>
+                        </>
+                      ) : (
+                        'Nenhuma turma encontrada para este departamento'
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Informações Adicionais */}
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+              <h4 className="font-semibold text-gray-700 mb-2">Critérios de Classificação:</h4>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• <strong>Frequência:</strong> Calculada como (Presentes ÷ Matriculados) × 100</li>
+                <li>• <strong>Oferta:</strong> Baseada no valor total de ofertas da turma</li>
+                <li>• <strong>Departamentos:</strong> Classificação automática baseada no nome da turma</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
   const Chamada = () => {
     const [turmaAtendance, setTurmaAtendance] = useState([]);
     const [currentTurmaStudents, setCurrentTurmaStudents] = useState([]);

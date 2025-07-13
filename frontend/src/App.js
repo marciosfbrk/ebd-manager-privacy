@@ -1813,6 +1813,237 @@ function App() {
     );
   };
 
+  // Componente Usuários
+  const Usuarios = () => {
+    const [usuarios, setUsuarios] = useState([]);
+    const [showForm, setShowForm] = useState(false);
+    const [formData, setFormData] = useState({
+      nome: '',
+      email: '',
+      senha: '',
+      tipo: 'professor',
+      turmas_permitidas: []
+    });
+
+    useEffect(() => {
+      loadUsuarios();
+    }, []);
+
+    const loadUsuarios = async () => {
+      try {
+        const response = await axios.get(`${API}/users`);
+        setUsuarios(response.data);
+      } catch (error) {
+        console.error('Erro ao carregar usuários:', error);
+      }
+    };
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        await axios.post(`${API}/users`, formData);
+        await loadUsuarios();
+        setShowForm(false);
+        setFormData({ nome: '', email: '', senha: '', tipo: 'professor', turmas_permitidas: [] });
+        alert('Usuário criado com sucesso!');
+      } catch (error) {
+        console.error('Erro ao criar usuário:', error);
+        if (error.response?.data?.detail) {
+          alert(`Erro: ${error.response.data.detail}`);
+        } else {
+          alert('Erro ao criar usuário');
+        }
+      }
+    };
+
+    const handleDelete = async (userId) => {
+      if (window.confirm('Tem certeza que deseja remover este usuário?')) {
+        try {
+          await axios.delete(`${API}/users/${userId}`);
+          await loadUsuarios();
+          alert('Usuário removido com sucesso!');
+        } catch (error) {
+          console.error('Erro ao remover usuário:', error);
+          alert('Erro ao remover usuário');
+        }
+      }
+    };
+
+    const toggleTurmaPermissao = (turmaId) => {
+      setFormData(prev => ({
+        ...prev,
+        turmas_permitidas: prev.turmas_permitidas.includes(turmaId)
+          ? prev.turmas_permitidas.filter(id => id !== turmaId)
+          : [...prev.turmas_permitidas, turmaId]
+      }));
+    };
+
+    return (
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-6">
+            <button
+              onClick={() => setCurrentView('dashboard')}
+              className="mb-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              ← Voltar ao Dashboard
+            </button>
+            <div className="flex justify-between items-center">
+              <h1 className="text-3xl font-bold text-gray-800">Gerenciar Usuários</h1>
+              <button
+                onClick={() => setShowForm(true)}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                Novo Usuário
+              </button>
+            </div>
+          </div>
+
+          {showForm && (
+            <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Novo Usuário</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Nome</label>
+                    <input
+                      type="text"
+                      value={formData.nome}
+                      onChange={(e) => setFormData({...formData, nome: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+                    <input
+                      type="password"
+                      value={formData.senha}
+                      onChange={(e) => setFormData({...formData, senha: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Tipo</label>
+                    <select
+                      value={formData.tipo}
+                      onChange={(e) => setFormData({...formData, tipo: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="professor">Professor</option>
+                      <option value="admin">Administrador</option>
+                    </select>
+                  </div>
+                </div>
+
+                {formData.tipo === 'professor' && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Turmas Permitidas</label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 p-4 border rounded-lg bg-gray-50">
+                      {turmas.map(turma => (
+                        <label key={turma.id} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={formData.turmas_permitidas.includes(turma.id)}
+                            onChange={() => toggleTurmaPermissao(turma.id)}
+                            className="mr-2"
+                          />
+                          <span className="text-sm">{turma.nome}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex space-x-4">
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    Criar Usuário
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowForm(false);
+                      setFormData({ nome: '', email: '', senha: '', tipo: 'professor', turmas_permitidas: [] });
+                    }}
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Lista de Usuários</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-200">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-4 py-2 text-left">Nome</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">Email</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">Tipo</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">Turmas</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {usuarios.map((usuario) => (
+                    <tr key={usuario.id} className="hover:bg-gray-50">
+                      <td className="border border-gray-300 px-4 py-2">{usuario.nome}</td>
+                      <td className="border border-gray-300 px-4 py-2">{usuario.email}</td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">
+                        <span className={`px-2 py-1 rounded text-xs ${
+                          usuario.tipo === 'admin' 
+                            ? 'bg-red-100 text-red-800' 
+                            : 'bg-blue-100 text-blue-800'
+                        }`}>
+                          {usuario.tipo === 'admin' ? 'Administrador' : 'Professor'}
+                        </span>
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">
+                        {usuario.tipo === 'admin' ? (
+                          <span className="text-green-600 font-semibold">Todas</span>
+                        ) : (
+                          <span className="text-sm">
+                            {usuario.turmas_permitidas.length} turma(s)
+                          </span>
+                        )}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">
+                        {usuario.email !== 'admin@ebd.com' && (
+                          <button
+                            onClick={() => handleDelete(usuario.id)}
+                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                          >
+                            Remover
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
   // Renderização condicional
   const renderCurrentView = () => {
     // Se não está logado, mostrar apenas home

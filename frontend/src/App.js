@@ -105,158 +105,243 @@ function App() {
 
   // Componente Dashboard
   const Dashboard = () => (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">EBD Manager</h1>
-          <p className="text-gray-600">Sistema de Gerenciamento da Escola Bíblica Dominical</p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Relatório do Dia</h2>
+        {/* Header Modernizado com Logo */}
+        <div className="bg-gradient-to-r from-indigo-900 via-blue-800 to-indigo-900 text-white px-6 py-8 shadow-2xl">
+          <div className="flex items-center justify-center mb-6">
             <div className="flex items-center space-x-4">
-              <input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button
-                onClick={loadDashboard}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                Atualizar
-              </button>
+              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg">
+                <img 
+                  src="https://images.unsplash.com/photo-1624003026915-a1de7c305b9d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwzfHxjcm9zcyUyMHN5bWJvbHxlbnwwfHx8fDE3NTI0NDgwMDZ8MA&ixlib=rb-4.1.0&q=85"
+                  alt="Logo Ministério"
+                  className="w-16 h-16 object-contain rounded-full"
+                />
+              </div>
+              <div className="text-center">
+                <h1 className="text-4xl font-bold tracking-wider">App EBD</h1>
+                <div className="mt-2 text-sm text-blue-200 space-y-1">
+                  <p>Presidente: <span className="font-semibold">Pr. José Felipe da Silva</span></p>
+                  <p>Pastor Local: <span className="font-semibold">Pr. Henrique Ferreira Neto</span></p>
+                </div>
+              </div>
             </div>
           </div>
-
-          {!isSunday(selectedDate) && (
-            <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-              <strong>Aviso:</strong> A data selecionada não é um domingo.
-            </div>
-          )}
-
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-200">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-300 px-4 py-2 text-left">Turma</th>
-                  <th className="border border-gray-300 px-4 py-2 text-center">Matriculados</th>
-                  <th className="border border-gray-300 px-4 py-2 text-center">Presentes</th>
-                  <th className="border border-gray-300 px-4 py-2 text-center">Ausentes</th>
-                  <th className="border border-gray-300 px-4 py-2 text-center">Visitantes</th>
-                  <th className="border border-gray-300 px-4 py-2 text-center">Pós-Chamada</th>
-                  <th className="border border-gray-300 px-4 py-2 text-center">Ofertas</th>
-                  <th className="border border-gray-300 px-4 py-2 text-center">Bíblias</th>
-                  <th className="border border-gray-300 px-4 py-2 text-center">Revistas</th>
-                </tr>
-              </thead>
-              <tbody>
-                {attendanceData.map((row, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="border border-gray-300 px-4 py-2 font-medium">{row.turma_nome}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">{row.matriculados}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">{row.presentes}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">{row.ausentes}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">{row.visitantes}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">{row.pos_chamada}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">R$ {row.total_ofertas.toFixed(2)}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">{row.total_biblias}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">{row.total_revistas}</td>
-                  </tr>
-                ))}
-                {attendanceData.length > 0 && (
-                  <tr className="bg-blue-50 font-semibold">
-                    <td className="border border-gray-300 px-4 py-2">TOTAL GERAL</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">
-                      {attendanceData.reduce((sum, row) => sum + row.matriculados, 0)}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">
-                      {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">
-                      {attendanceData.reduce((sum, row) => sum + row.ausentes, 0)}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">
-                      {attendanceData.reduce((sum, row) => sum + row.visitantes, 0)}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">
-                      {attendanceData.reduce((sum, row) => sum + row.pos_chamada, 0)}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">
-                      R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2)}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">
-                      {attendanceData.reduce((sum, row) => sum + row.total_biblias, 0)}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">
-                      {attendanceData.reduce((sum, row) => sum + row.total_revistas, 0)}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+          
+          <div className="text-center">
+            <p className="text-blue-200 text-lg">Ministério do Belém • São Paulo</p>
+            <p className="text-blue-300 text-sm mt-1">Sistema de Gerenciamento da Escola Bíblica Dominical</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Ações Rápidas</h3>
-            <div className="space-y-3">
-              <button
-                onClick={() => setCurrentView('chamada')}
-                className="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                Fazer Chamada
-              </button>
-              <button
-                onClick={() => setCurrentView('relatorios')}
-                className="w-full px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                Relatórios Detalhados
-              </button>
-              <button
-                onClick={() => setCurrentView('alunos')}
-                className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                Gerenciar Alunos
-              </button>
-              <button
-                onClick={() => setCurrentView('turmas')}
-                className="w-full px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                Gerenciar Turmas
-              </button>
+        <div className="p-6">
+          {/* Cards de Controle da Data */}
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800">Relatório do Dia</h2>
+                <p className="text-gray-600">Acompanhe a presença e atividades</p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="relative">
+                  <input
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className="px-4 py-3 border-2 border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
+                  />
+                </div>
+                <button
+                  onClick={loadDashboard}
+                  className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-lg hover:from-indigo-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200"
+                >
+                  🔄 Atualizar
+                </button>
+              </div>
+            </div>
+
+            {!isSunday(selectedDate) && (
+              <div className="bg-amber-50 border-l-4 border-amber-400 text-amber-800 px-4 py-3 rounded-r-lg mb-4">
+                <div className="flex items-center">
+                  <span className="text-xl mr-2">⚠️</span>
+                  <strong>Aviso:</strong> A data selecionada não é um domingo.
+                </div>
+              </div>
+            )}
+
+            <div className="overflow-x-auto rounded-lg shadow-sm">
+              <table className="w-full border-collapse bg-white">
+                <thead>
+                  <tr className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white">
+                    <th className="px-6 py-4 text-left font-semibold">Turma</th>
+                    <th className="px-4 py-4 text-center font-semibold">Matriculados</th>
+                    <th className="px-4 py-4 text-center font-semibold">Presentes</th>
+                    <th className="px-4 py-4 text-center font-semibold">Ausentes</th>
+                    <th className="px-4 py-4 text-center font-semibold">Visitantes</th>
+                    <th className="px-4 py-4 text-center font-semibold">Pós-Chamada</th>
+                    <th className="px-4 py-4 text-center font-semibold">Ofertas</th>
+                    <th className="px-4 py-4 text-center font-semibold">Bíblias</th>
+                    <th className="px-4 py-4 text-center font-semibold">Revistas</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {attendanceData.map((row, index) => (
+                    <tr key={index} className="hover:bg-indigo-50 transition-colors duration-150">
+                      <td className="px-6 py-4 font-medium text-gray-900">{row.turma_nome}</td>
+                      <td className="px-4 py-4 text-center text-gray-700">{row.matriculados}</td>
+                      <td className="px-4 py-4 text-center">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          {row.presentes}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-center">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          {row.ausentes}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-center">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          {row.visitantes}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-center">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                          {row.pos_chamada}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-center font-semibold text-green-600">R$ {row.total_ofertas.toFixed(2)}</td>
+                      <td className="px-4 py-4 text-center text-gray-700">{row.total_biblias}</td>
+                      <td className="px-4 py-4 text-center text-gray-700">{row.total_revistas}</td>
+                    </tr>
+                  ))}
+                  {attendanceData.length > 0 && (
+                    <tr className="bg-gradient-to-r from-indigo-100 to-blue-100 font-bold text-indigo-900">
+                      <td className="px-6 py-4 text-lg">TOTAL GERAL</td>
+                      <td className="px-4 py-4 text-center text-lg">
+                        {attendanceData.reduce((sum, row) => sum + row.matriculados, 0)}
+                      </td>
+                      <td className="px-4 py-4 text-center text-lg text-green-700">
+                        {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
+                      </td>
+                      <td className="px-4 py-4 text-center text-lg text-red-700">
+                        {attendanceData.reduce((sum, row) => sum + row.ausentes, 0)}
+                      </td>
+                      <td className="px-4 py-4 text-center text-lg text-blue-700">
+                        {attendanceData.reduce((sum, row) => sum + row.visitantes, 0)}
+                      </td>
+                      <td className="px-4 py-4 text-center text-lg text-yellow-700">
+                        {attendanceData.reduce((sum, row) => sum + row.pos_chamada, 0)}
+                      </td>
+                      <td className="px-4 py-4 text-center text-lg text-green-700">
+                        R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2)}
+                      </td>
+                      <td className="px-4 py-4 text-center text-lg">
+                        {attendanceData.reduce((sum, row) => sum + row.total_biblias, 0)}
+                      </td>
+                      <td className="px-4 py-4 text-center text-lg">
+                        {attendanceData.reduce((sum, row) => sum + row.total_revistas, 0)}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Resumo</h3>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Total de Turmas:</span>
-                <span className="font-semibold">{turmas.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Total de Alunos:</span>
-                <span className="font-semibold">{students.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Presentes Hoje:</span>
-                <span className="font-semibold text-green-600">
-                  {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
-                </span>
+          {/* Cards de Ações e Resumo */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Ações Rápidas */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                <span className="text-2xl mr-2">⚡</span>
+                Ações Rápidas
+              </h3>
+              <div className="space-y-4">
+                <button
+                  onClick={() => setCurrentView('chamada')}
+                  className="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
+                >
+                  <span className="text-xl mr-2">✅</span>
+                  Fazer Chamada
+                </button>
+                <button
+                  onClick={() => setCurrentView('relatorios')}
+                  className="w-full px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
+                >
+                  <span className="text-xl mr-2">📊</span>
+                  Relatórios Detalhados
+                </button>
+                <button
+                  onClick={() => setCurrentView('alunos')}
+                  className="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-lg hover:from-blue-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
+                >
+                  <span className="text-xl mr-2">👥</span>
+                  Gerenciar Alunos
+                </button>
+                <button
+                  onClick={() => setCurrentView('turmas')}
+                  className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
+                >
+                  <span className="text-xl mr-2">🏫</span>
+                  Gerenciar Turmas
+                </button>
               </div>
             </div>
-          </div>
 
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Dicas</h3>
-            <div className="text-sm text-gray-600 space-y-2">
-              <p>• A chamada só pode ser feita aos domingos</p>
-              <p>• Use a tela de chamada para registrar presença e ofertas</p>
-              <p>• O relatório é atualizado automaticamente</p>
+            {/* Resumo Estatístico */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                <span className="text-2xl mr-2">📈</span>
+                Resumo Geral
+              </h3>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                  <span className="text-gray-700 font-medium">Total de Turmas:</span>
+                  <span className="text-2xl font-bold text-blue-600">{turmas.length}</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                  <span className="text-gray-700 font-medium">Total de Alunos:</span>
+                  <span className="text-2xl font-bold text-green-600">{students.length}</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-emerald-50 rounded-lg">
+                  <span className="text-gray-700 font-medium">Presentes Hoje:</span>
+                  <span className="text-2xl font-bold text-emerald-600">
+                    {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
+                  <span className="text-gray-700 font-medium">Ofertas Hoje:</span>
+                  <span className="text-xl font-bold text-yellow-600">
+                    R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Dicas e Informações */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                <span className="text-2xl mr-2">💡</span>
+                Dicas de Uso
+              </h3>
+              <div className="space-y-3 text-sm text-gray-600">
+                <div className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <p>A chamada só pode ser feita aos domingos</p>
+                </div>
+                <div className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <p>Use a tela de chamada para registrar presença e ofertas</p>
+                </div>
+                <div className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <p>O relatório é atualizado automaticamente após salvar</p>
+                </div>
+                <div className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <p>Use os relatórios detalhados para ver classes vencedoras</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

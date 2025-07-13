@@ -1228,6 +1228,8 @@ function App() {
     switch(currentView) {
       case 'chamada':
         return <Chamada />;
+      case 'relatorios':
+        return <Relatorios />;
       case 'alunos':
         return <Alunos />;
       case 'turmas':

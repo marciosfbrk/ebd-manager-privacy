@@ -588,11 +588,11 @@ function App() {
   const Chamada = () => {
     const [turmaAtendance, setTurmaAtendance] = useState([]);
     const [turmaDataGlobal, setTurmaDataGlobal] = useState({
-      ofertas_total: 0,
-      biblias_total: 0,
-      revistas_total: 0,
-      visitantes_total: 0,
-      pos_chamada_total: 0
+      ofertas_total: '',
+      biblias_total: '',
+      revistas_total: '',
+      visitantes_total: '',
+      pos_chamada_total: ''
     });
 
     useEffect(() => {

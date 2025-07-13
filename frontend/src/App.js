@@ -110,14 +110,18 @@ function App() {
       <div className="max-w-7xl mx-auto">
         {/* Header Modernizado com Logo */}
         <div className="bg-gradient-to-r from-indigo-900 via-blue-800 to-indigo-900 text-white px-6 py-8 shadow-2xl">
-          <div className="flex items-center justify-center mb-6">
+          <div className="flex justify-between items-center mb-6">
+            <button
+              onClick={() => setCurrentView('home')}
+              className="px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg hover:bg-opacity-30 transition-all duration-200"
+            >
+              ← Início
+            </button>
             <div className="flex items-center space-x-4">
               <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg">
-                <img 
-                  src="https://images.unsplash.com/photo-1624003026915-a1de7c305b9d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwzfHxjcm9zcyUyMHN5bWJvbHxlbnwwfHx8fDE3NTI0NDgwMDZ8MA&ixlib=rb-4.1.0&q=85"
-                  alt="Logo Ministério"
-                  className="w-16 h-16 object-contain rounded-full"
-                />
+                <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
+                  <span className="text-2xl">⛪</span>
+                </div>
               </div>
               <div className="text-center">
                 <h1 className="text-4xl font-bold tracking-wider">App EBD</h1>
@@ -127,6 +131,7 @@ function App() {
                 </div>
               </div>
             </div>
+            <div className="w-20"></div>
           </div>
           
           <div className="text-center">

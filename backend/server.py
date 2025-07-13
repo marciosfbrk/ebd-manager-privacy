@@ -362,7 +362,7 @@ async def get_dashboard_report(data: Optional[date] = None):
 
 # Routes - Bulk Attendance for a turma
 @api_router.post("/attendance/bulk/{turma_id}")
-async def bulk_attendance(turma_id: str, data: date, attendance_list: List[AttendanceCreate]):
+async def bulk_attendance(turma_id: str, data: date, attendance_list: List[dict]):
     # Verificar se é domingo
     if not is_sunday(data):
         raise HTTPException(status_code=400, detail="Chamada só pode ser feita aos domingos")

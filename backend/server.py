@@ -452,6 +452,65 @@ async def init_sample_data():
     
     return {"message": "Dados de exemplo criados com sucesso", "turmas": len(turmas), "alunos": len(students)}
 
+# Endpoint para criar dados de exemplo com ofertas
+@api_router.post("/create-sample-attendance")
+async def create_sample_attendance():
+    """Criar dados de exemplo de chamada com ofertas para demonstrar relatórios"""
+    try:
+        # Buscar turmas e alunos
+        turmas = await db.turmas.find({"ativa": True}).to_list(10)
+        students = await db.students.find({"ativo": True}).to_list(10)
+        
+        if not turmas or not students:
+            raise HTTPException(status_code=404, detail="Turmas ou alunos não encontrados. Execute init-sample-data primeiro.")
+        
+        # Data de exemplo (domingo)
+        sample_date = "2025-07-13"
+        
+        # Limpar dados de attendance da data
+        await db.attendance.delete_many({"data": sample_date})
+        
+        # Criar presenças de exemplo com ofertas variadas
+        sample_attendance = []
+        
+        for turma in turmas:
+            turma_students = [s for s in students if s["turma_id"] == turma["id"]]
+            
+            for i, student in enumerate(turma_students):
+                # Variar as ofertas por turma para criar vencedores claros
+                oferta_base = 10.0
+                if turma["nome"] == "Gênesis":
+                    oferta_base = 50.0  # Adultos doam mais
+                elif turma["nome"] == "Juvenil":
+                    oferta_base = 25.0  # Jovens doam valor médio
+                elif turma["nome"] == "Primários":
+                    oferta_base = 5.0   # Crianças doam menos
+                
+                attendance_record = {
+                    "id": str(uuid.uuid4()),
+                    "aluno_id": student["id"],
+                    "turma_id": turma["id"],
+                    "data": sample_date,
+                    "status": "presente" if i % 2 == 0 else "presente",  # Maioria presente para ter boa frequência
+                    "oferta": oferta_base + (i * 5.0),  # Variar ofertas
+                    "biblias_entregues": 1 if i == 0 else 0,
+                    "revistas_entregues": 1,
+                    "criado_em": datetime.utcnow().isoformat()
+                }
+                sample_attendance.append(attendance_record)
+        
+        if sample_attendance:
+            await db.attendance.insert_many(sample_attendance)
+        
+        return {
+            "message": f"Dados de exemplo criados para {len(sample_attendance)} registros de presença",
+            "data": sample_date,
+            "registros": len(sample_attendance)
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao criar dados de exemplo: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 

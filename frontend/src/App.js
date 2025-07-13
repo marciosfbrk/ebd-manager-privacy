@@ -587,7 +587,13 @@ function App() {
   };
   const Chamada = () => {
     const [turmaAtendance, setTurmaAtendance] = useState([]);
-    const [currentTurmaStudents, setCurrentTurmaStudents] = useState([]);
+    const [turmaDataGlobal, setTurmaDataGlobal] = useState({
+      ofertas_total: 0,
+      biblias_total: 0,
+      revistas_total: 0,
+      visitantes_total: 0,
+      pos_chamada_total: 0
+    });
 
     useEffect(() => {
       if (selectedTurma) {
@@ -600,22 +606,38 @@ function App() {
 
       try {
         const studentsInTurma = students.filter(s => s.turma_id === selectedTurma);
-        setCurrentTurmaStudents(studentsInTurma);
 
         const existingAttendance = await loadAttendanceForTurma(selectedTurma, selectedDate);
         
+        // Calcular totais existentes
+        let totalOfertas = 0;
+        let totalBiblias = 0;
+        let totalRevistas = 0;
+        let totalVisitantes = 0;
+        let totalPosChamada = 0;
+
         const attendanceMap = {};
         existingAttendance.forEach(att => {
           attendanceMap[att.aluno_id] = att;
+          totalOfertas += att.oferta || 0;
+          totalBiblias += att.biblias_entregues || 0;
+          totalRevistas += att.revistas_entregues || 0;
+          if (att.status === 'visitante') totalVisitantes++;
+          if (att.status === 'pos_chamada') totalPosChamada++;
+        });
+
+        setTurmaDataGlobal({
+          ofertas_total: totalOfertas,
+          biblias_total: totalBiblias,
+          revistas_total: totalRevistas,
+          visitantes_total: totalVisitantes,
+          pos_chamada_total: totalPosChamada
         });
 
         const attendanceData = studentsInTurma.map(student => ({
           aluno_id: student.id,
           nome: student.nome_completo,
-          status: attendanceMap[student.id]?.status || 'ausente',
-          oferta: attendanceMap[student.id]?.oferta || 0,
-          biblias_entregues: attendanceMap[student.id]?.biblias_entregues || 0,
-          revistas_entregues: attendanceMap[student.id]?.revistas_entregues || 0
+          presente: attendanceMap[student.id]?.status === 'presente' || false
         }));
 
         setTurmaAtendance(attendanceData);
@@ -624,28 +646,61 @@ function App() {
       }
     };
 
-    const updateAttendance = (alunoId, field, value) => {
+    const togglePresenca = (alunoId) => {
       setTurmaAtendance(prev => 
         prev.map(att => 
-          att.aluno_id === alunoId ? { ...att, [field]: value } : att
+          att.aluno_id === alunoId ? { ...att, presente: !att.presente } : att
         )
       );
+    };
+
+    const updateTurmaData = (field, value) => {
+      setTurmaDataGlobal(prev => ({
+        ...prev,
+        [field]: parseFloat(value) || 0
+      }));
     };
 
     const handleSave = async () => {
       try {
         setLoading(true);
         
-        // Para implementação rápida, vou manter a estrutura atual mas com melhorias
-        const attendanceList = turmaAtendance.map(att => ({
-          aluno_id: att.aluno_id,
-          status: att.status,
-          oferta: parseFloat(att.oferta) || 0,
-          biblias_entregues: parseInt(att.biblias_entregues) || 0,
-          revistas_entregues: parseInt(att.revistas_entregues) || 0
-        }));
+        const presentesCount = turmaAtendance.filter(att => att.presente).length;
+        
+        const attendanceList = turmaAtendance.map((att, index) => {
+          let status = att.presente ? 'presente' : 'ausente';
+          let oferta = 0;
+          let biblias = 0;
+          let revistas = 0;
+          
+          // Distribuir ofertas igualmente entre os presentes
+          if (att.presente && presentesCount > 0) {
+            oferta = turmaDataGlobal.ofertas_total / presentesCount;
+          }
+          
+          // Dar bíblias e revistas apenas para o primeiro aluno (para não duplicar)
+          if (index === 0) {
+            biblias = turmaDataGlobal.biblias_total;
+            revistas = turmaDataGlobal.revistas_total;
+          }
+          
+          // Aplicar visitantes e pós-chamada aos primeiros da lista
+          if (index < turmaDataGlobal.visitantes_total) {
+            status = 'visitante';
+          } else if (index < turmaDataGlobal.visitantes_total + turmaDataGlobal.pos_chamada_total) {
+            status = 'pos_chamada';
+          }
 
-        const response = await axios.post(`${API}/attendance/bulk/${selectedTurma}?data=${selectedDate}`, attendanceList);
+          return {
+            aluno_id: att.aluno_id,
+            status: status,
+            oferta: oferta,
+            biblias_entregues: biblias,
+            revistas_entregues: revistas
+          };
+        });
+
+        await axios.post(`${API}/attendance/bulk/${selectedTurma}?data=${selectedDate}`, attendanceList);
         
         await loadDashboard();
         alert('Chamada salva com sucesso!');
@@ -708,75 +763,137 @@ function App() {
 
             {selectedTurma && (
               <div>
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-gray-800">
-                    Alunos da Turma: {turmas.find(t => t.id === selectedTurma)?.nome}
-                  </h2>
-                  <button
-                    onClick={handleSave}
-                    disabled={loading}
-                    className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400"
-                  >
-                    {loading ? 'Salvando...' : 'Salvar Chamada'}
-                  </button>
+                {/* Campos Globais da Turma */}
+                <div className="bg-blue-50 p-6 rounded-lg mb-6">
+                  <h3 className="text-xl font-semibold text-blue-800 mb-4">Dados da Turma</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-blue-700 mb-2">Oferta Total (R$)</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={turmaDataGlobal.ofertas_total}
+                        onChange={(e) => updateTurmaData('ofertas_total', e.target.value)}
+                        className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="0,00"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-blue-700 mb-2">Bíblias</label>
+                      <input
+                        type="number"
+                        value={turmaDataGlobal.biblias_total}
+                        onChange={(e) => updateTurmaData('biblias_total', e.target.value)}
+                        className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="0"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-blue-700 mb-2">Revistas</label>
+                      <input
+                        type="number"
+                        value={turmaDataGlobal.revistas_total}
+                        onChange={(e) => updateTurmaData('revistas_total', e.target.value)}
+                        className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="0"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-blue-700 mb-2">Visitantes</label>
+                      <input
+                        type="number"
+                        value={turmaDataGlobal.visitantes_total}
+                        onChange={(e) => updateTurmaData('visitantes_total', e.target.value)}
+                        className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="0"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-blue-700 mb-2">Pós-Chamada</label>
+                      <input
+                        type="number"
+                        value={turmaDataGlobal.pos_chamada_total}
+                        onChange={(e) => updateTurmaData('pos_chamada_total', e.target.value)}
+                        className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="0"
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse border border-gray-200">
-                    <thead>
-                      <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-4 py-2 text-left">Nome</th>
-                        <th className="border border-gray-300 px-4 py-2 text-center">Status</th>
-                        <th className="border border-gray-300 px-4 py-2 text-center">Oferta (R$)</th>
-                        <th className="border border-gray-300 px-4 py-2 text-center">Bíblias</th>
-                        <th className="border border-gray-300 px-4 py-2 text-center">Revistas</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+                {/* Lista de Presença Simples */}
+                <div className="bg-white border rounded-lg overflow-hidden mb-6">
+                  <div className="bg-gray-100 px-6 py-4 border-b flex justify-between items-center">
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-800">
+                        {turmas.find(t => t.id === selectedTurma)?.nome}
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">Clique nos nomes para marcar presença</p>
+                    </div>
+                    <button
+                      onClick={handleSave}
+                      disabled={loading}
+                      className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400 text-lg font-semibold"
+                    >
+                      {loading ? 'Salvando...' : 'Salvar Chamada'}
+                    </button>
+                  </div>
+                  
+                  <div className="p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                       {turmaAtendance.map((att, index) => (
-                        <tr key={index} className="hover:bg-gray-50">
-                          <td className="border border-gray-300 px-4 py-2 font-medium">{att.nome}</td>
-                          <td className="border border-gray-300 px-4 py-2 text-center">
-                            <select
-                              value={att.status}
-                              onChange={(e) => updateAttendance(att.aluno_id, 'status', e.target.value)}
-                              className="px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                              <option value="ausente">Ausente</option>
-                              <option value="presente">Presente</option>
-                              <option value="visitante">Visitante</option>
-                              <option value="pos_chamada">Pós-Chamada</option>
-                            </select>
-                          </td>
-                          <td className="border border-gray-300 px-4 py-2 text-center">
-                            <input
-                              type="number"
-                              step="0.01"
-                              value={att.oferta}
-                              onChange={(e) => updateAttendance(att.aluno_id, 'oferta', e.target.value)}
-                              className="w-20 px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                          </td>
-                          <td className="border border-gray-300 px-4 py-2 text-center">
-                            <input
-                              type="number"
-                              value={att.biblias_entregues}
-                              onChange={(e) => updateAttendance(att.aluno_id, 'biblias_entregues', e.target.value)}
-                              className="w-16 px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                          </td>
-                          <td className="border border-gray-300 px-4 py-2 text-center">
-                            <input
-                              type="number"
-                              value={att.revistas_entregues}
-                              onChange={(e) => updateAttendance(att.aluno_id, 'revistas_entregues', e.target.value)}
-                              className="w-16 px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                          </td>
-                        </tr>
+                        <button
+                          key={index}
+                          onClick={() => togglePresenca(att.aluno_id)}
+                          className={`p-4 rounded-lg text-left transition-all duration-200 ${
+                            att.presente 
+                              ? 'bg-green-100 border-2 border-green-500 text-green-800' 
+                              : 'bg-gray-100 border-2 border-gray-300 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          <div className="flex items-center">
+                            <div className={`w-4 h-4 rounded-full mr-3 ${
+                              att.presente ? 'bg-green-500' : 'bg-gray-400'
+                            }`}></div>
+                            <span className="font-medium">{att.nome}</span>
+                          </div>
+                        </button>
                       ))}
-                    </tbody>
-                  </table>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Resumo */}
+                <div className="p-6 bg-green-50 rounded-lg">
+                  <h4 className="text-lg font-semibold text-green-800 mb-3">Resumo</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-600">
+                        {turmaAtendance.filter(att => att.presente).length}
+                      </div>
+                      <div className="text-sm text-green-700">Presentes</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-red-600">
+                        {turmaAtendance.filter(att => !att.presente).length}
+                      </div>
+                      <div className="text-sm text-red-700">Ausentes</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-600">
+                        {turmaAtendance.length}
+                      </div>
+                      <div className="text-sm text-blue-700">Total</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-purple-600">
+                        {turmaAtendance.length > 0 
+                          ? ((turmaAtendance.filter(att => att.presente).length / turmaAtendance.length) * 100).toFixed(1)
+                          : 0}%
+                      </div>
+                      <div className="text-sm text-purple-700">Frequência</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}

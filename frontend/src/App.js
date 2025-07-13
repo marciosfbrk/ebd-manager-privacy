@@ -578,9 +578,10 @@ function App() {
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
               <h4 className="font-semibold text-gray-700 mb-2">Critérios de Classificação:</h4>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• <strong>Frequência:</strong> Calculada como (Presentes ÷ Matriculados) × 100</li>
-                <li>• <strong>Oferta:</strong> Baseada no valor total de ofertas da turma</li>
-                <li>• <strong>Departamentos:</strong> Classificação automática baseada no nome da turma</li>
+                <li>• <strong>Frequência:</strong> Calculada como (Presentes ÷ Matriculados) × 100, arredondada com 2 casas decimais</li>
+                <li>• <strong>Oferta:</strong> Baseada no valor total de ofertas da turma, arredondada com 2 casas decimais</li>
+                <li>• <strong>Departamentos:</strong> Baseados na posição das turmas (Infantil: primeiras, Jovens: intermediárias, Adulto: últimas)</li>
+                <li>• <strong>Lógica Excel:</strong> Equivalente a ÍNDICE + CORRESP + MÁXIMO para encontrar vencedores</li>
               </ul>
             </div>
           </div>

@@ -590,6 +590,42 @@ async def check_access(token: str, turma_id: str = None):
         "tipo": user["tipo"],
         "turmas_permitidas": user["turmas_permitidas"]
     }
+# Endpoint para criar usuário admin inicial
+@api_router.post("/init-admin")
+async def create_initial_admin():
+    """Criar usuário administrador inicial - só funciona se não houver nenhum admin"""
+    try:
+        # Verificar se já existe admin
+        existing_admin = await db.users.find_one({"tipo": "admin", "ativo": True})
+        if existing_admin:
+            raise HTTPException(status_code=400, detail="Já existe um administrador no sistema")
+        
+        # Criar admin padrão
+        admin_data = {
+            "id": str(uuid.uuid4()),
+            "nome": "Márcio Ferreira",
+            "email": "admin@ebd.com",
+            "senha_hash": hash_password("123456"),  # Senha padrão
+            "tipo": "admin",
+            "turmas_permitidas": [],  # Admin tem acesso a todas
+            "ativo": True,
+            "criado_em": datetime.utcnow().isoformat()
+        }
+        
+        await db.users.insert_one(admin_data)
+        
+        return {
+            "message": "Administrador criado com sucesso",
+            "email": "admin@ebd.com",
+            "senha": "123456",
+            "nome": "Márcio Ferreira"
+        }
+        
+    except Exception as e:
+        if "Já existe um administrador" in str(e):
+            raise e
+        raise HTTPException(status_code=500, detail=f"Erro ao criar administrador: {str(e)}")
+
 @api_router.post("/init-church-data")
 async def init_church_data():
     """Limpar dados existentes e criar dados reais da igreja"""

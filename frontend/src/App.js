@@ -468,7 +468,7 @@ function App() {
                     {classesVencedoras['Infantil']?.frequencia ? (
                       <>
                         Nome: <span className="font-semibold">{classesVencedoras['Infantil'].frequencia.turma_nome}</span> – 
-                        Porcentagem: <span className="font-semibold">{formatarPorcentagem(classesVencedoras['Infantil'].frequencia.porcentagem_frequencia)}%</span>
+                        Porcentagem: <span className="font-semibold">{formatarPorcentagem(classesVencedoras['Infantil'].frequencia.porcentagem)}%</span>
                       </>
                     ) : (
                       'Nenhuma turma encontrada para este departamento'
@@ -484,7 +484,7 @@ function App() {
                     {classesVencedoras['Infantil']?.oferta ? (
                       <>
                         Nome: <span className="font-semibold">{classesVencedoras['Infantil'].oferta.turma_nome}</span> – 
-                        Máximo: <span className="font-semibold">R$ {formatarValor(classesVencedoras['Infantil'].oferta.total_ofertas)}</span>
+                        Máximo: <span className="font-semibold">R$ {formatarValor(classesVencedoras['Infantil'].oferta.valor)}</span>
                       </>
                     ) : (
                       'Nenhuma turma encontrada para este departamento'

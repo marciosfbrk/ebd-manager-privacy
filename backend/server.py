@@ -265,14 +265,14 @@ async def create_attendance(attendance: AttendanceCreate):
     # Verificar se já existe chamada para este aluno nesta data
     existing = await db.attendance.find_one({
         "aluno_id": attendance.aluno_id,
-        "data": attendance.data
+        "data": attendance.data.isoformat()
     })
     if existing:
         raise HTTPException(status_code=400, detail="Chamada já existe para este aluno nesta data")
     
     attendance_dict = attendance.dict()
     attendance_obj = Attendance(**attendance_dict)
-    await db.attendance.insert_one(attendance_obj.dict())
+    await db.attendance.insert_one(prepare_for_mongo(attendance_obj.dict()))
     return attendance_obj
 
 @api_router.get("/attendance", response_model=List[Attendance])

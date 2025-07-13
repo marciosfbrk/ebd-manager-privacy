@@ -330,7 +330,7 @@ async def get_dashboard_report(data: Optional[date] = None):
         # Buscar presenças do dia
         attendance_records = await db.attendance.find({
             "turma_id": turma["id"],
-            "data": data
+            "data": data.isoformat()
         }).to_list(1000)
         
         # Calcular estatísticas

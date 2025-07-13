@@ -415,7 +415,7 @@ async def init_sample_data():
             "contato": "marcio@email.com",
             "turma_id": turmas[0]["id"],
             "ativo": True,
-            "criado_em": datetime.utcnow()
+            "criado_em": datetime.utcnow().isoformat()
         },
         {
             "id": str(uuid.uuid4()),
@@ -424,7 +424,7 @@ async def init_sample_data():
             "contato": "kesia@email.com",
             "turma_id": turmas[0]["id"],
             "ativo": True,
-            "criado_em": datetime.utcnow()
+            "criado_em": datetime.utcnow().isoformat()
         },
         {
             "id": str(uuid.uuid4()),
@@ -433,7 +433,7 @@ async def init_sample_data():
             "contato": "gustavo@email.com",
             "turma_id": turmas[1]["id"],
             "ativo": True,
-            "criado_em": datetime.utcnow()
+            "criado_em": datetime.utcnow().isoformat()
         },
         {
             "id": str(uuid.uuid4()),
@@ -442,7 +442,7 @@ async def init_sample_data():
             "contato": "gael@email.com",
             "turma_id": turmas[1]["id"],
             "ativo": True,
-            "criado_em": datetime.utcnow()
+            "criado_em": datetime.utcnow().isoformat()
         }
     ]
     

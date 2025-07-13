@@ -350,7 +350,110 @@ function App() {
     </div>
   );
 
-  // Função para calcular classes vencedoras usando a mesma lógica do Excel
+  // Componente Capa do App
+  const HomeCover = () => (
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 flex items-center justify-center relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+      <div className="absolute inset-0" style={{
+        backgroundImage: 'radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%)'
+      }}></div>
+      
+      <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-6">
+        {/* Logo Principal */}
+        <div className="mb-8">
+          <div className="w-32 h-32 mx-auto mb-6 bg-white rounded-full p-4 shadow-2xl">
+            {/* Usando um escudo/logo religioso como placeholder - você deve substituir pela sua imagem */}
+            <div className="w-full h-full bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
+              <div className="text-4xl">⛪</div>
+            </div>
+          </div>
+          
+          <h1 className="text-6xl font-bold mb-4 tracking-wider">
+            App EBD
+          </h1>
+          
+          <div className="text-xl text-blue-200 mb-2">
+            <p>Presidente: <span className="font-semibold text-white">Pr. José Felipe da Silva</span></p>
+            <p>Pastor Local: <span className="font-semibold text-white">Pr. Henrique Ferreira Neto</span></p>
+          </div>
+          
+          <div className="text-lg text-blue-300 mt-4">
+            <p className="font-semibold">Ministério do Belém • São Paulo</p>
+            <p className="text-base mt-1">Sistema de Gerenciamento da Escola Bíblica Dominical</p>
+          </div>
+        </div>
+
+        {/* Recursos do Sistema */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 border border-white border-opacity-20">
+            <div className="text-3xl mb-3">✅</div>
+            <h3 className="font-semibold mb-2">Chamada Digital</h3>
+            <p className="text-sm text-blue-200">Controle de presença rápido e eficiente</p>
+          </div>
+          
+          <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 border border-white border-opacity-20">
+            <div className="text-3xl mb-3">📊</div>
+            <h3 className="font-semibold mb-2">Relatórios</h3>
+            <p className="text-sm text-blue-200">Classes vencedoras e estatísticas completas</p>
+          </div>
+          
+          <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 border border-white border-opacity-20">
+            <div className="text-3xl mb-3">👥</div>
+            <h3 className="font-semibold mb-2">Gestão de Alunos</h3>
+            <p className="text-sm text-blue-200">Cadastro e transferência entre turmas</p>
+          </div>
+          
+          <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 border border-white border-opacity-20">
+            <div className="text-3xl mb-3">💰</div>
+            <h3 className="font-semibold mb-2">Controle de Ofertas</h3>
+            <p className="text-sm text-blue-200">Registro de ofertas e materiais distribuídos</p>
+          </div>
+        </div>
+
+        {/* Estatísticas Rápidas */}
+        <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-2xl p-8 mb-12 border border-white border-opacity-20">
+          <h3 className="text-2xl font-bold mb-6">Estatísticas Atuais</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-yellow-400">{turmas.length}</div>
+              <div className="text-blue-200">Turmas</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-green-400">{students.length}</div>
+              <div className="text-blue-200">Alunos</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-blue-400">
+                {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
+              </div>
+              <div className="text-blue-200">Presentes Hoje</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-purple-400">
+                R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(0)}
+              </div>
+              <div className="text-blue-200">Ofertas Hoje</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Botão de Entrada */}
+        <div className="space-y-4">
+          <button
+            onClick={() => setCurrentView('dashboard')}
+            className="px-12 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 rounded-full text-xl font-bold hover:from-yellow-400 hover:to-yellow-500 transform hover:scale-105 transition-all duration-300 shadow-2xl"
+          >
+            🚀 Acessar Sistema
+          </button>
+          
+          <p className="text-blue-300 text-sm mt-4">
+            Sistema desenvolvido para o Ministério do Belém
+          </p>
+        </div>
+      </div>
+    </div>
+  );
   const calcularClassesVencedoras = () => {
     if (!attendanceData || attendanceData.length === 0) return {};
 

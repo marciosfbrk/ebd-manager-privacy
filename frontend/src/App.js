@@ -445,7 +445,95 @@ function App() {
     </div>
   );
 
-  // Componente Capa do App
+  // Componente de Login
+  const LoginModal = () => {
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+    const [loginLoading, setLoginLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setLoginLoading(true);
+      setErrorMessage('');
+      
+      const result = await handleLogin(email, senha);
+      
+      if (!result.success) {
+        setErrorMessage(result.message);
+      }
+      
+      setLoginLoading(false);
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl">
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-b from-orange-400 via-yellow-500 to-green-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-2xl">🛡️</span>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800">Acesso ao Sistema</h2>
+            <p className="text-gray-600 mt-2">App EBD - Ministério do Belém</p>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="seu@email.com"
+                required
+              />
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+              <input
+                type="password"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            {errorMessage && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                {errorMessage}
+              </div>
+            )}
+
+            <div className="flex space-x-3">
+              <button
+                type="submit"
+                disabled={loginLoading}
+                className="flex-1 px-4 py-3 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-lg hover:from-indigo-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-400 font-semibold"
+              >
+                {loginLoading ? 'Entrando...' : 'Entrar'}
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => setShowLogin(false)}
+                className="px-4 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+
+          <div className="mt-6 text-center text-sm text-gray-600">
+            <p>Precisa de acesso? Fale com o administrador</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
   const HomeCover = () => (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 flex items-center justify-center relative overflow-hidden">
       {/* Background Pattern */}

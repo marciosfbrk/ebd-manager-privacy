@@ -220,7 +220,19 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="w-20"></div>
+            <div className="text-right">
+              <div className="text-sm text-blue-200">
+                <p>Logado como:</p>
+                <p className="font-semibold text-white">{currentUser?.nome}</p>
+                <p className="text-xs">({currentUser?.tipo === 'admin' ? 'Administrador' : 'Professor'})</p>
+              </div>
+              <button 
+                onClick={handleLogout}
+                className="mt-2 px-3 py-1 bg-red-500 bg-opacity-80 text-white rounded hover:bg-opacity-100 transition-all duration-200 text-sm"
+              >
+                Sair
+              </button>
+            </div>
           </div>
           
           <div className="text-center">

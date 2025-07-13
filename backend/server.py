@@ -113,6 +113,20 @@ class AttendanceReport(BaseModel):
 def is_sunday(date_obj: date) -> bool:
     return date_obj.weekday() == 6  # Sunday is 6
 
+def serialize_date(obj):
+    """Convert date objects to string for MongoDB storage"""
+    if isinstance(obj, date):
+        return obj.isoformat()
+    elif isinstance(obj, datetime):
+        return obj.isoformat()
+    return obj
+
+def prepare_for_mongo(data):
+    """Prepare data for MongoDB insertion by converting dates to strings"""
+    if isinstance(data, dict):
+        return {k: serialize_date(v) for k, v in data.items()}
+    return data
+
 # Routes - Turmas
 @api_router.post("/turmas", response_model=Turma)
 async def create_turma(turma: TurmaCreate):

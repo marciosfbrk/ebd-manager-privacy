@@ -284,8 +284,9 @@ def test_students_crud(turma_id):
                 turmas = response.json()
                 other_turma = next((t for t in turmas if t['id'] != turma_id), None)
                 if other_turma:
+                    transfer_data = {"nova_turma_id": other_turma['id']}
                     response = requests.post(f"{BASE_URL}/students/{new_student_id}/transfer", 
-                                           params={"nova_turma_id": other_turma['id']})
+                                           json=transfer_data)
                     if response.status_code == 200:
                         results.success("POST /api/students/{id}/transfer - Transfer student")
                     else:

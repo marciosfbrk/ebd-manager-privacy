@@ -678,6 +678,13 @@ function App() {
         
         const presentesCount = turmaAtendance.filter(att => att.presente).length;
         
+        // Converter valores para números, tratando strings vazias como 0
+        const ofertaTotal = parseFloat(turmaDataGlobal.ofertas_total) || 0;
+        const bibliasTotal = parseInt(turmaDataGlobal.biblias_total) || 0;
+        const revistasTotal = parseInt(turmaDataGlobal.revistas_total) || 0;
+        const visitantesTotal = parseInt(turmaDataGlobal.visitantes_total) || 0;
+        const posChamadaTotal = parseInt(turmaDataGlobal.pos_chamada_total) || 0;
+        
         const attendanceList = turmaAtendance.map((att, index) => {
           let status = att.presente ? 'presente' : 'ausente';
           let oferta = 0;
@@ -686,19 +693,19 @@ function App() {
           
           // Distribuir ofertas igualmente entre os presentes
           if (att.presente && presentesCount > 0) {
-            oferta = turmaDataGlobal.ofertas_total / presentesCount;
+            oferta = Math.round((ofertaTotal / presentesCount) * 100) / 100;
           }
           
           // Dar bíblias e revistas apenas para o primeiro aluno (para não duplicar)
           if (index === 0) {
-            biblias = turmaDataGlobal.biblias_total;
-            revistas = turmaDataGlobal.revistas_total;
+            biblias = bibliasTotal;
+            revistas = revistasTotal;
           }
           
           // Aplicar visitantes e pós-chamada aos primeiros da lista
-          if (index < turmaDataGlobal.visitantes_total) {
+          if (index < visitantesTotal) {
             status = 'visitante';
-          } else if (index < turmaDataGlobal.visitantes_total + turmaDataGlobal.pos_chamada_total) {
+          } else if (index < visitantesTotal + posChamadaTotal) {
             status = 'pos_chamada';
           }
 

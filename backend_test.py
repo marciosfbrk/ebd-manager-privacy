@@ -1,0 +1,510 @@
+#!/usr/bin/env python3
+"""
+Backend Test Suite for EBD Manager System
+Tests all API endpoints with focus on critical validations
+"""
+
+import requests
+import json
+from datetime import datetime, date, timedelta
+import uuid
+import sys
+import os
+
+# Get backend URL from frontend .env
+def get_backend_url():
+    try:
+        with open('/app/frontend/.env', 'r') as f:
+            for line in f:
+                if line.startswith('REACT_APP_BACKEND_URL='):
+                    return line.split('=')[1].strip()
+    except:
+        pass
+    return "http://localhost:8001"
+
+BASE_URL = get_backend_url() + "/api"
+print(f"Testing backend at: {BASE_URL}")
+
+class TestResults:
+    def __init__(self):
+        self.passed = 0
+        self.failed = 0
+        self.errors = []
+        
+    def success(self, test_name):
+        self.passed += 1
+        print(f"✅ {test_name}")
+        
+    def failure(self, test_name, error):
+        self.failed += 1
+        self.errors.append(f"{test_name}: {error}")
+        print(f"❌ {test_name}: {error}")
+        
+    def summary(self):
+        total = self.passed + self.failed
+        print(f"\n=== TEST SUMMARY ===")
+        print(f"Total tests: {total}")
+        print(f"Passed: {self.passed}")
+        print(f"Failed: {self.failed}")
+        if self.errors:
+            print("\nErrors:")
+            for error in self.errors:
+                print(f"  - {error}")
+
+results = TestResults()
+
+def get_next_sunday():
+    """Get next Sunday date for testing"""
+    today = date.today()
+    days_ahead = 6 - today.weekday()  # Sunday is 6
+    if days_ahead <= 0:
+        days_ahead += 7
+    return today + timedelta(days_ahead)
+
+def get_non_sunday():
+    """Get a non-Sunday date for testing validation"""
+    today = date.today()
+    if today.weekday() != 6:  # If not Sunday
+        return today
+    return today + timedelta(days=1)  # Monday
+
+# Test data
+SUNDAY_DATE = get_next_sunday()
+NON_SUNDAY_DATE = get_non_sunday()
+
+print(f"Using Sunday date for tests: {SUNDAY_DATE}")
+print(f"Using non-Sunday date for validation tests: {NON_SUNDAY_DATE}")
+
+def test_init_sample_data():
+    """Test POST /api/init-sample-data - MUST TEST FIRST"""
+    try:
+        response = requests.post(f"{BASE_URL}/init-sample-data")
+        if response.status_code == 200:
+            data = response.json()
+            if "turmas" in data and "alunos" in data:
+                results.success("POST /api/init-sample-data - Initialize sample data")
+                return True
+            else:
+                results.failure("POST /api/init-sample-data", f"Invalid response format: {data}")
+        else:
+            results.failure("POST /api/init-sample-data", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("POST /api/init-sample-data", str(e))
+    return False
+
+def test_turmas_crud():
+    """Test CRUD operations for turmas"""
+    turma_id = None
+    
+    # Test GET /api/turmas (list)
+    try:
+        response = requests.get(f"{BASE_URL}/turmas")
+        if response.status_code == 200:
+            turmas = response.json()
+            if isinstance(turmas, list) and len(turmas) >= 3:
+                # Check for expected turmas from sample data
+                turma_names = [t['nome'] for t in turmas]
+                expected_names = ['Gênesis', 'Primários', 'Juvenil']
+                if all(name in turma_names for name in expected_names):
+                    results.success("GET /api/turmas - List turmas with sample data")
+                    turma_id = turmas[0]['id']  # Use first turma for other tests
+                else:
+                    results.failure("GET /api/turmas", f"Missing expected turmas. Found: {turma_names}")
+            else:
+                results.failure("GET /api/turmas", f"Expected list with 3+ turmas, got: {turmas}")
+        else:
+            results.failure("GET /api/turmas", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/turmas", str(e))
+    
+    # Test POST /api/turmas (create)
+    new_turma_id = None
+    try:
+        new_turma = {
+            "nome": "Teste Turma",
+            "descricao": "Turma para testes"
+        }
+        response = requests.post(f"{BASE_URL}/turmas", json=new_turma)
+        if response.status_code == 200:
+            turma = response.json()
+            if turma['nome'] == new_turma['nome'] and 'id' in turma:
+                # Verify UUID format
+                try:
+                    uuid.UUID(turma['id'])
+                    results.success("POST /api/turmas - Create turma with UUID")
+                    new_turma_id = turma['id']
+                except ValueError:
+                    results.failure("POST /api/turmas", f"Invalid UUID format: {turma['id']}")
+            else:
+                results.failure("POST /api/turmas", f"Invalid response: {turma}")
+        else:
+            results.failure("POST /api/turmas", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("POST /api/turmas", str(e))
+    
+    # Test PUT /api/turmas/{id} (update)
+    if new_turma_id:
+        try:
+            update_data = {
+                "nome": "Turma Atualizada",
+                "descricao": "Descrição atualizada"
+            }
+            response = requests.put(f"{BASE_URL}/turmas/{new_turma_id}", json=update_data)
+            if response.status_code == 200:
+                turma = response.json()
+                if turma['nome'] == update_data['nome']:
+                    results.success("PUT /api/turmas/{id} - Update turma")
+                else:
+                    results.failure("PUT /api/turmas/{id}", f"Update failed: {turma}")
+            else:
+                results.failure("PUT /api/turmas/{id}", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("PUT /api/turmas/{id}", str(e))
+    
+    # Test DELETE /api/turmas/{id} (soft delete)
+    if new_turma_id:
+        try:
+            response = requests.delete(f"{BASE_URL}/turmas/{new_turma_id}")
+            if response.status_code == 200:
+                # Verify it's soft deleted (not in active list)
+                response = requests.get(f"{BASE_URL}/turmas")
+                if response.status_code == 200:
+                    turmas = response.json()
+                    active_ids = [t['id'] for t in turmas]
+                    if new_turma_id not in active_ids:
+                        results.success("DELETE /api/turmas/{id} - Soft delete turma")
+                    else:
+                        results.failure("DELETE /api/turmas/{id}", "Turma still appears in active list")
+                else:
+                    results.failure("DELETE /api/turmas/{id}", "Could not verify soft delete")
+            else:
+                results.failure("DELETE /api/turmas/{id}", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("DELETE /api/turmas/{id}", str(e))
+    
+    return turma_id
+
+def test_students_crud(turma_id):
+    """Test CRUD operations for students"""
+    if not turma_id:
+        results.failure("Students CRUD", "No valid turma_id available")
+        return None
+    
+    student_id = None
+    
+    # Test GET /api/students (list)
+    try:
+        response = requests.get(f"{BASE_URL}/students")
+        if response.status_code == 200:
+            students = response.json()
+            if isinstance(students, list) and len(students) >= 4:
+                # Check for expected students from sample data
+                student_names = [s['nome_completo'] for s in students]
+                expected_names = ['Márcio Ferreira', 'Késia Ferreira', 'Gustavo Ferreira', 'Gael Ferreira']
+                if all(name in student_names for name in expected_names):
+                    results.success("GET /api/students - List students with sample data")
+                    student_id = students[0]['id']
+                else:
+                    results.failure("GET /api/students", f"Missing expected students. Found: {student_names}")
+            else:
+                results.failure("GET /api/students", f"Expected list with 4+ students, got: {len(students) if isinstance(students, list) else 'not a list'}")
+        else:
+            results.failure("GET /api/students", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/students", str(e))
+    
+    # Test POST /api/students (create)
+    new_student_id = None
+    try:
+        new_student = {
+            "nome_completo": "João Silva",
+            "data_nascimento": "1990-01-15",
+            "contato": "joao@email.com",
+            "turma_id": turma_id
+        }
+        response = requests.post(f"{BASE_URL}/students", json=new_student)
+        if response.status_code == 200:
+            student = response.json()
+            if student['nome_completo'] == new_student['nome_completo'] and 'id' in student:
+                # Verify UUID format
+                try:
+                    uuid.UUID(student['id'])
+                    results.success("POST /api/students - Create student with UUID")
+                    new_student_id = student['id']
+                except ValueError:
+                    results.failure("POST /api/students", f"Invalid UUID format: {student['id']}")
+            else:
+                results.failure("POST /api/students", f"Invalid response: {student}")
+        else:
+            results.failure("POST /api/students", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("POST /api/students", str(e))
+    
+    # Test validation: create student with invalid turma_id
+    try:
+        invalid_student = {
+            "nome_completo": "Maria Invalid",
+            "data_nascimento": "1995-05-20",
+            "contato": "maria@email.com",
+            "turma_id": str(uuid.uuid4())  # Non-existent turma
+        }
+        response = requests.post(f"{BASE_URL}/students", json=invalid_student)
+        if response.status_code == 404:
+            results.success("POST /api/students - Validation: reject invalid turma_id")
+        else:
+            results.failure("POST /api/students - Validation", f"Should reject invalid turma_id, got status {response.status_code}")
+    except Exception as e:
+        results.failure("POST /api/students - Validation", str(e))
+    
+    # Test PUT /api/students/{id} (update)
+    if new_student_id:
+        try:
+            update_data = {
+                "nome_completo": "João Silva Atualizado",
+                "contato": "joao.novo@email.com"
+            }
+            response = requests.put(f"{BASE_URL}/students/{new_student_id}", json=update_data)
+            if response.status_code == 200:
+                student = response.json()
+                if student['nome_completo'] == update_data['nome_completo']:
+                    results.success("PUT /api/students/{id} - Update student")
+                else:
+                    results.failure("PUT /api/students/{id}", f"Update failed: {student}")
+            else:
+                results.failure("PUT /api/students/{id}", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("PUT /api/students/{id}", str(e))
+    
+    # Test POST /api/students/{id}/transfer
+    if new_student_id:
+        # Get another turma for transfer
+        try:
+            response = requests.get(f"{BASE_URL}/turmas")
+            if response.status_code == 200:
+                turmas = response.json()
+                other_turma = next((t for t in turmas if t['id'] != turma_id), None)
+                if other_turma:
+                    response = requests.post(f"{BASE_URL}/students/{new_student_id}/transfer", 
+                                           params={"nova_turma_id": other_turma['id']})
+                    if response.status_code == 200:
+                        results.success("POST /api/students/{id}/transfer - Transfer student")
+                    else:
+                        results.failure("POST /api/students/{id}/transfer", f"Status {response.status_code}: {response.text}")
+                else:
+                    results.failure("POST /api/students/{id}/transfer", "No other turma available for transfer")
+        except Exception as e:
+            results.failure("POST /api/students/{id}/transfer", str(e))
+    
+    # Test DELETE /api/students/{id} (soft delete)
+    if new_student_id:
+        try:
+            response = requests.delete(f"{BASE_URL}/students/{new_student_id}")
+            if response.status_code == 200:
+                # Verify it's soft deleted
+                response = requests.get(f"{BASE_URL}/students")
+                if response.status_code == 200:
+                    students = response.json()
+                    active_ids = [s['id'] for s in students]
+                    if new_student_id not in active_ids:
+                        results.success("DELETE /api/students/{id} - Soft delete student")
+                    else:
+                        results.failure("DELETE /api/students/{id}", "Student still appears in active list")
+                else:
+                    results.failure("DELETE /api/students/{id}", "Could not verify soft delete")
+            else:
+                results.failure("DELETE /api/students/{id}", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("DELETE /api/students/{id}", str(e))
+    
+    return student_id
+
+def test_attendance_system(turma_id, student_id):
+    """Test attendance system with critical validations"""
+    if not turma_id or not student_id:
+        results.failure("Attendance System", "No valid turma_id or student_id available")
+        return
+    
+    # Test POST /api/attendance with Sunday validation
+    try:
+        attendance_data = {
+            "aluno_id": student_id,
+            "turma_id": turma_id,
+            "data": SUNDAY_DATE.isoformat(),
+            "status": "presente",
+            "oferta": 10.50,
+            "biblias_entregues": 1,
+            "revistas_entregues": 1
+        }
+        response = requests.post(f"{BASE_URL}/attendance", json=attendance_data)
+        if response.status_code == 200:
+            attendance = response.json()
+            if 'id' in attendance and attendance['status'] == 'presente':
+                results.success("POST /api/attendance - Create attendance on Sunday")
+            else:
+                results.failure("POST /api/attendance", f"Invalid response: {attendance}")
+        else:
+            results.failure("POST /api/attendance", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("POST /api/attendance", str(e))
+    
+    # Test Sunday validation - should reject non-Sunday dates
+    try:
+        invalid_attendance = {
+            "aluno_id": student_id,
+            "turma_id": turma_id,
+            "data": NON_SUNDAY_DATE.isoformat(),
+            "status": "presente"
+        }
+        response = requests.post(f"{BASE_URL}/attendance", json=invalid_attendance)
+        if response.status_code == 400:
+            results.success("POST /api/attendance - Validation: reject non-Sunday dates")
+        else:
+            results.failure("POST /api/attendance - Validation", f"Should reject non-Sunday, got status {response.status_code}")
+    except Exception as e:
+        results.failure("POST /api/attendance - Validation", str(e))
+    
+    # Test GET /api/attendance
+    try:
+        response = requests.get(f"{BASE_URL}/attendance", params={"turma_id": turma_id, "data": SUNDAY_DATE.isoformat()})
+        if response.status_code == 200:
+            attendance_list = response.json()
+            if isinstance(attendance_list, list):
+                results.success("GET /api/attendance - List attendance by turma and date")
+            else:
+                results.failure("GET /api/attendance", f"Expected list, got: {attendance_list}")
+        else:
+            results.failure("GET /api/attendance", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/attendance", str(e))
+
+def test_bulk_attendance(turma_id):
+    """Test bulk attendance endpoint"""
+    if not turma_id:
+        results.failure("Bulk Attendance", "No valid turma_id available")
+        return
+    
+    # Get students for the turma
+    try:
+        response = requests.get(f"{BASE_URL}/students", params={"turma_id": turma_id})
+        if response.status_code != 200:
+            results.failure("Bulk Attendance", "Could not get students for turma")
+            return
+        
+        students = response.json()
+        if not students:
+            results.failure("Bulk Attendance", "No students found for turma")
+            return
+        
+        # Create bulk attendance data
+        bulk_data = []
+        for i, student in enumerate(students[:2]):  # Test with first 2 students
+            bulk_data.append({
+                "aluno_id": student['id'],
+                "turma_id": turma_id,
+                "data": SUNDAY_DATE.isoformat(),
+                "status": "presente" if i == 0 else "ausente",
+                "oferta": 5.0 if i == 0 else 0.0,
+                "biblias_entregues": 1 if i == 0 else 0,
+                "revistas_entregues": 1 if i == 0 else 0
+            })
+        
+        # Test POST /api/attendance/bulk/{turma_id}
+        response = requests.post(f"{BASE_URL}/attendance/bulk/{turma_id}", 
+                               params={"data": SUNDAY_DATE.isoformat()},
+                               json=bulk_data)
+        if response.status_code == 200:
+            result = response.json()
+            if "message" in result and "registros" in result["message"]:
+                results.success("POST /api/attendance/bulk/{turma_id} - Save bulk attendance")
+            else:
+                results.failure("POST /api/attendance/bulk/{turma_id}", f"Invalid response: {result}")
+        else:
+            results.failure("POST /api/attendance/bulk/{turma_id}", f"Status {response.status_code}: {response.text}")
+        
+        # Test Sunday validation for bulk
+        response = requests.post(f"{BASE_URL}/attendance/bulk/{turma_id}", 
+                               params={"data": NON_SUNDAY_DATE.isoformat()},
+                               json=bulk_data)
+        if response.status_code == 400:
+            results.success("POST /api/attendance/bulk/{turma_id} - Validation: reject non-Sunday")
+        else:
+            results.failure("POST /api/attendance/bulk/{turma_id} - Validation", f"Should reject non-Sunday, got status {response.status_code}")
+            
+    except Exception as e:
+        results.failure("Bulk Attendance", str(e))
+
+def test_reports_dashboard():
+    """Test reports dashboard endpoint"""
+    try:
+        response = requests.get(f"{BASE_URL}/reports/dashboard", 
+                              params={"data": SUNDAY_DATE.isoformat()})
+        if response.status_code == 200:
+            reports = response.json()
+            if isinstance(reports, list):
+                # Verify report structure
+                if reports:
+                    report = reports[0]
+                    required_fields = ['turma_nome', 'turma_id', 'data', 'matriculados', 
+                                     'presentes', 'ausentes', 'visitantes', 'pos_chamada',
+                                     'total_ofertas', 'total_biblias', 'total_revistas']
+                    if all(field in report for field in required_fields):
+                        # Verify calculation: ausentes = matriculados - presentes
+                        if report['ausentes'] == report['matriculados'] - report['presentes']:
+                            results.success("GET /api/reports/dashboard - Dashboard report with correct calculations")
+                        else:
+                            results.failure("GET /api/reports/dashboard", f"Incorrect calculation: ausentes={report['ausentes']}, matriculados={report['matriculados']}, presentes={report['presentes']}")
+                    else:
+                        missing = [f for f in required_fields if f not in report]
+                        results.failure("GET /api/reports/dashboard", f"Missing fields: {missing}")
+                else:
+                    results.success("GET /api/reports/dashboard - Empty report list (valid)")
+            else:
+                results.failure("GET /api/reports/dashboard", f"Expected list, got: {reports}")
+        else:
+            results.failure("GET /api/reports/dashboard", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/reports/dashboard", str(e))
+
+def main():
+    """Run all tests in sequence"""
+    print("=== EBD MANAGER BACKEND TEST SUITE ===\n")
+    
+    # Test 1: Initialize sample data (MUST BE FIRST)
+    print("1. Testing sample data initialization...")
+    if not test_init_sample_data():
+        print("❌ CRITICAL: Sample data initialization failed. Cannot continue with other tests.")
+        results.summary()
+        return
+    
+    # Test 2: CRUD Turmas
+    print("\n2. Testing CRUD operations for Turmas...")
+    turma_id = test_turmas_crud()
+    
+    # Test 3: CRUD Students
+    print("\n3. Testing CRUD operations for Students...")
+    student_id = test_students_crud(turma_id)
+    
+    # Test 4: Attendance System
+    print("\n4. Testing Attendance System...")
+    test_attendance_system(turma_id, student_id)
+    
+    # Test 5: Bulk Attendance
+    print("\n5. Testing Bulk Attendance...")
+    test_bulk_attendance(turma_id)
+    
+    # Test 6: Reports Dashboard
+    print("\n6. Testing Reports Dashboard...")
+    test_reports_dashboard()
+    
+    # Final summary
+    results.summary()
+    
+    # Return exit code based on results
+    if results.failed > 0:
+        sys.exit(1)
+    else:
+        print("\n🎉 All tests passed!")
+        sys.exit(0)
+
+if __name__ == "__main__":
+    main()

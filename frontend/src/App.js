@@ -11,7 +11,7 @@ function App() {
   const [students, setStudents] = useState([]);
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState('2025-07-13');
   const [loading, setLoading] = useState(false);
 
   // Carregar dados iniciais

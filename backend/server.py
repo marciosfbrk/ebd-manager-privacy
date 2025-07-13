@@ -132,7 +132,7 @@ def prepare_for_mongo(data):
 async def create_turma(turma: TurmaCreate):
     turma_dict = turma.dict()
     turma_obj = Turma(**turma_dict)
-    await db.turmas.insert_one(turma_obj.dict())
+    await db.turmas.insert_one(prepare_for_mongo(turma_obj.dict()))
     return turma_obj
 
 @api_router.get("/turmas", response_model=List[Turma])

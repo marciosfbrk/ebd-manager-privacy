@@ -1568,6 +1568,10 @@ function App() {
   // Renderização condicional
   const renderCurrentView = () => {
     switch(currentView) {
+      case 'home':
+        return <HomeCover />;
+      case 'dashboard':
+        return <Dashboard />;
       case 'chamada':
         return <Chamada />;
       case 'relatorios':
@@ -1577,7 +1581,7 @@ function App() {
       case 'turmas':
         return <Turmas />;
       default:
-        return <Dashboard />;
+        return <HomeCover />;
     }
   };
 

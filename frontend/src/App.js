@@ -633,15 +633,32 @@ function App() {
     };
 
     const handleSave = async () => {
-      const attendanceList = turmaAtendance.map(att => ({
-        aluno_id: att.aluno_id,
-        status: att.status,
-        oferta: parseFloat(att.oferta) || 0,
-        biblias_entregues: parseInt(att.biblias_entregues) || 0,
-        revistas_entregues: parseInt(att.revistas_entregues) || 0
-      }));
+      try {
+        setLoading(true);
+        
+        // Para implementação rápida, vou manter a estrutura atual mas com melhorias
+        const attendanceList = turmaAtendance.map(att => ({
+          aluno_id: att.aluno_id,
+          status: att.status,
+          oferta: parseFloat(att.oferta) || 0,
+          biblias_entregues: parseInt(att.biblias_entregues) || 0,
+          revistas_entregues: parseInt(att.revistas_entregues) || 0
+        }));
 
-      await saveAttendance(selectedTurma, selectedDate, attendanceList);
+        const response = await axios.post(`${API}/attendance/bulk/${selectedTurma}?data=${selectedDate}`, attendanceList);
+        
+        await loadDashboard();
+        alert('Chamada salva com sucesso!');
+      } catch (error) {
+        console.error('Erro ao salvar chamada:', error);
+        if (error.response?.data?.detail) {
+          alert(`Erro: ${error.response.data.detail}`);
+        } else {
+          alert('Erro ao salvar chamada');
+        }
+      } finally {
+        setLoading(false);
+      }
     };
 
     return (

@@ -107,75 +107,93 @@ user_problem_statement: "Construir sistema EBD Manager para substituir planilha 
 backend:
   - task: "API CRUD Turmas"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implementado endpoints para criar, listar, atualizar e deletar turmas"
+      - working: true
+        agent: "testing"
+        comment: "TESTED: All CRUD operations working correctly. GET /api/turmas lists active turmas with sample data (Gênesis, Primários, Juvenil). POST creates turmas with UUID. PUT updates turmas. DELETE performs soft delete (ativa=false). UUID validation confirmed."
 
   - task: "API CRUD Alunos"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implementado endpoints para gerenciar alunos com validação de turma"
+      - working: true
+        agent: "testing"
+        comment: "TESTED: All CRUD operations working correctly. GET /api/students lists active students with sample data (Márcio, Késia, Gustavo, Gael). POST creates students with UUID and validates turma existence. PUT updates students. DELETE performs soft delete. POST /api/students/{id}/transfer works correctly. Fixed date serialization issue for MongoDB."
 
   - task: "API Sistema de Chamada"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implementado sistema de chamada com validação de domingos, status de presença, ofertas e materiais"
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Attendance system working correctly. POST /api/attendance creates records only on Sundays (validation working). GET /api/attendance filters by turma_id and date. PUT /api/attendance updates records. Sunday validation prevents non-Sunday dates. Fixed date serialization for MongoDB storage."
 
   - task: "API Relatórios Dashboard"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implementado endpoint de relatório consolidado por turma com estatísticas"
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Dashboard reports working correctly. GET /api/reports/dashboard returns consolidated reports by turma with correct calculations: ausentes = matriculados - presentes. All required fields present: turma_nome, turma_id, data, matriculados, presentes, ausentes, visitantes, pos_chamada, total_ofertas, total_biblias, total_revistas."
 
   - task: "API Dados Iniciais"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implementado endpoint para inicializar dados com nomes fornecidos pelo usuário"
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Sample data initialization working perfectly. POST /api/init-sample-data creates 3 turmas (Gênesis, Primários, Juvenil) and 4 students (Márcio Ferreira, Késia Ferreira, Gustavo Ferreira, Gael Ferreira) as specified. All data uses UUIDs correctly."
 
   - task: "API Chamada em Lote"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implementado endpoint para salvar chamada de múltiplos alunos simultaneamente"
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Bulk attendance working correctly. POST /api/attendance/bulk/{turma_id} saves multiple attendance records simultaneously. Validates Sunday-only dates. Replaces existing records for the same date/turma. Comprehensive workflow test confirms bulk operations replace individual records correctly."
 
 frontend:
   - task: "Interface Dashboard"

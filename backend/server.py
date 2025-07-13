@@ -399,9 +399,9 @@ async def init_sample_data():
     
     # Criar turmas de exemplo
     turmas = [
-        {"id": str(uuid.uuid4()), "nome": "Gênesis", "descricao": "Turma dos adultos", "ativa": True, "criada_em": datetime.utcnow()},
-        {"id": str(uuid.uuid4()), "nome": "Primários", "descricao": "Turma das crianças", "ativa": True, "criada_em": datetime.utcnow()},
-        {"id": str(uuid.uuid4()), "nome": "Juvenil", "descricao": "Turma dos jovens", "ativa": True, "criada_em": datetime.utcnow()}
+        {"id": str(uuid.uuid4()), "nome": "Gênesis", "descricao": "Turma dos adultos", "ativa": True, "criada_em": datetime.utcnow().isoformat()},
+        {"id": str(uuid.uuid4()), "nome": "Primários", "descricao": "Turma das crianças", "ativa": True, "criada_em": datetime.utcnow().isoformat()},
+        {"id": str(uuid.uuid4()), "nome": "Juvenil", "descricao": "Turma dos jovens", "ativa": True, "criada_em": datetime.utcnow().isoformat()}
     ]
     
     await db.turmas.insert_many(turmas)

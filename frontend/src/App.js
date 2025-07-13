@@ -445,11 +445,16 @@ function App() {
   const Alunos = () => {
     const [showForm, setShowForm] = useState(false);
     const [editingStudent, setEditingStudent] = useState(null);
+    const [showTransferForm, setShowTransferForm] = useState(false);
+    const [transferringStudent, setTransferringStudent] = useState(null);
     const [formData, setFormData] = useState({
       nome_completo: '',
       data_nascimento: '',
       contato: '',
       turma_id: ''
+    });
+    const [transferData, setTransferData] = useState({
+      nova_turma_id: ''
     });
 
     const handleSubmit = async (e) => {
@@ -464,9 +469,33 @@ function App() {
         setShowForm(false);
         setEditingStudent(null);
         setFormData({ nome_completo: '', data_nascimento: '', contato: '', turma_id: '' });
+        alert('Aluno salvo com sucesso!');
       } catch (error) {
         console.error('Erro ao salvar aluno:', error);
-        alert('Erro ao salvar aluno');
+        if (error.response?.data?.detail) {
+          alert(`Erro: ${error.response.data.detail}`);
+        } else {
+          alert('Erro ao salvar aluno');
+        }
+      }
+    };
+
+    const handleTransferSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        await axios.post(`${API}/students/${transferringStudent.id}/transfer`, transferData);
+        await loadStudents();
+        setShowTransferForm(false);
+        setTransferringStudent(null);
+        setTransferData({ nova_turma_id: '' });
+        alert('Aluno transferido com sucesso!');
+      } catch (error) {
+        console.error('Erro ao transferir aluno:', error);
+        if (error.response?.data?.detail) {
+          alert(`Erro: ${error.response.data.detail}`);
+        } else {
+          alert('Erro ao transferir aluno');
+        }
       }
     };
 
@@ -481,14 +510,25 @@ function App() {
       setShowForm(true);
     };
 
+    const handleTransfer = (student) => {
+      setTransferringStudent(student);
+      setTransferData({ nova_turma_id: '' });
+      setShowTransferForm(true);
+    };
+
     const handleDelete = async (studentId) => {
       if (window.confirm('Tem certeza que deseja remover este aluno?')) {
         try {
           await axios.delete(`${API}/students/${studentId}`);
           await loadStudents();
+          alert('Aluno removido com sucesso!');
         } catch (error) {
           console.error('Erro ao remover aluno:', error);
-          alert('Erro ao remover aluno');
+          if (error.response?.data?.detail) {
+            alert(`Erro: ${error.response.data.detail}`);
+          } else {
+            alert('Erro ao remover aluno');
+          }
         }
       }
     };
@@ -587,6 +627,49 @@ function App() {
             </div>
           )}
 
+          {showTransferForm && (
+            <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                Transferir Aluno: {transferringStudent?.nome_completo}
+              </h2>
+              <form onSubmit={handleTransferSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Nova Turma</label>
+                  <select
+                    value={transferData.nova_turma_id}
+                    onChange={(e) => setTransferData({nova_turma_id: e.target.value})}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  >
+                    <option value="">Selecione a nova turma</option>
+                    {turmas.filter(t => t.id !== transferringStudent?.turma_id).map(turma => (
+                      <option key={turma.id} value={turma.id}>{turma.nome}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex space-x-4">
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    Transferir
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowTransferForm(false);
+                      setTransferringStudent(null);
+                      setTransferData({ nova_turma_id: '' });
+                    }}
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Lista de Alunos</h2>
             <div className="overflow-x-auto">
@@ -615,6 +698,12 @@ function App() {
                           className="mr-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
                         >
                           Editar
+                        </button>
+                        <button
+                          onClick={() => handleTransfer(student)}
+                          className="mr-2 px-3 py-1 bg-orange-500 text-white rounded hover:bg-orange-600"
+                        >
+                          Transferir
                         </button>
                         <button
                           onClick={() => handleDelete(student.id)}

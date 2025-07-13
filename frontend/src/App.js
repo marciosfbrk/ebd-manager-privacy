@@ -627,11 +627,11 @@ function App() {
         });
 
         setTurmaDataGlobal({
-          ofertas_total: totalOfertas,
-          biblias_total: totalBiblias,
-          revistas_total: totalRevistas,
-          visitantes_total: totalVisitantes,
-          pos_chamada_total: totalPosChamada
+          ofertas_total: totalOfertas > 0 ? totalOfertas.toString() : '',
+          biblias_total: totalBiblias > 0 ? totalBiblias.toString() : '',
+          revistas_total: totalRevistas > 0 ? totalRevistas.toString() : '',
+          visitantes_total: totalVisitantes > 0 ? totalVisitantes.toString() : '',
+          pos_chamada_total: totalPosChamada > 0 ? totalPosChamada.toString() : ''
         });
 
         const attendanceData = studentsInTurma.map(student => ({

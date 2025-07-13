@@ -14,6 +14,90 @@ function App() {
   const [selectedTurma, setSelectedTurma] = useState(null);
   const [selectedDate, setSelectedDate] = useState('2025-07-13');
   const [loading, setLoading] = useState(false);
+  
+  // Estados de autenticação
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [showLogin, setShowLogin] = useState(false);
+
+  // Verificar se há sessão salva ao carregar
+  useEffect(() => {
+    const savedToken = localStorage.getItem('ebd_token');
+    const savedUser = localStorage.getItem('ebd_user');
+    
+    if (savedToken && savedUser) {
+      setToken(savedToken);
+      setCurrentUser(JSON.parse(savedUser));
+      setIsLoggedIn(true);
+      loadTurmas();
+      loadStudents();
+      loadDashboard();
+    }
+  }, []);
+
+  // Função de login
+  const handleLogin = async (email, senha) => {
+    try {
+      const response = await axios.post(`${API}/login`, { email, senha });
+      const { user_id, nome, email: userEmail, tipo, turmas_permitidas, token: userToken } = response.data;
+      
+      const userData = { user_id, nome, email: userEmail, tipo, turmas_permitidas };
+      
+      setToken(userToken);
+      setCurrentUser(userData);
+      setIsLoggedIn(true);
+      setShowLogin(false);
+      
+      // Salvar no localStorage
+      localStorage.setItem('ebd_token', userToken);
+      localStorage.setItem('ebd_user', JSON.stringify(userData));
+      
+      // Carregar dados
+      await loadTurmas();
+      await loadStudents();
+      await loadDashboard();
+      
+      return { success: true };
+    } catch (error) {
+      console.error('Erro no login:', error);
+      return { 
+        success: false, 
+        message: error.response?.data?.detail || 'Erro ao fazer login'
+      };
+    }
+  };
+
+  // Função de logout
+  const handleLogout = async () => {
+    try {
+      if (token) {
+        await axios.post(`${API}/logout?token=${token}`);
+      }
+    } catch (error) {
+      console.error('Erro no logout:', error);
+    }
+    
+    setToken(null);
+    setCurrentUser(null);
+    setIsLoggedIn(false);
+    setCurrentView('home');
+    
+    localStorage.removeItem('ebd_token');
+    localStorage.removeItem('ebd_user');
+  };
+
+  // Filtrar turmas baseado nas permissões do usuário
+  const getFilteredTurmas = () => {
+    if (!currentUser) return turmas;
+    
+    if (currentUser.tipo === 'admin') {
+      return turmas; // Admin vê todas
+    } else {
+      // Professor vê apenas suas turmas
+      return turmas.filter(turma => currentUser.turmas_permitidas.includes(turma.id));
+    }
+  };
 
   // Carregar dados iniciais
   useEffect(() => {

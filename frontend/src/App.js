@@ -655,21 +655,10 @@ function App() {
     };
 
     const updateTurmaData = (field, value) => {
-      if (value === '') {
-        setTurmaDataGlobal(prev => ({
-          ...prev,
-          [field]: ''
-        }));
-      } else {
-        // Substituir vírgula por ponto e arredondar para evitar problemas de precisão
-        const numValue = parseFloat(value.replace(',', '.'));
-        if (!isNaN(numValue)) {
-          setTurmaDataGlobal(prev => ({
-            ...prev,
-            [field]: Math.round(numValue * 100) / 100  // Arredonda para 2 casas decimais
-          }));
-        }
-      }
+      setTurmaDataGlobal(prev => ({
+        ...prev,
+        [field]: value  // Manter sempre como string, sem conversão
+      }));
     };
 
     const handleSave = async () => {

@@ -6,7 +6,8 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 function App() {
-  const [currentView, setCurrentView] = useState('dashboard');
+  const [currentView, setCurrentView] = useState('home');
+  const [showApp, setShowApp] = useState(false);
   const [turmas, setTurmas] = useState([]);
   const [students, setStudents] = useState([]);
   const [attendanceData, setAttendanceData] = useState([]);

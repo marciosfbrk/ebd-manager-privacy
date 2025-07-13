@@ -367,10 +367,15 @@ function App() {
       <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-6">
         {/* Logo Principal */}
         <div className="mb-8">
-          <div className="w-32 h-32 mx-auto mb-6 bg-white rounded-full p-4 shadow-2xl">
-            {/* Usando um escudo/logo religioso como placeholder - você deve substituir pela sua imagem */}
-            <div className="w-full h-full bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
-              <div className="text-4xl">⛪</div>
+          <div className="w-32 h-32 mx-auto mb-6 bg-white rounded-full p-2 shadow-2xl">
+            {/* Logo Ministério do Belém */}
+            <div className="w-full h-full bg-gradient-to-b from-orange-400 via-yellow-500 to-green-500 rounded-full flex items-center justify-center relative overflow-hidden">
+              {/* Simulação do escudo - SUBSTITUA pela sua imagem */}
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-red-600 rounded-full"></div>
+              <div className="relative z-10 text-white text-3xl font-bold">🛡️</div>
+              {/* Para usar sua imagem real, substitua todo este div por:
+                  <img src="SUA_IMAGEM_BASE64_AQUI" alt="Ministério do Belém" className="w-full h-full object-cover rounded-full" />
+              */}
             </div>
           </div>
           

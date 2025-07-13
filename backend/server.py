@@ -373,16 +373,16 @@ async def bulk_attendance(turma_id: str, data: date, attendance_list: List[Atten
         raise HTTPException(status_code=404, detail="Turma não encontrada")
     
     # Remover registros existentes da data
-    await db.attendance.delete_many({"turma_id": turma_id, "data": data})
+    await db.attendance.delete_many({"turma_id": turma_id, "data": data.isoformat()})
     
     # Inserir novos registros
     attendance_objects = []
     for att_data in attendance_list:
         att_dict = att_data.dict()
-        att_dict["data"] = data
+        att_dict["data"] = data.isoformat()
         att_dict["turma_id"] = turma_id
         attendance_obj = Attendance(**att_dict)
-        attendance_objects.append(attendance_obj.dict())
+        attendance_objects.append(prepare_for_mongo(attendance_obj.dict()))
     
     if attendance_objects:
         await db.attendance.insert_many(attendance_objects)

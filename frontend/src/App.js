@@ -1185,7 +1185,7 @@ function App() {
     };
 
     return (
-      <div className="p-6 bg-gray-50 min-h-screen">
+      <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6">
             <button
@@ -1194,10 +1194,10 @@ function App() {
             >
               ← Voltar ao Dashboard
             </button>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Fazer Chamada</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Fazer Chamada</h1>
           </div>
 
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <div className="bg-white rounded-lg shadow-lg p-4 md:p-6 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Turma</label>

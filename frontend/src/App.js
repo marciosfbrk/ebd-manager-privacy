@@ -1255,11 +1255,13 @@ function App() {
                     <div>
                       <label className="block text-sm font-medium text-blue-700 mb-2">Oferta Total (R$)</label>
                       <input
-                        type="text"
+                        type="number"
+                        step="0.01"
+                        min="0"
                         value={turmaDataGlobal.ofertas_total || ''}
                         onChange={(e) => updateTurmaData('ofertas_total', e.target.value)}
                         className="w-full px-3 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="0"
+                        placeholder="0.00"
                       />
                     </div>
                     <div>

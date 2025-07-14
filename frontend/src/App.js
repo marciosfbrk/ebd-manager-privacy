@@ -1119,10 +1119,23 @@ function App() {
     };
 
     const updateTurmaData = (field, value) => {
-      setTurmaDataGlobal(prev => ({
-        ...prev,
-        [field]: value  // Manter sempre como string, sem conversão
-      }));
+      // Se for campo de oferta, validar formato
+      if (field === 'ofertas_total') {
+        // Permitir apenas números e ponto decimal
+        const regex = /^\d*\.?\d{0,2}$/;
+        if (value === '' || regex.test(value)) {
+          setTurmaDataGlobal(prev => ({
+            ...prev,
+            [field]: value
+          }));
+        }
+      } else {
+        // Para outros campos, manter como string
+        setTurmaDataGlobal(prev => ({
+          ...prev,
+          [field]: value
+        }));
+      }
     };
 
     const handleSave = async () => {

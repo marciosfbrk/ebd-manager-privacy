@@ -1083,16 +1083,17 @@ function App() {
         const attendanceMap = {};
         existingAttendance.forEach(att => {
           attendanceMap[att.aluno_id] = att;
-          totalOfertas += att.oferta || 0;
+          // Usar parseFloat com toFixed para evitar acúmulo de imprecisões
+          totalOfertas = parseFloat((totalOfertas + (att.oferta || 0)).toFixed(2));
           totalBiblias += att.biblias_entregues || 0;
           totalRevistas += att.revistas_entregues || 0;
           if (att.status === 'visitante') totalVisitantes++;
           if (att.status === 'pos_chamada') totalPosChamada++;
         });
 
-        // Corrigir precisão dos valores decimais antes de setar no estado
+        // Garantir precisão dos valores decimais antes de setar no estado
         setTurmaDataGlobal({
-          ofertas_total: totalOfertas > 0 ? parseFloat(totalOfertas.toFixed(2)).toString() : '',
+          ofertas_total: totalOfertas > 0 ? totalOfertas.toString() : '',
           biblias_total: totalBiblias > 0 ? totalBiblias.toString() : '',
           revistas_total: totalRevistas > 0 ? totalRevistas.toString() : '',
           visitantes_total: totalVisitantes > 0 ? totalVisitantes.toString() : '',

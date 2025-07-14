@@ -303,3 +303,5 @@ agent_communication:
     message: "TEXT CORRECTION COMPLETED: Corrigido erro na tela inicial onde estava escrito 'Presentes Hoje' quando deveria ser apenas 'Presentes' na seção de estatísticas da HomeCover. Alteração feita na linha 657 do arquivo /app/frontend/src/App.js."
   - agent: "main"
     message: "TITLE UPDATE COMPLETED: Atualizado título da seção de estatísticas na tela inicial de 'Estatísticas Atuais' para 'Estatísticas Atuais para Relatório Semanal' conforme solicitado pelo usuário. Alteração feita na linha 643 do arquivo /app/frontend/src/App.js."
+  - agent: "main"
+    message: "PERCENTAGE COLUMN ADDED: Adicionada nova coluna de porcentagem (%) nas tabelas do Dashboard e Relatórios Detalhados para mostrar o percentual de presença por turma (presentes/matriculados * 100). Colunas adicionadas entre 'Presentes' e 'Ausentes' com formatação roxo/purple e cálculo automático incluindo linha de TOTAL GERAL."

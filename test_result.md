@@ -311,3 +311,5 @@ agent_communication:
     message: "MOBILE RESPONSIVENESS FIXED: Corrigida responsividade da tela de chamada para mobile. Problemas corrigidos: botão 'Salvar Chamada' agora é full-width e sempre visível no mobile, campos de dados da turma organizados em grid responsivo (1 col mobile, 2 cols tablet, 5 cols desktop), lista de alunos com quebra de texto, padding responsivo em todas as seções, touch-manipulation para melhor experiência de toque. Botão salvar movido para baixo do cabeçalho com ícone e estilo melhorado."
   - agent: "main"
     message: "CHURCH ADDRESS ADDED: Adicionado endereço da igreja 'Rua Managuá, 53 - Parque das Nações, Sumaré, SP, Brazil' tanto na tela inicial (HomeCover) quanto no header do Dashboard. Informações da igreja agora estão completas com presidente, pastor local, endereço e descrição do sistema."
+  - agent: "main"
+    message: "CHURCH INFO CORRECTIONS: Corrigidas informações da igreja conforme solicitado: alterado 'Brazil' para 'Brasil' e simplificado 'Ministério do Belém • São Paulo' para apenas 'Ministério Belém'. Alterações aplicadas tanto na tela inicial quanto no header do Dashboard."

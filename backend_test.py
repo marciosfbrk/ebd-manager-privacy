@@ -466,6 +466,179 @@ def test_reports_dashboard():
     except Exception as e:
         results.failure("GET /api/reports/dashboard", str(e))
 
+def test_floating_point_precision():
+    """Test specific floating point precision issue with offers - CRITICAL TEST"""
+    print("\n=== TESTING FLOATING POINT PRECISION ISSUE ===")
+    
+    # Use specific date from the review request
+    test_date = "2025-07-13"
+    
+    # First, get a turma and its students
+    try:
+        response = requests.get(f"{BASE_URL}/turmas")
+        if response.status_code != 200:
+            results.failure("Float Precision Test", "Could not get turmas")
+            return
+        
+        turmas = response.json()
+        if not turmas:
+            results.failure("Float Precision Test", "No turmas available")
+            return
+        
+        turma_id = turmas[0]['id']
+        turma_nome = turmas[0]['nome']
+        
+        # Get students for this turma
+        response = requests.get(f"{BASE_URL}/students", params={"turma_id": turma_id})
+        if response.status_code != 200:
+            results.failure("Float Precision Test", "Could not get students")
+            return
+        
+        students = response.json()
+        if len(students) < 2:
+            results.failure("Float Precision Test", "Need at least 2 students for test")
+            return
+        
+        # TEST 1: POST /api/attendance/bulk/{turma_id}?data=2025-07-13
+        # Simulate scenario: 2 students present, total offer of 17.00
+        # Each should receive exactly 8.50 (17.00 / 2)
+        print(f"Testing with turma: {turma_nome} ({turma_id})")
+        print(f"Using {len(students[:2])} students for precision test")
+        
+        bulk_data = []
+        for i, student in enumerate(students[:2]):
+            bulk_data.append({
+                "aluno_id": student['id'],
+                "status": "presente",
+                "oferta": 8.50,  # Each student gets exactly 8.50
+                "biblias_entregues": 0,
+                "revistas_entregues": 0
+            })
+        
+        # Save bulk attendance with total offer of 17.00 (2 x 8.50)
+        response = requests.post(f"{BASE_URL}/attendance/bulk/{turma_id}", 
+                               params={"data": test_date},
+                               json=bulk_data)
+        
+        if response.status_code == 200:
+            results.success("POST /api/attendance/bulk - Save 17.00 total offer (2 x 8.50)")
+        else:
+            results.failure("POST /api/attendance/bulk", f"Status {response.status_code}: {response.text}")
+            return
+        
+        # TEST 2: GET /api/attendance?turma_id={turma_id}&data=2025-07-13
+        # Verify sum of individual offers returns exactly 17.00
+        response = requests.get(f"{BASE_URL}/attendance", 
+                              params={"turma_id": turma_id, "data": test_date})
+        
+        if response.status_code == 200:
+            attendance_records = response.json()
+            total_ofertas = sum(record.get('oferta', 0) for record in attendance_records)
+            
+            # Check if total is exactly 17.00 (not 16.919999999999995)
+            if total_ofertas == 17.00:
+                results.success(f"GET /api/attendance - Sum of offers is exactly 17.00 (got {total_ofertas})")
+            else:
+                results.failure("GET /api/attendance - Precision Issue", 
+                              f"Expected 17.00, got {total_ofertas} (precision error detected)")
+            
+            # Also check individual values
+            individual_offers = [record.get('oferta', 0) for record in attendance_records]
+            print(f"Individual offers: {individual_offers}")
+            
+            if all(offer == 8.50 for offer in individual_offers):
+                results.success("GET /api/attendance - Individual offers are exactly 8.50 each")
+            else:
+                results.failure("GET /api/attendance - Individual Precision", 
+                              f"Expected all 8.50, got {individual_offers}")
+        else:
+            results.failure("GET /api/attendance", f"Status {response.status_code}: {response.text}")
+            return
+        
+        # TEST 3: GET /api/reports/dashboard?data=2025-07-13
+        # Verify total_ofertas shows 17.00 and not imprecise value
+        response = requests.get(f"{BASE_URL}/reports/dashboard", 
+                              params={"data": test_date})
+        
+        if response.status_code == 200:
+            reports = response.json()
+            
+            # Find the report for our test turma
+            test_report = None
+            for report in reports:
+                if report['turma_id'] == turma_id:
+                    test_report = report
+                    break
+            
+            if test_report:
+                total_ofertas = test_report['total_ofertas']
+                
+                if total_ofertas == 17.00:
+                    results.success(f"GET /api/reports/dashboard - total_ofertas is exactly 17.00 (got {total_ofertas})")
+                else:
+                    results.failure("GET /api/reports/dashboard - Precision Issue", 
+                                  f"Expected 17.00, got {total_ofertas} (precision error in dashboard)")
+                
+                # Additional checks
+                print(f"Dashboard report for {turma_nome}:")
+                print(f"  - Matriculados: {test_report['matriculados']}")
+                print(f"  - Presentes: {test_report['presentes']}")
+                print(f"  - Total Ofertas: {test_report['total_ofertas']}")
+                
+            else:
+                results.failure("GET /api/reports/dashboard", f"No report found for turma {turma_nome}")
+        else:
+            results.failure("GET /api/reports/dashboard", f"Status {response.status_code}: {response.text}")
+        
+        # TEST 4: Test with different precision scenarios
+        print("\n--- Testing additional precision scenarios ---")
+        
+        # Test with 17.01 (should remain 17.01)
+        bulk_data_2 = []
+        for i, student in enumerate(students[:2]):
+            bulk_data_2.append({
+                "aluno_id": student['id'],
+                "status": "presente", 
+                "oferta": 8.505,  # This should round to 8.51 each = 17.02 total
+                "biblias_entregues": 0,
+                "revistas_entregues": 0
+            })
+        
+        # Clear previous data and test new scenario
+        test_date_2 = "2025-07-20"  # Another Sunday
+        response = requests.post(f"{BASE_URL}/attendance/bulk/{turma_id}", 
+                               params={"data": test_date_2},
+                               json=bulk_data_2)
+        
+        if response.status_code == 200:
+            # Check the result
+            response = requests.get(f"{BASE_URL}/attendance", 
+                                  params={"turma_id": turma_id, "data": test_date_2})
+            
+            if response.status_code == 200:
+                attendance_records = response.json()
+                total_ofertas = sum(record.get('oferta', 0) for record in attendance_records)
+                individual_offers = [record.get('oferta', 0) for record in attendance_records]
+                
+                print(f"Precision test 2 - Individual offers: {individual_offers}")
+                print(f"Precision test 2 - Total: {total_ofertas}")
+                
+                # Check if values are properly rounded to 2 decimal places
+                all_properly_rounded = all(
+                    len(str(offer).split('.')[-1]) <= 2 if '.' in str(offer) else True 
+                    for offer in individual_offers
+                )
+                
+                if all_properly_rounded:
+                    results.success("Precision Test 2 - All values properly rounded to 2 decimal places")
+                else:
+                    results.failure("Precision Test 2", f"Values not properly rounded: {individual_offers}")
+        
+    except Exception as e:
+        results.failure("Float Precision Test", f"Exception: {str(e)}")
+        import traceback
+        print(f"Full traceback: {traceback.format_exc()}")
+
 def main():
     """Run all tests in sequence"""
     print("=== EBD MANAGER BACKEND TEST SUITE ===\n")

@@ -313,3 +313,5 @@ agent_communication:
     message: "CHURCH ADDRESS ADDED: Adicionado endereço da igreja 'Rua Managuá, 53 - Parque das Nações, Sumaré, SP, Brazil' tanto na tela inicial (HomeCover) quanto no header do Dashboard. Informações da igreja agora estão completas com presidente, pastor local, endereço e descrição do sistema."
   - agent: "main"
     message: "CHURCH INFO CORRECTIONS: Corrigidas informações da igreja conforme solicitado: alterado 'Brazil' para 'Brasil' e simplificado 'Ministério do Belém • São Paulo' para apenas 'Ministério Belém'. Alterações aplicadas tanto na tela inicial quanto no header do Dashboard."
+  - agent: "main"
+    message: "FLOATING POINT PRECISION FIXED: Corrigido problema de precisão de ponto flutuante nos valores de ofertas. Problemas resolvidos: cálculo de oferta individual agora usa toFixed(2) para garantir 2 casas decimais, campo de oferta com type='number' e step='0.01', validação de input para aceitar apenas formato decimal válido. Valor 17 agora permanece como 17.00 em vez de 16.919999999999995."

@@ -152,5 +152,34 @@
                 person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
             });
         </script>
+        
+        <!-- PWA Service Worker Registration -->
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then((registration) => {
+                            console.log('SW registrado com sucesso: ', registration);
+                        })
+                        .catch((registrationError) => {
+                            console.log('SW falhou ao registrar: ', registrationError);
+                        });
+                });
+            }
+            
+            // PWA Install prompt
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                // Mostrar botão de instalação personalizado se desejar
+                console.log('PWA install prompt ready');
+            });
+            
+            // Handle PWA installation
+            window.addEventListener('appinstalled', (evt) => {
+                console.log('App EBD foi instalado');
+            });
+        </script>
     </body>
 </html>

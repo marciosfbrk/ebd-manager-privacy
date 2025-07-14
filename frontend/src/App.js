@@ -1323,23 +1323,23 @@ function App() {
                     </div>
                   </div>
                   
-                  <div className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="p-4 md:p-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                       {turmaAtendance.map((att, index) => (
                         <button
                           key={index}
                           onClick={() => togglePresenca(att.aluno_id)}
-                          className={`p-4 rounded-lg text-left transition-all duration-200 ${
+                          className={`p-3 md:p-4 rounded-lg text-left transition-all duration-200 touch-manipulation ${
                             att.presente 
                               ? 'bg-green-100 border-2 border-green-500 text-green-800' 
                               : 'bg-gray-100 border-2 border-gray-300 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
                           <div className="flex items-center">
-                            <div className={`w-4 h-4 rounded-full mr-3 ${
+                            <div className={`w-4 h-4 rounded-full mr-3 flex-shrink-0 ${
                               att.presente ? 'bg-green-500' : 'bg-gray-400'
                             }`}></div>
-                            <span className="font-medium">{att.nome}</span>
+                            <span className="font-medium text-sm md:text-base break-words">{att.nome}</span>
                           </div>
                         </button>
                       ))}

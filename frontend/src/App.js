@@ -839,6 +839,7 @@ function App() {
                     <th className="border border-gray-300 px-4 py-2 text-left">Turma</th>
                     <th className="border border-gray-300 px-4 py-2 text-center">Matriculados</th>
                     <th className="border border-gray-300 px-4 py-2 text-center">Presentes</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">%</th>
                     <th className="border border-gray-300 px-4 py-2 text-center">Ausentes</th>
                     <th className="border border-gray-300 px-4 py-2 text-center">Visitantes</th>
                     <th className="border border-gray-300 px-4 py-2 text-center">Pós-Chamada</th>

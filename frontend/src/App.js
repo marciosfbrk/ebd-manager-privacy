@@ -1290,13 +1290,13 @@ function App() {
 
                 {/* Lista de Presença Simples */}
                 <div className="bg-white border rounded-lg overflow-hidden mb-6">
-                  <div className="bg-gray-100 px-6 py-4 border-b flex justify-between items-center">
-                    <div>
+                  <div className="bg-gray-100 px-4 py-4 border-b">
+                    <div className="mb-4">
                       <h3 className="text-xl font-semibold text-gray-800">
                         {turmas.find(t => t.id === selectedTurma)?.nome}
                       </h3>
                       <p className="text-sm text-gray-600 mt-1">Clique nos nomes para marcar presença</p>
-                      <div className="flex space-x-6 mt-2 text-sm">
+                      <div className="flex flex-wrap gap-4 mt-2 text-sm">
                         <span className="text-green-700 font-medium">
                           Presentes: {turmaAtendance.filter(att => att.presente).length}
                         </span>
@@ -1310,13 +1310,17 @@ function App() {
                         </span>
                       </div>
                     </div>
-                    <button
-                      onClick={handleSave}
-                      disabled={loading}
-                      className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400 text-lg font-semibold"
-                    >
-                      {loading ? 'Salvando...' : 'Salvar Chamada'}
-                    </button>
+                    
+                    {/* Botão Salvar - Agora responsivo */}
+                    <div className="w-full">
+                      <button
+                        onClick={handleSave}
+                        disabled={loading}
+                        className="w-full px-6 py-4 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400 text-lg font-semibold shadow-lg"
+                      >
+                        {loading ? 'Salvando...' : '💾 Salvar Chamada'}
+                      </button>
+                    </div>
                   </div>
                   
                   <div className="p-6">

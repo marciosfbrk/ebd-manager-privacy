@@ -1090,8 +1090,9 @@ function App() {
           if (att.status === 'pos_chamada') totalPosChamada++;
         });
 
+        // Corrigir precisão dos valores decimais antes de setar no estado
         setTurmaDataGlobal({
-          ofertas_total: totalOfertas > 0 ? totalOfertas.toString() : '',
+          ofertas_total: totalOfertas > 0 ? parseFloat(totalOfertas.toFixed(2)).toString() : '',
           biblias_total: totalBiblias > 0 ? totalBiblias.toString() : '',
           revistas_total: totalRevistas > 0 ? totalRevistas.toString() : '',
           visitantes_total: totalVisitantes > 0 ? totalVisitantes.toString() : '',

@@ -670,6 +670,10 @@ def main():
     print("\n6. Testing Reports Dashboard...")
     test_reports_dashboard()
     
+    # Test 7: CRITICAL - Floating Point Precision Issue
+    print("\n7. Testing Floating Point Precision (CRITICAL)...")
+    test_floating_point_precision()
+    
     # Final summary
     results.summary()
     

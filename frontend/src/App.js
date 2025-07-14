@@ -337,6 +337,13 @@ function App() {
                       <td className="px-4 py-4 text-center text-lg text-green-700">
                         {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
                       </td>
+                      <td className="px-4 py-4 text-center text-lg text-purple-700">
+                        {(() => {
+                          const totalMatriculados = attendanceData.reduce((sum, row) => sum + row.matriculados, 0);
+                          const totalPresentes = attendanceData.reduce((sum, row) => sum + row.presentes, 0);
+                          return totalMatriculados > 0 ? ((totalPresentes / totalMatriculados) * 100).toFixed(1) : '0.0';
+                        })()}%
+                      </td>
                       <td className="px-4 py-4 text-center text-lg text-red-700">
                         {attendanceData.reduce((sum, row) => sum + row.ausentes, 0)}
                       </td>

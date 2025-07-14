@@ -341,7 +341,7 @@ async def get_dashboard_report(data: Optional[str] = None):
         pos_chamada = len([a for a in attendance_records if a["status"] == "pos_chamada"])
         ausentes = matriculados - presentes
         
-        total_ofertas = sum(a.get("oferta", 0) for a in attendance_records)
+        total_ofertas = round(sum(a.get("oferta", 0) for a in attendance_records), 2)
         total_biblias = sum(a.get("biblias_entregues", 0) for a in attendance_records)
         total_revistas = sum(a.get("revistas_entregues", 0) for a in attendance_records)
         

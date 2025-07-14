@@ -1348,34 +1348,34 @@ function App() {
                 </div>
 
                 {/* Resumo */}
-                <div className="p-6 bg-green-50 rounded-lg">
+                <div className="p-4 md:p-6 bg-green-50 rounded-lg">
                   <h4 className="text-lg font-semibold text-green-800 mb-3">Resumo</h4>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">
+                      <div className="text-xl md:text-2xl font-bold text-green-600">
                         {turmaAtendance.filter(att => att.presente).length}
                       </div>
-                      <div className="text-sm text-green-700">Presentes</div>
+                      <div className="text-xs md:text-sm text-green-700">Presentes</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-red-600">
+                      <div className="text-xl md:text-2xl font-bold text-red-600">
                         {turmaAtendance.filter(att => !att.presente).length}
                       </div>
-                      <div className="text-sm text-red-700">Ausentes</div>
+                      <div className="text-xs md:text-sm text-red-700">Ausentes</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-600">
+                      <div className="text-xl md:text-2xl font-bold text-blue-600">
                         {turmaAtendance.length}
                       </div>
-                      <div className="text-sm text-blue-700">Total</div>
+                      <div className="text-xs md:text-sm text-blue-700">Total</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-purple-600">
+                      <div className="text-xl md:text-2xl font-bold text-purple-600">
                         {turmaAtendance.length > 0 
                           ? ((turmaAtendance.filter(att => att.presente).length / turmaAtendance.length) * 100).toFixed(1)
                           : 0}%
                       </div>
-                      <div className="text-sm text-purple-700">Frequência</div>
+                      <div className="text-xs md:text-sm text-purple-700">Frequência</div>
                     </div>
                   </div>
                 </div>

@@ -1,0 +1,27 @@
+{
+  "name": "app-ebd-mobile",
+  "version": "1.0.0",
+  "description": "App EBD - Sistema de Gerenciamento da Escola Bíblica Dominical",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run build --prefix frontend",
+    "cap:add": "npx cap add android",
+    "cap:sync": "npx cap sync android",
+    "cap:open": "npx cap open android",
+    "cap:run": "npx cap run android",
+    "cap:build": "npm run build && npx cap sync android",
+    "android": "npm run cap:build && npm run cap:open"
+  },
+  "dependencies": {
+    "@capacitor/android": "^5.6.0",
+    "@capacitor/core": "^5.6.0",
+    "@capacitor/splash-screen": "^5.0.6",
+    "@capacitor/status-bar": "^5.0.6"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^5.6.0"
+  },
+  "keywords": ["ebd", "igreja", "android", "app"],
+  "author": "Ministério do Belém",
+  "license": "MIT"
+}

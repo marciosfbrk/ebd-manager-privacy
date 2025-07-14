@@ -1232,16 +1232,16 @@ function App() {
             {selectedTurma && (
               <div>
                 {/* Campos Globais da Turma */}
-                <div className="bg-blue-50 p-6 rounded-lg mb-6">
+                <div className="bg-blue-50 p-4 md:p-6 rounded-lg mb-6">
                   <h3 className="text-xl font-semibold text-blue-800 mb-4">Dados da Turma</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-blue-700 mb-2">Oferta Total (R$)</label>
                       <input
                         type="text"
                         value={turmaDataGlobal.ofertas_total || ''}
                         onChange={(e) => updateTurmaData('ofertas_total', e.target.value)}
-                        className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="0"
                       />
                     </div>
@@ -1251,7 +1251,7 @@ function App() {
                         type="text"
                         value={turmaDataGlobal.biblias_total || ''}
                         onChange={(e) => updateTurmaData('biblias_total', e.target.value)}
-                        className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="0"
                       />
                     </div>
@@ -1261,7 +1261,7 @@ function App() {
                         type="text"
                         value={turmaDataGlobal.revistas_total || ''}
                         onChange={(e) => updateTurmaData('revistas_total', e.target.value)}
-                        className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="0"
                       />
                     </div>
@@ -1271,7 +1271,7 @@ function App() {
                         type="text"
                         value={turmaDataGlobal.visitantes_total || ''}
                         onChange={(e) => updateTurmaData('visitantes_total', e.target.value)}
-                        className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="0"
                       />
                     </div>
@@ -1281,7 +1281,7 @@ function App() {
                         type="text"
                         value={turmaDataGlobal.pos_chamada_total || ''}
                         onChange={(e) => updateTurmaData('pos_chamada_total', e.target.value)}
-                        className="w-full px-4 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="0"
                       />
                     </div>

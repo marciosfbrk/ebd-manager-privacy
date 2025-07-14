@@ -654,7 +654,7 @@ function App() {
               <div className="text-4xl font-bold text-blue-400">
                 {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
               </div>
-              <div className="text-blue-200">Presentes Hoje</div>
+              <div className="text-blue-200">Presentes</div>
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold text-purple-400">

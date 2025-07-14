@@ -620,7 +620,9 @@ function App() {
           
           <div className="text-lg text-blue-300 mt-4">
             <p className="font-semibold">Ministério do Belém • São Paulo</p>
-            <p className="text-base mt-1">Sistema de Gerenciamento da Escola Bíblica Dominical</p>
+            <p className="text-base mt-1">Rua Managuá, 53 - Parque das Nações</p>
+            <p className="text-base">Sumaré, SP, Brazil</p>
+            <p className="text-base mt-2">Sistema de Gerenciamento da Escola Bíblica Dominical</p>
           </div>
         </div>
 

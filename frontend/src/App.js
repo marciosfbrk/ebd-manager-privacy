@@ -284,6 +284,7 @@ function App() {
                     <th className="px-6 py-4 text-left font-semibold">Turma</th>
                     <th className="px-4 py-4 text-center font-semibold">Matriculados</th>
                     <th className="px-4 py-4 text-center font-semibold">Presentes</th>
+                    <th className="px-4 py-4 text-center font-semibold">%</th>
                     <th className="px-4 py-4 text-center font-semibold">Ausentes</th>
                     <th className="px-4 py-4 text-center font-semibold">Visitantes</th>
                     <th className="px-4 py-4 text-center font-semibold">Pós-Chamada</th>

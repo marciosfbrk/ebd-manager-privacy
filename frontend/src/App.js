@@ -1002,12 +1002,12 @@ function App() {
                   Departamento Adulto
                 </h3>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-purple-800 mb-2">
+                    <h4 className="font-semibold text-purple-800 mb-2 text-sm md:text-base">
                       Classe Vencedora em Frequência do departamento Adulto
                     </h4>
-                    <p className="text-purple-700">
+                    <p className="text-purple-700 text-sm md:text-base">
                       {classesVencedoras['Adulto']?.frequencia ? (
                         <>
                           Nome: <span className="font-semibold">{classesVencedoras['Adulto'].frequencia.turma_nome}</span> – 
@@ -1020,10 +1020,10 @@ function App() {
                   </div>
 
                   <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-purple-800 mb-2">
+                    <h4 className="font-semibold text-purple-800 mb-2 text-sm md:text-base">
                       Classe Vencedora em Oferta do departamento Adulto
                     </h4>
-                    <p className="text-purple-700">
+                    <p className="text-purple-700 text-sm md:text-base">
                       {classesVencedoras['Adulto']?.oferta ? (
                         <>
                           Nome: <span className="font-semibold">{classesVencedoras['Adulto'].oferta.turma_nome}</span> – 
@@ -1040,8 +1040,8 @@ function App() {
 
             {/* Informações Adicionais */}
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <h4 className="font-semibold text-gray-700 mb-2">Critérios de Classificação:</h4>
-              <ul className="text-sm text-gray-600 space-y-1">
+              <h4 className="font-semibold text-gray-700 mb-2 text-sm md:text-base">Critérios de Classificação:</h4>
+              <ul className="text-xs md:text-sm text-gray-600 space-y-1">
                 <li>• <strong>Frequência:</strong> Calculada como (Presentes ÷ Matriculados) × 100, arredondada com 2 casas decimais</li>
                 <li>• <strong>Oferta:</strong> Baseada no valor total de ofertas da turma, arredondada com 2 casas decimais</li>
                 <li>• <strong>Departamentos:</strong> Baseados na posição das turmas (Infantil: primeiras, Jovens: intermediárias, Adulto: últimas)</li>

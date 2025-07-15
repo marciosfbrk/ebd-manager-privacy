@@ -910,46 +910,48 @@ function App() {
           </div>
 
           {/* Classes Vencedoras */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="bg-white rounded-lg shadow-lg p-4 md:p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-6">Classes Vencedoras por Departamento</h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-6">
               {/* Departamento Infantil */}
               <div className="space-y-4">
                 <h3 className="text-lg font-medium text-green-700 border-b-2 border-green-200 pb-2">
                   Departamento Infantil
                 </h3>
                 
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-green-800 mb-2">
-                    Classe Vencedora em Frequência do departamento Infantil
-                  </h4>
-                  <p className="text-green-700">
-                    {classesVencedoras['Infantil']?.frequencia ? (
-                      <>
-                        Nome: <span className="font-semibold">{classesVencedoras['Infantil'].frequencia.turma_nome}</span> – 
-                        Porcentagem: <span className="font-semibold">{formatarPorcentagem(classesVencedoras['Infantil'].frequencia.porcentagem)}%</span>
-                      </>
-                    ) : (
-                      'Nenhuma turma encontrada para este departamento'
-                    )}
-                  </p>
-                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-green-800 mb-2 text-sm md:text-base">
+                      Classe Vencedora em Frequência do departamento Infantil
+                    </h4>
+                    <p className="text-green-700 text-sm md:text-base">
+                      {classesVencedoras['Infantil']?.frequencia ? (
+                        <>
+                          Nome: <span className="font-semibold">{classesVencedoras['Infantil'].frequencia.turma_nome}</span> – 
+                          Porcentagem: <span className="font-semibold">{formatarPorcentagem(classesVencedoras['Infantil'].frequencia.porcentagem)}%</span>
+                        </>
+                      ) : (
+                        'Nenhuma turma encontrada para este departamento'
+                      )}
+                    </p>
+                  </div>
 
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-green-800 mb-2">
-                    Classe Vencedora em Oferta do departamento Infantil
-                  </h4>
-                  <p className="text-green-700">
-                    {classesVencedoras['Infantil']?.oferta ? (
-                      <>
-                        Nome: <span className="font-semibold">{classesVencedoras['Infantil'].oferta.turma_nome}</span> – 
-                        Máximo: <span className="font-semibold">R$ {formatarValor(classesVencedoras['Infantil'].oferta.valor)}</span>
-                      </>
-                    ) : (
-                      'Nenhuma turma encontrada para este departamento'
-                    )}
-                  </p>
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-green-800 mb-2 text-sm md:text-base">
+                      Classe Vencedora em Oferta do departamento Infantil
+                    </h4>
+                    <p className="text-green-700 text-sm md:text-base">
+                      {classesVencedoras['Infantil']?.oferta ? (
+                        <>
+                          Nome: <span className="font-semibold">{classesVencedoras['Infantil'].oferta.turma_nome}</span> – 
+                          Máximo: <span className="font-semibold">R$ {formatarValor(classesVencedoras['Infantil'].oferta.valor)}</span>
+                        </>
+                      ) : (
+                        'Nenhuma turma encontrada para este departamento'
+                      )}
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -959,41 +961,43 @@ function App() {
                   Departamento Jovens e Adolescentes
                 </h3>
                 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-blue-800 mb-2">
-                    Classe Vencedora em Frequência do departamento Jovens e Adolescentes
-                  </h4>
-                  <p className="text-blue-700">
-                    {classesVencedoras['Jovens e Adolescentes']?.frequencia ? (
-                      <>
-                        Nome: <span className="font-semibold">{classesVencedoras['Jovens e Adolescentes'].frequencia.turma_nome}</span> – 
-                        Porcentagem: <span className="font-semibold">{formatarPorcentagem(classesVencedoras['Jovens e Adolescentes'].frequencia.porcentagem)}%</span>
-                      </>
-                    ) : (
-                      'Nenhuma turma encontrada para este departamento'
-                    )}
-                  </p>
-                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-blue-800 mb-2 text-sm md:text-base">
+                      Classe Vencedora em Frequência do departamento Jovens e Adolescentes
+                    </h4>
+                    <p className="text-blue-700 text-sm md:text-base">
+                      {classesVencedoras['Jovens e Adolescentes']?.frequencia ? (
+                        <>
+                          Nome: <span className="font-semibold">{classesVencedoras['Jovens e Adolescentes'].frequencia.turma_nome}</span> – 
+                          Porcentagem: <span className="font-semibold">{formatarPorcentagem(classesVencedoras['Jovens e Adolescentes'].frequencia.porcentagem)}%</span>
+                        </>
+                      ) : (
+                        'Nenhuma turma encontrada para este departamento'
+                      )}
+                    </p>
+                  </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-blue-800 mb-2">
-                    Classe Vencedora em Oferta do departamento Jovens e Adolescentes
-                  </h4>
-                  <p className="text-blue-700">
-                    {classesVencedoras['Jovens e Adolescentes']?.oferta ? (
-                      <>
-                        Nome: <span className="font-semibold">{classesVencedoras['Jovens e Adolescentes'].oferta.turma_nome}</span> – 
-                        Máximo: <span className="font-semibold">R$ {formatarValor(classesVencedoras['Jovens e Adolescentes'].oferta.valor)}</span>
-                      </>
-                    ) : (
-                      'Nenhuma turma encontrada para este departamento'
-                    )}
-                  </p>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-blue-800 mb-2 text-sm md:text-base">
+                      Classe Vencedora em Oferta do departamento Jovens e Adolescentes
+                    </h4>
+                    <p className="text-blue-700 text-sm md:text-base">
+                      {classesVencedoras['Jovens e Adolescentes']?.oferta ? (
+                        <>
+                          Nome: <span className="font-semibold">{classesVencedoras['Jovens e Adolescentes'].oferta.turma_nome}</span> – 
+                          Máximo: <span className="font-semibold">R$ {formatarValor(classesVencedoras['Jovens e Adolescentes'].oferta.valor)}</span>
+                        </>
+                      ) : (
+                        'Nenhuma turma encontrada para este departamento'
+                      )}
+                    </p>
+                  </div>
                 </div>
               </div>
 
               {/* Departamento Adulto */}
-              <div className="space-y-4 md:col-span-2">
+              <div className="space-y-4">
                 <h3 className="text-lg font-medium text-purple-700 border-b-2 border-purple-200 pb-2">
                   Departamento Adulto
                 </h3>

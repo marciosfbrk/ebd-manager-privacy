@@ -2152,7 +2152,10 @@ function App() {
           <div className="mb-6">
             <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-1 bg-gray-200 p-2 sm:p-1 rounded-lg">
               <button
-                onClick={() => setActiveTab('alunos')}
+                onClick={() => {
+                  console.log('Clicou em alunos');
+                  setActiveTab('alunos');
+                }}
                 className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'alunos'
                     ? 'bg-blue-500 text-white'
@@ -2162,7 +2165,10 @@ function App() {
                 🎓 Alunos Gerais
               </button>
               <button
-                onClick={() => setActiveTab('professores')}
+                onClick={() => {
+                  console.log('Clicou em professores');
+                  setActiveTab('professores');
+                }}
                 className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'professores'
                     ? 'bg-blue-500 text-white'
@@ -2172,7 +2178,10 @@ function App() {
                 👨‍🏫 Professores e Oficiais
               </button>
               <button
-                onClick={() => setActiveTab('turmas')}
+                onClick={() => {
+                  console.log('Clicou em turmas');
+                  setActiveTab('turmas');
+                }}
                 className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'turmas'
                     ? 'bg-blue-500 text-white'

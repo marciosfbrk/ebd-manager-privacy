@@ -53,6 +53,15 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 function App() {
+  // Inject animation styles
+  useEffect(() => {
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = animationStyles;
+    document.head.appendChild(styleSheet);
+    
+    return () => document.head.removeChild(styleSheet);
+  }, []);
+
   const [currentView, setCurrentView] = useState('home');
   const [showApp, setShowApp] = useState(false);
   const [turmas, setTurmas] = useState([]);

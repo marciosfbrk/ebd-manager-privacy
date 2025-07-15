@@ -849,6 +849,177 @@ async def init_church_data():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao criar dados de exemplo: {str(e)}")
 
+# Ranking de Alunos
+@api_router.get("/ranking/alunos")
+async def get_alunos_ranking():
+    """Retorna ranking de alunos por presença"""
+    try:
+        # Buscar todos os registros de presença
+        attendance_records = await db.attendance.find({"status": "presente"}).to_list(10000)
+        
+        # Contar presenças por aluno
+        aluno_presencas = {}
+        for record in attendance_records:
+            aluno_id = record["aluno_id"]
+            if aluno_id not in aluno_presencas:
+                aluno_presencas[aluno_id] = 0
+            aluno_presencas[aluno_id] += 1
+        
+        # Buscar informações dos alunos
+        students = await db.students.find({"ativo": True}).to_list(1000)
+        student_dict = {s["id"]: s for s in students}
+        
+        # Buscar informações das turmas
+        turmas = await db.turmas.find({"ativa": True}).to_list(100)
+        turma_dict = {t["id"]: t for t in turmas}
+        
+        # Criar ranking
+        ranking = []
+        for aluno_id, presencas in aluno_presencas.items():
+            if aluno_id in student_dict:
+                student = student_dict[aluno_id]
+                turma = turma_dict.get(student["turma_id"], {})
+                
+                ranking.append({
+                    "posicao": 0,  # Will be set after sorting
+                    "aluno_id": aluno_id,
+                    "nome": student["nome_completo"],
+                    "turma": turma.get("nome", "Turma não encontrada"),
+                    "turma_id": student["turma_id"],
+                    "total_presencas": presencas,
+                    "domingos_presentes": presencas  # Cada registro é um domingo
+                })
+        
+        # Ordenar por total de presenças (decrescente)
+        ranking.sort(key=lambda x: x["total_presencas"], reverse=True)
+        
+        # Definir posições
+        for i, item in enumerate(ranking):
+            item["posicao"] = i + 1
+        
+        return {
+            "message": "Ranking de alunos por presença",
+            "total_alunos": len(ranking),
+            "ranking": ranking[:50]  # Top 50
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao gerar ranking: {str(e)}")
+
+@api_router.get("/ranking/professores-oficiais")
+async def get_professores_oficiais_ranking():
+    """Retorna ranking específico da turma Professores e Oficiais"""
+    try:
+        # Buscar turma Professores e Oficiais
+        turma_prof = await db.turmas.find_one({"nome": "Professores e Oficiais", "ativa": True})
+        if not turma_prof:
+            raise HTTPException(status_code=404, detail="Turma Professores e Oficiais não encontrada")
+        
+        # Buscar alunos da turma
+        students = await db.students.find({"turma_id": turma_prof["id"], "ativo": True}).to_list(100)
+        
+        # Buscar presenças dos alunos desta turma
+        alunos_ids = [s["id"] for s in students]
+        attendance_records = await db.attendance.find({
+            "aluno_id": {"$in": alunos_ids},
+            "status": "presente"
+        }).to_list(10000)
+        
+        # Contar presenças por aluno
+        aluno_presencas = {}
+        for record in attendance_records:
+            aluno_id = record["aluno_id"]
+            if aluno_id not in aluno_presencas:
+                aluno_presencas[aluno_id] = 0
+            aluno_presencas[aluno_id] += 1
+        
+        # Criar ranking
+        ranking = []
+        for student in students:
+            presencas = aluno_presencas.get(student["id"], 0)
+            ranking.append({
+                "posicao": 0,  # Will be set after sorting
+                "aluno_id": student["id"],
+                "nome": student["nome_completo"],
+                "total_presencas": presencas,
+                "domingos_presentes": presencas,
+                "turma": "Professores e Oficiais"
+            })
+        
+        # Ordenar por total de presenças (decrescente)
+        ranking.sort(key=lambda x: x["total_presencas"], reverse=True)
+        
+        # Definir posições
+        for i, item in enumerate(ranking):
+            item["posicao"] = i + 1
+        
+        return {
+            "message": "Ranking da turma Professores e Oficiais",
+            "turma_nome": "Professores e Oficiais",
+            "total_membros": len(ranking),
+            "ranking": ranking
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao gerar ranking de professores: {str(e)}")
+
+@api_router.get("/ranking/turmas")
+async def get_turmas_ranking():
+    """Retorna ranking de turmas por frequência média"""
+    try:
+        # Buscar dados do dashboard (que já calcula as estatísticas)
+        dashboard_data = []
+        
+        # Buscar todas as turmas
+        turmas = await db.turmas.find({"ativa": True}).to_list(100)
+        
+        for turma in turmas:
+            # Buscar alunos matriculados
+            matriculados = await db.students.count_documents({"turma_id": turma["id"], "ativo": True})
+            
+            # Buscar presenças da turma
+            attendance_records = await db.attendance.find({
+                "turma_id": turma["id"],
+                "status": "presente"
+            }).to_list(10000)
+            
+            # Contar domingos únicos com presença
+            domingos_com_presenca = set()
+            for record in attendance_records:
+                domingos_com_presenca.add(record["data"])
+            
+            # Calcular frequência média
+            total_presencas = len(attendance_records)
+            total_domingos = len(domingos_com_presenca) if domingos_com_presenca else 1
+            media_presencas = total_presencas / total_domingos if total_domingos > 0 else 0
+            percentual_frequencia = (media_presencas / matriculados * 100) if matriculados > 0 else 0
+            
+            dashboard_data.append({
+                "turma_id": turma["id"],
+                "turma_nome": turma["nome"],
+                "matriculados": matriculados,
+                "media_presencas": round(media_presencas, 1),
+                "percentual_frequencia": round(percentual_frequencia, 1),
+                "total_presencas": total_presencas,
+                "domingos_ativos": total_domingos
+            })
+        
+        # Ordenar por percentual de frequência (decrescente)
+        dashboard_data.sort(key=lambda x: x["percentual_frequencia"], reverse=True)
+        
+        # Definir posições
+        for i, item in enumerate(dashboard_data):
+            item["posicao"] = i + 1
+        
+        return {
+            "message": "Ranking de turmas por frequência",
+            "total_turmas": len(dashboard_data),
+            "ranking": dashboard_data
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao gerar ranking de turmas: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 

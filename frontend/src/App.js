@@ -266,130 +266,93 @@ function App() {
         </div>
 
         <div className="p-6">
-          {/* Cards de Controle da Data */}
+          {/* Resumo Rápido */}
           <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-6">
               <div>
-                <h2 className="text-2xl font-bold text-gray-800">Relatório do Dia</h2>
-                <p className="text-gray-600">Acompanhe a presença e atividades</p>
+                <h2 className="text-2xl font-bold text-gray-800">Resumo Rápido</h2>
+                <p className="text-gray-600">Estatísticas do último domingo</p>
               </div>
-              <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <input
-                    type="date"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="px-4 py-3 border-2 border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
-                  />
-                </div>
+              <div className="text-right">
+                <p className="text-sm text-gray-500">Data: {selectedDate}</p>
                 <button
                   onClick={loadDashboard}
-                  className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-lg hover:from-indigo-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200"
+                  className="mt-1 px-4 py-2 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-lg hover:from-indigo-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200 text-sm"
                 >
                   🔄 Atualizar
                 </button>
               </div>
             </div>
 
-            {!isSunday(selectedDate) && (
-              <div className="bg-amber-50 border-l-4 border-amber-400 text-amber-800 px-4 py-3 rounded-r-lg mb-4">
-                <div className="flex items-center">
-                  <span className="text-xl mr-2">⚠️</span>
-                  <strong>Aviso:</strong> A data selecionada não é um domingo.
+            {/* Cards de Resumo */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-blue-600">
+                  {attendanceData.reduce((sum, row) => sum + row.matriculados, 0)}
+                </div>
+                <div className="text-sm text-blue-500 font-medium">Matriculados</div>
+              </div>
+              
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-green-600">
+                  {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
+                </div>
+                <div className="text-sm text-green-500 font-medium">Presentes</div>
+              </div>
+              
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-purple-600">
+                  {(() => {
+                    const totalMatriculados = attendanceData.reduce((sum, row) => sum + row.matriculados, 0);
+                    const totalPresentes = attendanceData.reduce((sum, row) => sum + row.presentes, 0);
+                    return totalMatriculados > 0 ? ((totalPresentes / totalMatriculados) * 100).toFixed(1) : '0.0';
+                  })()}%
+                </div>
+                <div className="text-sm text-purple-500 font-medium">Frequência</div>
+              </div>
+              
+              <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-yellow-600">
+                  R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2)}
+                </div>
+                <div className="text-sm text-yellow-500 font-medium">Ofertas</div>
+              </div>
+            </div>
+
+            {/* Turmas com Melhor Frequência */}
+            {attendanceData.length > 0 && (
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">🏆 Destaques do Dia</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-green-50 rounded-lg p-4">
+                    <div className="font-semibold text-green-800">Melhor Frequência</div>
+                    <div className="text-green-700">
+                      {(() => {
+                        const melhorFrequencia = attendanceData
+                          .filter(row => row.matriculados > 0)
+                          .sort((a, b) => (b.presentes / b.matriculados) - (a.presentes / a.matriculados))[0];
+                        return melhorFrequencia ? 
+                          `${melhorFrequencia.turma_nome} (${((melhorFrequencia.presentes / melhorFrequencia.matriculados) * 100).toFixed(1)}%)` : 
+                          'Nenhuma turma';
+                      })()}
+                    </div>
+                  </div>
+                  
+                  <div className="bg-yellow-50 rounded-lg p-4">
+                    <div className="font-semibold text-yellow-800">Maior Oferta</div>
+                    <div className="text-yellow-700">
+                      {(() => {
+                        const maiorOferta = attendanceData
+                          .sort((a, b) => b.total_ofertas - a.total_ofertas)[0];
+                        return maiorOferta ? 
+                          `${maiorOferta.turma_nome} (R$ ${maiorOferta.total_ofertas.toFixed(2)})` : 
+                          'Nenhuma turma';
+                      })()}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
-
-            <div className="overflow-x-auto rounded-lg shadow-sm">
-              <table className="w-full border-collapse bg-white">
-                <thead>
-                  <tr className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white">
-                    <th className="px-6 py-4 text-left font-semibold">Turma</th>
-                    <th className="px-4 py-4 text-center font-semibold">Matriculados</th>
-                    <th className="px-4 py-4 text-center font-semibold">Presentes</th>
-                    <th className="px-4 py-4 text-center font-semibold">%</th>
-                    <th className="px-4 py-4 text-center font-semibold">Ausentes</th>
-                    <th className="px-4 py-4 text-center font-semibold">Visitantes</th>
-                    <th className="px-4 py-4 text-center font-semibold">Pós-Chamada</th>
-                    <th className="px-4 py-4 text-center font-semibold">Ofertas</th>
-                    <th className="px-4 py-4 text-center font-semibold">Bíblias</th>
-                    <th className="px-4 py-4 text-center font-semibold">Revistas</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {attendanceData.map((row, index) => (
-                    <tr key={index} className="hover:bg-indigo-50 transition-colors duration-150">
-                      <td className="px-6 py-4 font-medium text-gray-900">{row.turma_nome}</td>
-                      <td className="px-4 py-4 text-center text-gray-700">{row.matriculados}</td>
-                      <td className="px-4 py-4 text-center">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          {row.presentes}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4 text-center">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                          {row.matriculados > 0 ? ((row.presentes / row.matriculados) * 100).toFixed(1) : '0.0'}%
-                        </span>
-                      </td>
-                      <td className="px-4 py-4 text-center">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                          {row.ausentes}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4 text-center">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          {row.visitantes}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4 text-center">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                          {row.pos_chamada}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4 text-center font-semibold text-green-600">R$ {row.total_ofertas.toFixed(2)}</td>
-                      <td className="px-4 py-4 text-center text-gray-700">{row.total_biblias}</td>
-                      <td className="px-4 py-4 text-center text-gray-700">{row.total_revistas}</td>
-                    </tr>
-                  ))}
-                  {attendanceData.length > 0 && (
-                    <tr className="bg-gradient-to-r from-indigo-100 to-blue-100 font-bold text-indigo-900">
-                      <td className="px-6 py-4 text-lg">TOTAL GERAL</td>
-                      <td className="px-4 py-4 text-center text-lg">
-                        {attendanceData.reduce((sum, row) => sum + row.matriculados, 0)}
-                      </td>
-                      <td className="px-4 py-4 text-center text-lg text-green-700">
-                        {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
-                      </td>
-                      <td className="px-4 py-4 text-center text-lg text-purple-700">
-                        {(() => {
-                          const totalMatriculados = attendanceData.reduce((sum, row) => sum + row.matriculados, 0);
-                          const totalPresentes = attendanceData.reduce((sum, row) => sum + row.presentes, 0);
-                          return totalMatriculados > 0 ? ((totalPresentes / totalMatriculados) * 100).toFixed(1) : '0.0';
-                        })()}%
-                      </td>
-                      <td className="px-4 py-4 text-center text-lg text-red-700">
-                        {attendanceData.reduce((sum, row) => sum + row.ausentes, 0)}
-                      </td>
-                      <td className="px-4 py-4 text-center text-lg text-blue-700">
-                        {attendanceData.reduce((sum, row) => sum + row.visitantes, 0)}
-                      </td>
-                      <td className="px-4 py-4 text-center text-lg text-yellow-700">
-                        {attendanceData.reduce((sum, row) => sum + row.pos_chamada, 0)}
-                      </td>
-                      <td className="px-4 py-4 text-center text-lg text-green-700">
-                        R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2)}
-                      </td>
-                      <td className="px-4 py-4 text-center text-lg">
-                        {attendanceData.reduce((sum, row) => sum + row.total_biblias, 0)}
-                      </td>
-                      <td className="px-4 py-4 text-center text-lg">
-                        {attendanceData.reduce((sum, row) => sum + row.total_revistas, 0)}
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
           </div>
 
           {/* Cards de Ações e Resumo */}

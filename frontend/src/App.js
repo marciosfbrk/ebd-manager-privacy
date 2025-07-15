@@ -836,70 +836,70 @@ function App() {
 
             {/* Tabela de Consolidação */}
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse border border-gray-200">
+              <table className="w-full border-collapse border border-gray-200 text-sm">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="border border-gray-300 px-4 py-2 text-left">Turma</th>
-                    <th className="border border-gray-300 px-4 py-2 text-center">Matriculados</th>
-                    <th className="border border-gray-300 px-4 py-2 text-center">Presentes</th>
-                    <th className="border border-gray-300 px-4 py-2 text-center">%</th>
-                    <th className="border border-gray-300 px-4 py-2 text-center">Ausentes</th>
-                    <th className="border border-gray-300 px-4 py-2 text-center">Visitantes</th>
-                    <th className="border border-gray-300 px-4 py-2 text-center">Pós-Chamada</th>
-                    <th className="border border-gray-300 px-4 py-2 text-center">Ofertas</th>
-                    <th className="border border-gray-300 px-4 py-2 text-center">Bíblias</th>
-                    <th className="border border-gray-300 px-4 py-2 text-center">Revistas</th>
+                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-left">Turma</th>
+                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Matric.</th>
+                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Pres.</th>
+                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">%</th>
+                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Aus.</th>
+                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Vis.</th>
+                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Pós</th>
+                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Ofertas</th>
+                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Bíb.</th>
+                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Rev.</th>
                   </tr>
                 </thead>
                 <tbody>
                   {attendanceData.map((row, index) => (
                     <tr key={index} className="hover:bg-gray-50">
-                      <td className="border border-gray-300 px-4 py-2 font-medium">{row.turma_nome}</td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">{row.matriculados}</td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">{row.presentes}</td>
-                      <td className="border border-gray-300 px-4 py-2 text-center font-semibold text-purple-600">
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 font-medium">{row.turma_nome}</td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.matriculados}</td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.presentes}</td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center font-semibold text-purple-600">
                         {row.matriculados > 0 ? ((row.presentes / row.matriculados) * 100).toFixed(1) : '0.0'}%
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">{row.ausentes}</td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">{row.visitantes}</td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">{row.pos_chamada}</td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">R$ {row.total_ofertas.toFixed(2)}</td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">{row.total_biblias}</td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">{row.total_revistas}</td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.ausentes}</td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.visitantes}</td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.pos_chamada}</td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">R$ {row.total_ofertas.toFixed(2)}</td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.total_biblias}</td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.total_revistas}</td>
                     </tr>
                   ))}
                   {attendanceData.length > 0 && (
                     <tr className="bg-blue-50 font-semibold">
-                      <td className="border border-gray-300 px-4 py-2">TOTAL GERAL</td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">
+                      <td className="border border-gray-300 px-2 md:px-4 py-2">TOTAL GERAL</td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         {attendanceData.reduce((sum, row) => sum + row.matriculados, 0)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-center font-semibold text-purple-600">
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center font-semibold text-purple-600">
                         {(() => {
                           const totalMatriculados = attendanceData.reduce((sum, row) => sum + row.matriculados, 0);
                           const totalPresentes = attendanceData.reduce((sum, row) => sum + row.presentes, 0);
                           return totalMatriculados > 0 ? ((totalPresentes / totalMatriculados) * 100).toFixed(1) : '0.0';
                         })()}%
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         {attendanceData.reduce((sum, row) => sum + row.ausentes, 0)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         {attendanceData.reduce((sum, row) => sum + row.visitantes, 0)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         {attendanceData.reduce((sum, row) => sum + row.pos_chamada, 0)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         {attendanceData.reduce((sum, row) => sum + row.total_biblias, 0)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-center">
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         {attendanceData.reduce((sum, row) => sum + row.total_revistas, 0)}
                       </td>
                     </tr>

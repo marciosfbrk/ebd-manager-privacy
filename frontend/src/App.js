@@ -342,21 +342,21 @@ function App() {
 
             {/* Cards de Resumo */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center animate-border-glow transition-all duration-300 hover:scale-105">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center animate-border-glow">
                 <div className="text-2xl font-bold text-blue-600">
                   {attendanceData.reduce((sum, row) => sum + row.matriculados, 0)}
                 </div>
                 <div className="text-sm text-blue-500 font-medium">Matriculados</div>
               </div>
               
-              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 text-center animate-border-glow transition-all duration-300 hover:scale-105">
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 text-center animate-border-glow">
                 <div className="text-2xl font-bold text-green-600">
                   {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
                 </div>
                 <div className="text-sm text-green-500 font-medium">Presentes</div>
               </div>
               
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center animate-border-glow transition-all duration-300 hover:scale-105">
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center animate-border-glow">
                 <div className="text-2xl font-bold text-purple-600">
                   {(() => {
                     const totalMatriculados = attendanceData.reduce((sum, row) => sum + row.matriculados, 0);
@@ -367,7 +367,7 @@ function App() {
                 <div className="text-sm text-purple-500 font-medium">Frequência</div>
               </div>
               
-              <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-4 text-center animate-border-glow transition-all duration-300 hover:scale-105">
+              <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-4 text-center animate-border-glow">
                 <div className="text-2xl font-bold text-yellow-600">
                   R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2)}
                 </div>

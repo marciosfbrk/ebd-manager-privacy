@@ -144,6 +144,22 @@ function App() {
     }
   };
 
+  const loadRankings = async () => {
+    try {
+      const [alunosResponse, professoresResponse, turmasResponse] = await Promise.all([
+        axios.get(`${API}/ranking/alunos`),
+        axios.get(`${API}/ranking/professores-oficiais`),
+        axios.get(`${API}/ranking/turmas`)
+      ]);
+      
+      setRankingAlunos(alunosResponse.data);
+      setRankingProfessores(professoresResponse.data);
+      setRankingTurmas(turmasResponse.data);
+    } catch (error) {
+      console.error('Erro ao carregar rankings:', error);
+    }
+  };
+
   const loadAttendanceForTurma = async (turmaId, date) => {
     try {
       const response = await axios.get(`${API}/attendance?turma_id=${turmaId}&data=${date}`);

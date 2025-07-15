@@ -323,7 +323,7 @@ function App() {
 
         <div className="p-6">
           {/* Resumo Rápido */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200 animate-pulse-glow">
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h2 className="text-2xl font-bold text-gray-800">Resumo Rápido</h2>
@@ -333,7 +333,7 @@ function App() {
                 <p className="text-sm text-gray-500">Data: {selectedDate}</p>
                 <button
                   onClick={loadDashboard}
-                  className="mt-1 px-4 py-2 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-lg hover:from-indigo-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200 text-sm"
+                  className="mt-1 px-4 py-2 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-lg hover:from-indigo-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200 text-sm animate-shimmer"
                 >
                   🔄 Atualizar
                 </button>

@@ -397,6 +397,13 @@ function App() {
                       Relatórios Detalhados
                     </button>
                     <button
+                      onClick={() => setCurrentView('ranking')}
+                      className="w-full px-6 py-4 bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-lg hover:from-yellow-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
+                    >
+                      <span className="text-xl mr-2">🏆</span>
+                      Rankings
+                    </button>
+                    <button
                       onClick={() => setCurrentView('alunos')}
                       className="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-lg hover:from-blue-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
                     >

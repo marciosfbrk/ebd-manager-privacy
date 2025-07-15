@@ -419,7 +419,10 @@ function App() {
                       Relatórios Detalhados
                     </button>
                     <button
-                      onClick={() => setCurrentView('ranking')}
+                      onClick={() => {
+                        setActiveTab('alunos');
+                        setCurrentView('ranking');
+                      }}
                       className="w-full px-6 py-4 bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-lg hover:from-yellow-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
                     >
                       <span className="text-xl mr-2">🏆</span>

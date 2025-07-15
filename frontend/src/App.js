@@ -2266,44 +2266,44 @@ function App() {
 
             {activeTab === 'turmas' && (
               <div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Ranking de Turmas</h2>
-                <p className="text-gray-600 mb-6">Turmas ordenadas por frequência média</p>
+                <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Ranking de Turmas</h2>
+                <p className="text-sm md:text-base text-gray-600 mb-6">Turmas ordenadas por frequência média</p>
                 
                 <div className="overflow-x-auto">
-                  <table className="w-full border-collapse border border-gray-200 text-sm">
+                  <table className="w-full border-collapse border border-gray-200 text-xs md:text-sm">
                     <thead>
                       <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-3 py-2 text-center">Posição</th>
-                        <th className="border border-gray-300 px-3 py-2 text-left">Turma</th>
-                        <th className="border border-gray-300 px-3 py-2 text-center">Matriculados</th>
-                        <th className="border border-gray-300 px-3 py-2 text-center">Média Pres.</th>
-                        <th className="border border-gray-300 px-3 py-2 text-center">Frequência</th>
-                        <th className="border border-gray-300 px-3 py-2 text-center">Domingos</th>
+                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Pos.</th>
+                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-left">Turma</th>
+                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Matric.</th>
+                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Média</th>
+                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Freq.</th>
+                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Dom.</th>
                       </tr>
                     </thead>
                     <tbody>
                       {rankingTurmas.ranking?.map((turma, index) => (
                         <tr key={turma.turma_id} className="hover:bg-gray-50">
-                          <td className="border border-gray-300 px-3 py-2 text-center font-bold">
+                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center font-bold">
                             {index + 1 === 1 && '🥇'}
                             {index + 1 === 2 && '🥈'}
                             {index + 1 === 3 && '🥉'}
                             {index + 1 > 3 && `${index + 1}º`}
                           </td>
-                          <td className="border border-gray-300 px-3 py-2 font-medium">{turma.turma_nome}</td>
-                          <td className="border border-gray-300 px-3 py-2 text-center">{turma.matriculados}</td>
-                          <td className="border border-gray-300 px-3 py-2 text-center">{turma.media_presencas}</td>
-                          <td className="border border-gray-300 px-3 py-2 text-center font-semibold text-green-600">
+                          <td className="border border-gray-300 px-2 md:px-3 py-2 font-medium">{turma.turma_nome}</td>
+                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{turma.matriculados}</td>
+                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{turma.media_presencas}</td>
+                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center font-semibold text-green-600">
                             {turma.percentual_frequencia}%
                           </td>
-                          <td className="border border-gray-300 px-3 py-2 text-center">{turma.domingos_ativos}</td>
+                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{turma.domingos_ativos}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
 
-                <div className="mt-4 text-sm text-gray-600">
+                <div className="mt-4 text-xs md:text-sm text-gray-600">
                   <p>Total de turmas: {rankingTurmas.total_turmas}</p>
                 </div>
               </div>

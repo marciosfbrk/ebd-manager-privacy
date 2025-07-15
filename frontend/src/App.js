@@ -2140,6 +2140,8 @@ function App() {
         return isLoggedIn ? <Chamada /> : <HomeCover />;
       case 'relatorios':
         return isLoggedIn && currentUser?.tipo === 'admin' ? <Relatorios /> : <Dashboard />;
+      case 'ranking':
+        return isLoggedIn && currentUser?.tipo === 'admin' ? <Rankings /> : <Dashboard />;
       case 'alunos':
         return isLoggedIn && currentUser?.tipo === 'admin' ? <Alunos /> : <Dashboard />;
       case 'turmas':

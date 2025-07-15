@@ -2123,6 +2123,207 @@ function App() {
       </div>
     );
   };
+
+  // Componente Rankings
+  const Rankings = () => {
+    useEffect(() => {
+      loadRankings();
+    }, []);
+
+    const [activeTab, setActiveTab] = useState('alunos');
+
+    return (
+      <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-6">
+            <button
+              onClick={() => setCurrentView('dashboard')}
+              className="mb-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              ← Voltar ao Dashboard
+            </button>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">🏆 Rankings</h1>
+            <p className="text-gray-600">Ranking de presença e desempenho</p>
+          </div>
+
+          {/* Tabs */}
+          <div className="mb-6">
+            <div className="flex flex-wrap space-x-1 bg-gray-200 p-1 rounded-lg">
+              <button
+                onClick={() => setActiveTab('alunos')}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  activeTab === 'alunos'
+                    ? 'bg-blue-500 text-white'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                🎓 Alunos Gerais
+              </button>
+              <button
+                onClick={() => setActiveTab('professores')}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  activeTab === 'professores'
+                    ? 'bg-blue-500 text-white'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                👨‍🏫 Professores e Oficiais
+              </button>
+              <button
+                onClick={() => setActiveTab('turmas')}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  activeTab === 'turmas'
+                    ? 'bg-blue-500 text-white'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                🏫 Turmas
+              </button>
+            </div>
+          </div>
+
+          {/* Conteúdo dos Rankings */}
+          <div className="bg-white rounded-lg shadow-lg p-4 md:p-6">
+            {activeTab === 'alunos' && (
+              <div>
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Ranking Geral de Alunos</h2>
+                <p className="text-gray-600 mb-6">Top 50 alunos com mais presenças</p>
+                
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse border border-gray-200 text-sm">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border border-gray-300 px-3 py-2 text-center">Posição</th>
+                        <th className="border border-gray-300 px-3 py-2 text-left">Nome</th>
+                        <th className="border border-gray-300 px-3 py-2 text-left">Turma</th>
+                        <th className="border border-gray-300 px-3 py-2 text-center">Presenças</th>
+                        <th className="border border-gray-300 px-3 py-2 text-center">Domingos</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rankingAlunos.ranking?.map((aluno, index) => (
+                        <tr key={aluno.aluno_id} className="hover:bg-gray-50">
+                          <td className="border border-gray-300 px-3 py-2 text-center font-bold">
+                            {index + 1 === 1 && '🥇'}
+                            {index + 1 === 2 && '🥈'}
+                            {index + 1 === 3 && '🥉'}
+                            {index + 1 > 3 && `${index + 1}º`}
+                          </td>
+                          <td className="border border-gray-300 px-3 py-2 font-medium">{aluno.nome}</td>
+                          <td className="border border-gray-300 px-3 py-2">{aluno.turma}</td>
+                          <td className="border border-gray-300 px-3 py-2 text-center">{aluno.total_presencas}</td>
+                          <td className="border border-gray-300 px-3 py-2 text-center">{aluno.domingos_presentes}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="mt-4 text-sm text-gray-600">
+                  <p>Total de alunos no ranking: {rankingAlunos.total_alunos}</p>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'professores' && (
+              <div>
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Ranking Professores e Oficiais</h2>
+                <p className="text-gray-600 mb-6">Ranking da turma de liderança da igreja</p>
+                
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse border border-gray-200 text-sm">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border border-gray-300 px-3 py-2 text-center">Posição</th>
+                        <th className="border border-gray-300 px-3 py-2 text-left">Nome</th>
+                        <th className="border border-gray-300 px-3 py-2 text-center">Presenças</th>
+                        <th className="border border-gray-300 px-3 py-2 text-center">Domingos</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rankingProfessores.ranking?.map((professor, index) => (
+                        <tr key={professor.aluno_id} className="hover:bg-gray-50">
+                          <td className="border border-gray-300 px-3 py-2 text-center font-bold">
+                            {index + 1 === 1 && '🥇'}
+                            {index + 1 === 2 && '🥈'}
+                            {index + 1 === 3 && '🥉'}
+                            {index + 1 > 3 && `${index + 1}º`}
+                          </td>
+                          <td className="border border-gray-300 px-3 py-2 font-medium">{professor.nome}</td>
+                          <td className="border border-gray-300 px-3 py-2 text-center">{professor.total_presencas}</td>
+                          <td className="border border-gray-300 px-3 py-2 text-center">{professor.domingos_presentes}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="mt-4 text-sm text-gray-600">
+                  <p>Total de membros: {rankingProfessores.total_membros}</p>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'turmas' && (
+              <div>
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Ranking de Turmas</h2>
+                <p className="text-gray-600 mb-6">Turmas ordenadas por frequência média</p>
+                
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse border border-gray-200 text-sm">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border border-gray-300 px-3 py-2 text-center">Posição</th>
+                        <th className="border border-gray-300 px-3 py-2 text-left">Turma</th>
+                        <th className="border border-gray-300 px-3 py-2 text-center">Matriculados</th>
+                        <th className="border border-gray-300 px-3 py-2 text-center">Média Pres.</th>
+                        <th className="border border-gray-300 px-3 py-2 text-center">Frequência</th>
+                        <th className="border border-gray-300 px-3 py-2 text-center">Domingos</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rankingTurmas.ranking?.map((turma, index) => (
+                        <tr key={turma.turma_id} className="hover:bg-gray-50">
+                          <td className="border border-gray-300 px-3 py-2 text-center font-bold">
+                            {index + 1 === 1 && '🥇'}
+                            {index + 1 === 2 && '🥈'}
+                            {index + 1 === 3 && '🥉'}
+                            {index + 1 > 3 && `${index + 1}º`}
+                          </td>
+                          <td className="border border-gray-300 px-3 py-2 font-medium">{turma.turma_nome}</td>
+                          <td className="border border-gray-300 px-3 py-2 text-center">{turma.matriculados}</td>
+                          <td className="border border-gray-300 px-3 py-2 text-center">{turma.media_presencas}</td>
+                          <td className="border border-gray-300 px-3 py-2 text-center font-semibold text-green-600">
+                            {turma.percentual_frequencia}%
+                          </td>
+                          <td className="border border-gray-300 px-3 py-2 text-center">{turma.domingos_ativos}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="mt-4 text-sm text-gray-600">
+                  <p>Total de turmas: {rankingTurmas.total_turmas}</p>
+                </div>
+              </div>
+            )}
+
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+              <h4 className="font-semibold text-blue-800 mb-2">Como funciona o ranking:</h4>
+              <ul className="text-sm text-blue-700 space-y-1">
+                <li>• <strong>Alunos:</strong> Ordenados por total de presenças (domingos presentes)</li>
+                <li>• <strong>Professores:</strong> Ranking específico da turma de liderança</li>
+                <li>• <strong>Turmas:</strong> Ordenadas por percentual de frequência média</li>
+                <li>• <strong>Cálculo:</strong> Baseado nos dados reais de chamada registrados</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Renderização condicional
   const renderCurrentView = () => {
     // Se não está logado, mostrar apenas home

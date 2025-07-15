@@ -2310,8 +2310,8 @@ function App() {
             )}
 
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-2">Como funciona o ranking:</h4>
-              <ul className="text-sm text-blue-700 space-y-1">
+              <h4 className="font-semibold text-blue-800 mb-2 text-sm md:text-base">Como funciona o ranking:</h4>
+              <ul className="text-xs md:text-sm text-blue-700 space-y-1">
                 <li>• <strong>Alunos:</strong> Ordenados por total de presenças (domingos presentes)</li>
                 <li>• <strong>Professores:</strong> Ranking específico da turma de liderança</li>
                 <li>• <strong>Turmas:</strong> Ordenadas por percentual de frequência média</li>

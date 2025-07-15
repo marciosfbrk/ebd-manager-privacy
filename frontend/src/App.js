@@ -2148,10 +2148,10 @@ function App() {
 
           {/* Tabs */}
           <div className="mb-6">
-            <div className="flex flex-wrap space-x-1 bg-gray-200 p-1 rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-1 bg-gray-200 p-2 sm:p-1 rounded-lg">
               <button
                 onClick={() => setActiveTab('alunos')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'alunos'
                     ? 'bg-blue-500 text-white'
                     : 'text-gray-600 hover:text-gray-800'
@@ -2161,7 +2161,7 @@ function App() {
               </button>
               <button
                 onClick={() => setActiveTab('professores')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'professores'
                     ? 'bg-blue-500 text-white'
                     : 'text-gray-600 hover:text-gray-800'
@@ -2171,7 +2171,7 @@ function App() {
               </button>
               <button
                 onClick={() => setActiveTab('turmas')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'turmas'
                     ? 'bg-blue-500 text-white'
                     : 'text-gray-600 hover:text-gray-800'

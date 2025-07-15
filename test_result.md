@@ -292,7 +292,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Interface Relatórios Detalhados"
+    - "Interface Rankings"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

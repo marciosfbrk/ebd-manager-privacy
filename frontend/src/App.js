@@ -2127,15 +2127,9 @@ function App() {
 
   // Componente Rankings
   const Rankings = () => {
-    const [activeTab, setActiveTab] = useState('alunos');
-
     useEffect(() => {
       loadRankings();
     }, []);
-
-    const handleTabChange = (tab) => {
-      setActiveTab(tab);
-    };
 
     return (
       <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
@@ -2155,7 +2149,7 @@ function App() {
           <div className="mb-6">
             <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-1 bg-gray-200 p-2 sm:p-1 rounded-lg">
               <button
-                onClick={() => handleTabChange('alunos')}
+                onClick={() => setActiveTab('alunos')}
                 className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'alunos'
                     ? 'bg-blue-500 text-white'
@@ -2165,7 +2159,7 @@ function App() {
                 🎓 Alunos Gerais
               </button>
               <button
-                onClick={() => handleTabChange('professores')}
+                onClick={() => setActiveTab('professores')}
                 className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'professores'
                     ? 'bg-blue-500 text-white'
@@ -2175,7 +2169,7 @@ function App() {
                 👨‍🏫 Professores e Oficiais
               </button>
               <button
-                onClick={() => handleTabChange('turmas')}
+                onClick={() => setActiveTab('turmas')}
                 className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'turmas'
                     ? 'bg-blue-500 text-white'

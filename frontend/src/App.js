@@ -19,6 +19,7 @@ function App() {
   const [rankingAlunos, setRankingAlunos] = useState([]);
   const [rankingProfessores, setRankingProfessores] = useState([]);
   const [rankingTurmas, setRankingTurmas] = useState([]);
+  const [activeTab, setActiveTab] = useState('alunos');
   
   // Estados de autenticação
   const [isLoggedIn, setIsLoggedIn] = useState(false);

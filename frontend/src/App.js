@@ -422,7 +422,7 @@ function App() {
               <div className="space-y-4">
                 <button
                   onClick={() => setCurrentView('chamada')}
-                  className="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold animate-border-glow hover:scale-105"
+                  className="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold animate-border-glow"
                 >
                   <span className="text-xl mr-2">✅</span>
                   Fazer Chamada
@@ -432,7 +432,7 @@ function App() {
                   <>
                     <button
                       onClick={() => setCurrentView('relatorios')}
-                      className="w-full px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold animate-border-glow hover:scale-105"
+                      className="w-full px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold animate-border-glow"
                     >
                       <span className="text-xl mr-2">📊</span>
                       Relatórios Detalhados
@@ -442,7 +442,7 @@ function App() {
                         setActiveTab('alunos');
                         setCurrentView('ranking');
                       }}
-                      className="w-full px-6 py-4 bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-lg hover:from-yellow-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold animate-border-glow hover:scale-105"
+                      className="w-full px-6 py-4 bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-lg hover:from-yellow-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold animate-border-glow"
                     >
                       <span className="text-xl mr-2">🏆</span>
                       Rankings

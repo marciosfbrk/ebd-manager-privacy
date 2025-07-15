@@ -15,6 +15,11 @@ function App() {
   const [selectedDate, setSelectedDate] = useState('2025-07-13');
   const [loading, setLoading] = useState(false);
   
+  // Estados de ranking
+  const [rankingAlunos, setRankingAlunos] = useState([]);
+  const [rankingProfessores, setRankingProfessores] = useState([]);
+  const [rankingTurmas, setRankingTurmas] = useState([]);
+  
   // Estados de autenticação
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);

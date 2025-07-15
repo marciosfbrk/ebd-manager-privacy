@@ -2,66 +2,10 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
 
-// Adicionar estilos de animação
-const animationStyles = `
-  @keyframes borderGlow {
-    0% {
-      box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4);
-    }
-    100% {
-      box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
-    }
-  }
-  
-  @keyframes pulseGlow {
-    0%, 100% {
-      box-shadow: 0 0 5px rgba(99, 102, 241, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 15px rgba(99, 102, 241, 0.6), 0 0 25px rgba(99, 102, 241, 0.4);
-    }
-  }
-  
-  @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
-    }
-  }
-  
-  .animate-border-glow {
-    animation: borderGlow 3s ease-in-out infinite;
-  }
-  
-  .animate-pulse-glow {
-    animation: pulseGlow 4s ease-in-out infinite;
-  }
-  
-  .animate-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    background-size: 200% 100%;
-    animation: shimmer 2s ease-in-out infinite;
-  }
-`;
-
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 function App() {
-  // Inject animation styles
-  useEffect(() => {
-    const styleSheet = document.createElement('style');
-    styleSheet.textContent = animationStyles;
-    document.head.appendChild(styleSheet);
-    
-    return () => document.head.removeChild(styleSheet);
-  }, []);
-
   const [currentView, setCurrentView] = useState('home');
   const [showApp, setShowApp] = useState(false);
   const [turmas, setTurmas] = useState([]);
@@ -323,7 +267,7 @@ function App() {
 
         <div className="p-6">
           {/* Resumo Rápido */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200 animate-border-glow">
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h2 className="text-2xl font-bold text-gray-800">Resumo Rápido</h2>
@@ -342,21 +286,21 @@ function App() {
 
             {/* Cards de Resumo */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center animate-border-glow">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-blue-600">
                   {attendanceData.reduce((sum, row) => sum + row.matriculados, 0)}
                 </div>
                 <div className="text-sm text-blue-500 font-medium">Matriculados</div>
               </div>
               
-              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 text-center animate-border-glow">
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-green-600">
                   {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
                 </div>
                 <div className="text-sm text-green-500 font-medium">Presentes</div>
               </div>
               
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center animate-border-glow">
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-purple-600">
                   {(() => {
                     const totalMatriculados = attendanceData.reduce((sum, row) => sum + row.matriculados, 0);
@@ -367,7 +311,7 @@ function App() {
                 <div className="text-sm text-purple-500 font-medium">Frequência</div>
               </div>
               
-              <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-4 text-center animate-border-glow">
+              <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-yellow-600">
                   R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2)}
                 </div>
@@ -380,7 +324,7 @@ function App() {
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">🏆 Destaques do Dia</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-green-50 rounded-lg p-4 animate-border-glow">
+                  <div className="bg-green-50 rounded-lg p-4">
                     <div className="font-semibold text-green-800">Melhor Frequência</div>
                     <div className="text-green-700">
                       {(() => {
@@ -394,7 +338,7 @@ function App() {
                     </div>
                   </div>
                   
-                  <div className="bg-yellow-50 rounded-lg p-4 animate-border-glow">
+                  <div className="bg-yellow-50 rounded-lg p-4">
                     <div className="font-semibold text-yellow-800">Maior Oferta</div>
                     <div className="text-yellow-700">
                       {(() => {
@@ -422,7 +366,7 @@ function App() {
               <div className="space-y-4">
                 <button
                   onClick={() => setCurrentView('chamada')}
-                  className="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold animate-border-glow"
+                  className="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
                 >
                   <span className="text-xl mr-2">✅</span>
                   Fazer Chamada
@@ -432,7 +376,7 @@ function App() {
                   <>
                     <button
                       onClick={() => setCurrentView('relatorios')}
-                      className="w-full px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold animate-border-glow"
+                      className="w-full px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
                     >
                       <span className="text-xl mr-2">📊</span>
                       Relatórios Detalhados
@@ -442,7 +386,7 @@ function App() {
                         setActiveTab('alunos');
                         setCurrentView('ranking');
                       }}
-                      className="w-full px-6 py-4 bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-lg hover:from-yellow-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold animate-border-glow"
+                      className="w-full px-6 py-4 bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-lg hover:from-yellow-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
                     >
                       <span className="text-xl mr-2">🏆</span>
                       Rankings

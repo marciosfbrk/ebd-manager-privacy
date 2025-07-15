@@ -2186,9 +2186,6 @@ function App() {
 
           {/* Conteúdo dos Rankings */}
           <div className="bg-white rounded-lg shadow-lg p-4 md:p-6">
-            <div className="mb-4">
-              <small className="text-gray-500">Debug: activeTab = {activeTab}</small>
-            </div>
             {activeTab === 'alunos' && (
               <div>
                 <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Ranking Geral de Alunos</h2>

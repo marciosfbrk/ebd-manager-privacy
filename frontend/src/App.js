@@ -380,7 +380,7 @@ function App() {
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">🏆 Destaques do Dia</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-green-50 rounded-lg p-4 animate-pulse-glow transition-all duration-300 hover:scale-105">
+                  <div className="bg-green-50 rounded-lg p-4 animate-border-glow">
                     <div className="font-semibold text-green-800">Melhor Frequência</div>
                     <div className="text-green-700">
                       {(() => {
@@ -394,7 +394,7 @@ function App() {
                     </div>
                   </div>
                   
-                  <div className="bg-yellow-50 rounded-lg p-4 animate-pulse-glow transition-all duration-300 hover:scale-105">
+                  <div className="bg-yellow-50 rounded-lg p-4 animate-border-glow">
                     <div className="font-semibold text-yellow-800">Maior Oferta</div>
                     <div className="text-yellow-700">
                       {(() => {

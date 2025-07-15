@@ -2186,40 +2186,40 @@ function App() {
           <div className="bg-white rounded-lg shadow-lg p-4 md:p-6">
             {activeTab === 'alunos' && (
               <div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Ranking Geral de Alunos</h2>
-                <p className="text-gray-600 mb-6">Top 50 alunos com mais presenças</p>
+                <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Ranking Geral de Alunos</h2>
+                <p className="text-sm md:text-base text-gray-600 mb-6">Top 50 alunos com mais presenças</p>
                 
                 <div className="overflow-x-auto">
-                  <table className="w-full border-collapse border border-gray-200 text-sm">
+                  <table className="w-full border-collapse border border-gray-200 text-xs md:text-sm">
                     <thead>
                       <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-3 py-2 text-center">Posição</th>
-                        <th className="border border-gray-300 px-3 py-2 text-left">Nome</th>
-                        <th className="border border-gray-300 px-3 py-2 text-left">Turma</th>
-                        <th className="border border-gray-300 px-3 py-2 text-center">Presenças</th>
-                        <th className="border border-gray-300 px-3 py-2 text-center">Domingos</th>
+                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Pos.</th>
+                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-left">Nome</th>
+                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-left">Turma</th>
+                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Pres.</th>
+                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Dom.</th>
                       </tr>
                     </thead>
                     <tbody>
                       {rankingAlunos.ranking?.map((aluno, index) => (
                         <tr key={aluno.aluno_id} className="hover:bg-gray-50">
-                          <td className="border border-gray-300 px-3 py-2 text-center font-bold">
+                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center font-bold">
                             {index + 1 === 1 && '🥇'}
                             {index + 1 === 2 && '🥈'}
                             {index + 1 === 3 && '🥉'}
                             {index + 1 > 3 && `${index + 1}º`}
                           </td>
-                          <td className="border border-gray-300 px-3 py-2 font-medium">{aluno.nome}</td>
-                          <td className="border border-gray-300 px-3 py-2">{aluno.turma}</td>
-                          <td className="border border-gray-300 px-3 py-2 text-center">{aluno.total_presencas}</td>
-                          <td className="border border-gray-300 px-3 py-2 text-center">{aluno.domingos_presentes}</td>
+                          <td className="border border-gray-300 px-2 md:px-3 py-2 font-medium">{aluno.nome}</td>
+                          <td className="border border-gray-300 px-2 md:px-3 py-2">{aluno.turma}</td>
+                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{aluno.total_presencas}</td>
+                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{aluno.domingos_presentes}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
 
-                <div className="mt-4 text-sm text-gray-600">
+                <div className="mt-4 text-xs md:text-sm text-gray-600">
                   <p>Total de alunos no ranking: {rankingAlunos.total_alunos}</p>
                 </div>
               </div>

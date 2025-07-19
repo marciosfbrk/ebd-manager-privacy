@@ -48,7 +48,7 @@ start_system.bat
 ## 📁 Estrutura Local
 
 ```
-C:\Ebd-v4\
+C:\Ebd-v6\
 ├── backend\          # FastAPI + Python
 ├── frontend\         # React + Node.js
 ├── data\            # MongoDB local
@@ -74,7 +74,7 @@ npm start
 
 ### MongoDB
 ```cmd
-mongod --dbpath C:\Ebd-v4\data
+mongod --dbpath C:\Ebd-v6\data
 ```
 
 ## 📊 Dados Inclusos

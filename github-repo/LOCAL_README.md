@@ -84,6 +84,8 @@ mongod --dbpath C:\Ebd-v6\data
 - **Usuários** configurados
 - **Sistema completo** funcionando
 
----
-
 **🚀 Em 5 minutos você terá o EBD Manager rodando localmente!**
+
+## 📞 Repositório
+- **GitHub**: https://github.com/marciosfbrk/Ebd-v6
+- **Desenvolvido por**: Márcio Ferreira

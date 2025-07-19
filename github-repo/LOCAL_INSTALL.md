@@ -50,7 +50,7 @@ start_system.bat
 ## 📁 Estrutura após instalação
 
 ```
-C:\Ebd-v4\
+C:\Ebd-v6\
 ├── backend\
 │   ├── venv\              # Ambiente Python virtual
 │   ├── server.py          # Aplicação FastAPI

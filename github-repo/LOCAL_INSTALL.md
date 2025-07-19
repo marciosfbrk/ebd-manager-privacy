@@ -24,8 +24,8 @@
 ### 1. Baixar o projeto
 ```cmd
 cd C:\
-git clone https://github.com/SEU_USUARIO/Ebd-v4.git
-cd Ebd-v4
+git clone https://github.com/marciosfbrk/Ebd-v6.git
+cd Ebd-v6
 ```
 
 ### 2. Executar instalação automática

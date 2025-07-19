@@ -5,7 +5,7 @@
 ## 🚀 Deploy Rápido
 
 [![Deploy Backend](https://railway.app/button.svg)](https://railway.app/new/template)
-[![Deploy Frontend](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/seu-usuario/ebd-manager)
+[![Deploy Frontend](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/marciosfbrk/Ebd-v6)
 
 ## 📋 Sobre o Sistema
 

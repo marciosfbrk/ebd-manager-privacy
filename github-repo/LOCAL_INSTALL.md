@@ -83,7 +83,7 @@ cd frontend
 npm start
 
 # Iniciar MongoDB
-mongod --dbpath C:\Ebd-v4\data
+mongod --dbpath C:\Ebd-v6\data
 
 # Ver logs
 type logs\backend.log

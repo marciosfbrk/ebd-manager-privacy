@@ -1876,25 +1876,28 @@ function App() {
     };
 
     const handleDelete = async (userId) => {
-      if (window.confirm('Tem certeza que deseja remover este usuário?')) {
+      const usuario = usuarios.find(u => u.id === userId);
+      const nomeUsuario = usuario ? usuario.nome : 'usuário';
+      
+      if (window.confirm(`Tem certeza que deseja remover ${nomeUsuario}? Esta ação não pode ser desfeita.`)) {
         try {
           console.log('Attempting to delete user with ID:', userId);
           const response = await axios.delete(`${API}/users/${userId}`);
           console.log('Delete response:', response.data);
           await loadUsuarios();
-          alert('Usuário removido com sucesso!');
+          alert(`✅ ${nomeUsuario} foi removido com sucesso!`);
         } catch (error) {
           console.error('Erro ao remover usuário:', error);
           if (error.response) {
             console.error('Response data:', error.response.data);
             console.error('Response status:', error.response.status);
-            alert(`Erro ao remover usuário: ${error.response.data.detail || error.response.status}`);
+            alert(`❌ Erro ao remover usuário: ${error.response.data.detail || error.response.status}`);
           } else if (error.request) {
             console.error('No response received:', error.request);
-            alert('Erro de conexão ao remover usuário');
+            alert('❌ Erro de conexão ao remover usuário');
           } else {
             console.error('Error setting up request:', error.message);
-            alert(`Erro ao remover usuário: ${error.message}`);
+            alert(`❌ Erro ao remover usuário: ${error.message}`);
           }
         }
       }

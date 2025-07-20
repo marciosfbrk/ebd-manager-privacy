@@ -2138,34 +2138,57 @@ function App() {
           <div className="mb-6">
             <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-1 bg-gray-200 p-2 sm:p-1 rounded-lg">
               <button
-                onClick={() => setActiveTab('alunos')}
-                className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
+                onClick={() => handleTabChange('alunos')}
+                disabled={isLoadingRankings}
+                className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                   activeTab === 'alunos'
                     ? 'bg-blue-500 text-white'
-                    : 'text-gray-600 hover:text-gray-800'
+                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-300'
                 }`}
               >
                 🎓 Alunos Gerais
               </button>
               <button
-                onClick={() => setActiveTab('professores')}
-                className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
+                onClick={() => handleTabChange('professores')}
+                disabled={isLoadingRankings}
+                className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                   activeTab === 'professores'
                     ? 'bg-blue-500 text-white'
-                    : 'text-gray-600 hover:text-gray-800'
+                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-300'
                 }`}
               >
                 👨‍🏫 Professores e Oficiais
               </button>
               <button
-                onClick={() => setActiveTab('turmas')}
-                className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors ${
+                onClick={() => handleTabChange('turmas')}
+                disabled={isLoadingRankings}
+                className={`px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                   activeTab === 'turmas'
                     ? 'bg-blue-500 text-white'
-                    : 'text-gray-600 hover:text-gray-800'
+                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-300'
                 }`}
               >
                 🏫 Turmas
+              </button>
+            </div>
+            
+            {/* Botão de refresh */}
+            <div className="mt-3 text-right">
+              <button
+                onClick={loadRankingsData}
+                disabled={isLoadingRankings}
+                className="px-3 py-1 bg-green-500 text-white text-sm rounded hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 ml-auto"
+              >
+                {isLoadingRankings ? (
+                  <>
+                    <span className="animate-spin">⟳</span>
+                    Carregando...
+                  </>
+                ) : (
+                  <>
+                    🔄 Atualizar Rankings
+                  </>
+                )}
               </button>
             </div>
           </div>

@@ -649,33 +649,6 @@ function App() {
           </div>
         </div>
 
-        {/* Estatísticas Rápidas */}
-        <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-2xl p-8 mb-12 border border-white border-opacity-20">
-          <h3 className="text-2xl font-bold mb-6">Estatísticas Atuais para Relatório Semanal</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-400">{turmas.length}</div>
-              <div className="text-blue-200">Turmas</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-green-400">{students.length}</div>
-              <div className="text-blue-200">Alunos</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-blue-400">
-                {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
-              </div>
-              <div className="text-blue-200">Presentes</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-purple-400">
-                R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(0)}
-              </div>
-              <div className="text-blue-200">Ofertas Hoje</div>
-            </div>
-          </div>
-        </div>
-
         {/* Botão de Entrada */}
         <div className="space-y-4">
           {isLoggedIn ? (

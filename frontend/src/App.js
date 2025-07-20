@@ -2195,46 +2195,61 @@ function App() {
 
           {/* Conteúdo dos Rankings */}
           <div className="bg-white rounded-lg shadow-lg p-4 md:p-6">
-            {activeTab === 'alunos' && (
-              <div>
-                <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Ranking Geral de Alunos</h2>
-                <p className="text-sm md:text-base text-gray-600 mb-6">Top 50 alunos com mais presenças</p>
-                
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse border border-gray-200 text-xs md:text-sm">
-                    <thead>
-                      <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Pos.</th>
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-left">Nome</th>
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-left">Turma</th>
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Pres.</th>
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Dom.</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {rankingAlunos.ranking?.map((aluno, index) => (
-                        <tr key={aluno.aluno_id} className="hover:bg-gray-50">
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center font-bold">
-                            {index + 1 === 1 && '🥇'}
-                            {index + 1 === 2 && '🥈'}
-                            {index + 1 === 3 && '🥉'}
-                            {index + 1 > 3 && `${index + 1}º`}
-                          </td>
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 font-medium">{aluno.nome}</td>
-                          <td className="border border-gray-300 px-2 md:px-3 py-2">{aluno.turma}</td>
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{aluno.total_presencas}</td>
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{aluno.domingos_presentes}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="mt-4 text-xs md:text-sm text-gray-600">
-                  <p>Total de alunos no ranking: {rankingAlunos.total_alunos}</p>
-                </div>
+            {isLoadingRankings ? (
+              <div className="text-center py-12">
+                <div className="animate-spin text-4xl mb-4">⟳</div>
+                <p className="text-gray-600">Carregando rankings...</p>
               </div>
-            )}
+            ) : (
+              <>
+                {activeTab === 'alunos' && (
+                  <div>
+                    <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Ranking Geral de Alunos</h2>
+                    <p className="text-sm md:text-base text-gray-600 mb-6">Top 50 alunos com mais presenças</p>
+                    
+                    {rankingAlunos.ranking && rankingAlunos.ranking.length > 0 ? (
+                      <>
+                        <div className="overflow-x-auto">
+                          <table className="w-full border-collapse border border-gray-200 text-xs md:text-sm">
+                            <thead>
+                              <tr className="bg-gray-100">
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Pos.</th>
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-left">Nome</th>
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-left">Turma</th>
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Pres.</th>
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Dom.</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {rankingAlunos.ranking.map((aluno, index) => (
+                                <tr key={`aluno-${aluno.aluno_id}-${index}`} className="hover:bg-gray-50">
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 text-center font-bold">
+                                    {index + 1 === 1 && '🥇'}
+                                    {index + 1 === 2 && '🥈'}
+                                    {index + 1 === 3 && '🥉'}
+                                    {index + 1 > 3 && `${index + 1}º`}
+                                  </td>
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 font-medium">{aluno.nome}</td>
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2">{aluno.turma}</td>
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{aluno.total_presencas}</td>
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{aluno.domingos_presentes}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="mt-4 text-xs md:text-sm text-gray-600">
+                          <p>Total de alunos no ranking: {rankingAlunos.total_alunos || rankingAlunos.ranking.length}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">
+                        <p>📊 Nenhum dado de ranking disponível</p>
+                        <p className="text-sm mt-2">Tente atualizar os rankings</p>
+                      </div>
+                    )}
+                  </div>
+                )}
 
             {activeTab === 'professores' && (
               <div>

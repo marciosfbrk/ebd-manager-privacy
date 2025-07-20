@@ -2251,76 +2251,107 @@ function App() {
                   </div>
                 )}
 
-            {activeTab === 'professores' && (
-              <div>
-                <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Ranking Professores e Oficiais</h2>
-                <p className="text-sm md:text-base text-gray-600 mb-6">Ranking da turma de liderança da igreja</p>
-                
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse border border-gray-200 text-xs md:text-sm">
-                    <thead>
-                      <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Pos.</th>
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-left">Nome</th>
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Pres.</th>
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Dom.</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {rankingProfessores.ranking?.map((professor, index) => (
-                        <tr key={professor.aluno_id} className="hover:bg-gray-50">
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center font-bold">
-                            {index + 1 === 1 && '🥇'}
-                            {index + 1 === 2 && '🥈'}
-                            {index + 1 === 3 && '🥉'}
-                            {index + 1 > 3 && `${index + 1}º`}
-                          </td>
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 font-medium">{professor.nome}</td>
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{professor.total_presencas}</td>
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{professor.domingos_presentes}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                {activeTab === 'professores' && (
+                  <div>
+                    <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Ranking Professores e Oficiais</h2>
+                    <p className="text-sm md:text-base text-gray-600 mb-6">Ranking da turma de liderança da igreja</p>
+                    
+                    {rankingProfessores.ranking && rankingProfessores.ranking.length > 0 ? (
+                      <>
+                        <div className="overflow-x-auto">
+                          <table className="w-full border-collapse border border-gray-200 text-xs md:text-sm">
+                            <thead>
+                              <tr className="bg-gray-100">
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Pos.</th>
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-left">Nome</th>
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Pres.</th>
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Dom.</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {rankingProfessores.ranking.map((professor, index) => (
+                                <tr key={`prof-${professor.aluno_id}-${index}`} className="hover:bg-gray-50">
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 text-center font-bold">
+                                    {index + 1 === 1 && '🥇'}
+                                    {index + 1 === 2 && '🥈'}
+                                    {index + 1 === 3 && '🥉'}
+                                    {index + 1 > 3 && `${index + 1}º`}
+                                  </td>
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 font-medium">{professor.nome}</td>
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{professor.total_presencas}</td>
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{professor.domingos_presentes}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="mt-4 text-xs md:text-sm text-gray-600">
+                          <p>Total de membros: {rankingProfessores.total_membros || rankingProfessores.ranking.length}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">
+                        <p>📊 Nenhum dado de ranking disponível</p>
+                        <p className="text-sm mt-2">Tente atualizar os rankings</p>
+                      </div>
+                    )}
+                  </div>
+                )}
 
-                <div className="mt-4 text-xs md:text-sm text-gray-600">
-                  <p>Total de membros: {rankingProfessores.total_membros}</p>
-                </div>
-              </div>
+                {activeTab === 'turmas' && (
+                  <div>
+                    <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Ranking de Turmas</h2>
+                    <p className="text-sm md:text-base text-gray-600 mb-6">Turmas ordenadas por frequência média</p>
+                    
+                    {rankingTurmas.ranking && rankingTurmas.ranking.length > 0 ? (
+                      <>
+                        <div className="overflow-x-auto">
+                          <table className="w-full border-collapse border border-gray-200 text-xs md:text-sm">
+                            <thead>
+                              <tr className="bg-gray-100">
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Pos.</th>
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-left">Turma</th>
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Matric.</th>
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Média</th>
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Freq.</th>
+                                <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Dom.</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {rankingTurmas.ranking.map((turma, index) => (
+                                <tr key={`turma-${turma.turma_id}-${index}`} className="hover:bg-gray-50">
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 text-center font-bold">
+                                    {index + 1 === 1 && '🥇'}
+                                    {index + 1 === 2 && '🥈'}
+                                    {index + 1 === 3 && '🥉'}
+                                    {index + 1 > 3 && `${index + 1}º`}
+                                  </td>
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 font-medium">{turma.turma_nome}</td>
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{turma.matriculados}</td>
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{turma.media_presencas}</td>
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 text-center font-semibold text-green-600">
+                                    {turma.percentual_frequencia}%
+                                  </td>
+                                  <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{turma.domingos_com_dados}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="mt-4 text-xs md:text-sm text-gray-600">
+                          <p>Total de turmas: {rankingTurmas.total_turmas || rankingTurmas.ranking.length}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">
+                        <p>📊 Nenhum dado de ranking disponível</p>
+                        <p className="text-sm mt-2">Tente atualizar os rankings</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
             )}
-
-            {activeTab === 'turmas' && (
-              <div>
-                <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Ranking de Turmas</h2>
-                <p className="text-sm md:text-base text-gray-600 mb-6">Turmas ordenadas por frequência média</p>
-                
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse border border-gray-200 text-xs md:text-sm">
-                    <thead>
-                      <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Pos.</th>
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-left">Turma</th>
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Matric.</th>
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Média</th>
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Freq.</th>
-                        <th className="border border-gray-300 px-2 md:px-3 py-2 text-center">Dom.</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {rankingTurmas.ranking?.map((turma, index) => (
-                        <tr key={turma.turma_id} className="hover:bg-gray-50">
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center font-bold">
-                            {index + 1 === 1 && '🥇'}
-                            {index + 1 === 2 && '🥈'}
-                            {index + 1 === 3 && '🥉'}
-                            {index + 1 > 3 && `${index + 1}º`}
-                          </td>
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 font-medium">{turma.turma_nome}</td>
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{turma.matriculados}</td>
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{turma.media_presencas}</td>
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center font-semibold text-green-600">
-                            {turma.percentual_frequencia}%
                           </td>
                           <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{turma.domingos_ativos}</td>
                         </tr>

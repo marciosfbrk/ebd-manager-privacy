@@ -300,6 +300,8 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: "Implementado sistema EBD Manager completo com backend FastAPI e frontend React. Sistema inclui: CRUD de turmas e alunos, sistema de chamada com validação de domingos, registro de ofertas e materiais, relatórios consolidados. Dados iniciais com nomes fornecidos pelo usuário. Precisa testar todos os endpoints antes de testar frontend."
+  - agent: "main"
+    message: "REGISTRO DE DADOS HISTÓRICOS CONCLUÍDO (2025-07-20): ✅ Registrados com sucesso dados históricos de presença da turma 'Professores e Oficiais' para os dias 06/07/2025 e 13/07/2025. ✅ Dia 06/07: 18 presentes, R$ 33,00 oferta, 33 revistas/bíblias. ✅ Dia 13/07: 15 presentes, R$ 40,00 oferta, 40 revistas/bíblias. ✅ Sistema processou corretamente 32 alunos com mapeamento nome->ID. ✅ Dashboard atualizado mostrando dados do dia 13/07 (mais recente): 15 presentes, R$ 40,00 ofertas, Professores e Oficiais como destaque com 46.9% frequência. ✅ Script Python criado (/app/register_attendance.py) para registro automatizado dos dados através da API bulk attendance. Todos os dados foram validados e estão funcionando perfeitamente no sistema hospedado."
   - agent: "testing"
     message: "BACKEND TESTING COMPLETED: All 6 backend tasks tested and working correctly. Fixed critical date serialization issue for MongoDB (BSON cannot encode Python date objects directly). All endpoints tested: CRUD operations for turmas/students, attendance system with Sunday validation, bulk attendance, dashboard reports, and sample data initialization. UUID validation confirmed throughout. System ready for production use. Minor fix applied: added date serialization helpers to handle MongoDB storage properly."
   - agent: "testing"

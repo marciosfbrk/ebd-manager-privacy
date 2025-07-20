@@ -2352,19 +2352,6 @@ function App() {
                 )}
               </>
             )}
-                          </td>
-                          <td className="border border-gray-300 px-2 md:px-3 py-2 text-center">{turma.domingos_ativos}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="mt-4 text-xs md:text-sm text-gray-600">
-                  <p>Total de turmas: {rankingTurmas.total_turmas}</p>
-                </div>
-              </div>
-            )}
 
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
               <h4 className="font-semibold text-blue-800 mb-2 text-sm md:text-base">Como funciona o ranking:</h4>

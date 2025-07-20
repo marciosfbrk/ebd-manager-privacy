@@ -125,6 +125,9 @@ def register_attendance_for_date(date_str, attendance_list, revista_biblia, ofer
     """Registrar presença para uma data específica"""
     print(f"\n📅 Registrando presença para {date_str}...")
     
+    # Contar presentes primeiro
+    present_count = sum(1 for att in attendance_list if att["presente"])
+    
     # Preparar lista de presenças para a API
     bulk_attendance = []
     total_present = 0
@@ -142,10 +145,13 @@ def register_attendance_for_date(date_str, attendance_list, revista_biblia, ofer
         student_id = name_to_id[nome]
         status = "presente" if presente else "ausente"
         
-        # Calcular oferta individual (oferta total dividida pelo número de presentes)
-        present_count = sum(1 for att in attendance_list if att["presente"])
-        individual_offer = oferta / present_count if present_count > 0 and presente else 0.0
-        individual_revista = revista_biblia / present_count if present_count > 0 and presente else 0
+        # Calcular oferta e revista individual apenas para quem está presente
+        if presente and present_count > 0:
+            individual_offer = oferta / present_count
+            individual_revista = revista_biblia / present_count
+        else:
+            individual_offer = 0.0
+            individual_revista = 0
         
         bulk_attendance.append({
             "aluno_id": student_id,
@@ -164,8 +170,11 @@ def register_attendance_for_date(date_str, attendance_list, revista_biblia, ofer
         print(f"⚠️  Nomes não encontrados no sistema: {', '.join(not_found)}")
     
     print(f"📊 Resumo: {total_present} presentes, {total_absent} ausentes")
-    print(f"💰 Oferta individual: R$ {bulk_attendance[0]['oferta']:.2f} (para presentes)")
-    print(f"📖 Revistas/Bíblias individuais: {bulk_attendance[0]['biblias_entregues']} (para presentes)")
+    if total_present > 0:
+        individual_offer_display = oferta / present_count
+        individual_revista_display = revista_biblia / present_count
+        print(f"💰 Oferta individual: R$ {individual_offer_display:.2f} (para presentes)")
+        print(f"📖 Revistas/Bíblias individuais: {individual_revista_display:.1f} (para presentes)")
     
     # Fazer chamada para a API
     try:

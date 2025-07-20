@@ -2081,9 +2081,44 @@ function App() {
 
   // Componente Rankings
   const Rankings = () => {
+    const [isLoadingRankings, setIsLoadingRankings] = useState(false);
+    
     useEffect(() => {
-      loadRankings();
+      // Só carrega se ainda não tiver dados
+      if (!rankingAlunos.ranking || !rankingProfessores.ranking || !rankingTurmas.ranking) {
+        loadRankingsData();
+      }
     }, []);
+
+    const loadRankingsData = async () => {
+      if (isLoadingRankings) return; // Evita múltiplas chamadas simultâneas
+      
+      setIsLoadingRankings(true);
+      try {
+        console.log('Carregando rankings...');
+        const [alunosResponse, professoresResponse, turmasResponse] = await Promise.all([
+          axios.get(`${API}/ranking/alunos`),
+          axios.get(`${API}/ranking/professores-oficiais`),
+          axios.get(`${API}/ranking/turmas`)
+        ]);
+        
+        setRankingAlunos(alunosResponse.data);
+        setRankingProfessores(professoresResponse.data);
+        setRankingTurmas(turmasResponse.data);
+        console.log('Rankings carregados com sucesso');
+      } catch (error) {
+        console.error('Erro ao carregar rankings:', error);
+        alert('Erro ao carregar rankings. Tente novamente.');
+      } finally {
+        setIsLoadingRankings(false);
+      }
+    };
+
+    const handleTabChange = (newTab) => {
+      // Debounce para evitar mudanças rápidas de aba
+      if (isLoadingRankings) return;
+      setActiveTab(newTab);
+    };
 
     return (
       <div className="p-4 md:p-6 bg-gray-50 min-h-screen">

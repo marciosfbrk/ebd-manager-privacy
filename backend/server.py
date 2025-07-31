@@ -1037,6 +1037,139 @@ async def get_turmas_ranking():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao gerar ranking de turmas: {str(e)}")
 
+# Routes - Revistas
+@api_router.get("/revistas")
+async def get_revistas():
+    """Buscar todas as revistas ativas"""
+    try:
+        revistas = await db.revistas.find({"ativa": True}).to_list(100)
+        return revistas
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar revistas: {str(e)}")
+
+@api_router.get("/revistas/turma/{turma_id}")
+async def get_revista_by_turma(turma_id: str):
+    """Buscar revista de uma turma específica"""
+    try:
+        revista = await db.revistas.find_one({"turma_ids": turma_id, "ativa": True})
+        if not revista:
+            return {"tema": None, "licoes": []}
+        return revista
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar revista da turma: {str(e)}")
+
+@api_router.post("/revistas")
+async def create_revista(revista: RevistaCreate):
+    """Criar nova revista"""
+    try:
+        revista_data = {
+            "id": str(uuid.uuid4()),
+            "tema": revista.tema,
+            "licoes": [licao.dict() for licao in revista.licoes],
+            "turma_ids": revista.turma_ids,
+            "ativa": True,
+            "criada_em": datetime.utcnow().isoformat()
+        }
+        
+        result = await db.revistas.insert_one(revista_data)
+        revista_data["_id"] = str(result.inserted_id)
+        return {"message": "Revista criada com sucesso", "revista": revista_data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao criar revista: {str(e)}")
+
+@api_router.put("/revistas/{revista_id}")
+async def update_revista(revista_id: str, revista: RevistaCreate):
+    """Atualizar revista existente"""
+    try:
+        revista_data = {
+            "tema": revista.tema,
+            "licoes": [licao.dict() for licao in revista.licoes],
+            "turma_ids": revista.turma_ids,
+        }
+        
+        result = await db.revistas.update_one(
+            {"id": revista_id},
+            {"$set": revista_data}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Revista não encontrada")
+        
+        return {"message": "Revista atualizada com sucesso"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao atualizar revista: {str(e)}")
+
+@api_router.delete("/revistas/{revista_id}")
+async def delete_revista(revista_id: str):
+    """Desativar revista"""
+    try:
+        result = await db.revistas.update_one(
+            {"id": revista_id},
+            {"$set": {"ativa": False}}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Revista não encontrada")
+        
+        return {"message": "Revista desativada com sucesso"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao desativar revista: {str(e)}")
+
+# Endpoint para inicializar revista de adultos
+@api_router.post("/init-revista-adultos")
+async def init_revista_adultos():
+    """Inicializar dados da revista de adultos para as turmas especificadas"""
+    try:
+        # Buscar IDs das turmas de adultos
+        turmas_adultos = ["Professores e Oficiais", "Ebenezer (Obreiros)", "Dorcas (irmãs)", "Soldados de Cristo"]
+        
+        turmas = await db.turmas.find({"nome": {"$in": turmas_adultos}, "ativa": True}).to_list(10)
+        turma_ids = [turma["id"] for turma in turmas]
+        
+        if not turma_ids:
+            raise HTTPException(status_code=404, detail="Turmas de adultos não encontradas")
+        
+        # Verificar se já existe uma revista para essas turmas
+        revista_existente = await db.revistas.find_one({"turma_ids": {"$in": turma_ids}, "ativa": True})
+        if revista_existente:
+            return {"message": "Revista de adultos já existe", "revista": revista_existente}
+        
+        # Dados da revista de adultos
+        revista_adultos = {
+            "id": str(uuid.uuid4()),
+            "tema": "A Igreja em Jerusalém — Doutrina, Comunhão e Fé: a base para o crescimento da Igreja em meio às perseguições",
+            "licoes": [
+                {"titulo": "A Igreja que nasceu no Pentecostes", "data": "2025-07-06"},
+                {"titulo": "A Igreja de Jerusalém: um modelo a ser seguido", "data": "2025-07-13"},
+                {"titulo": "Uma Igreja fiel à pregação do Evangelho", "data": "2025-07-20"},
+                {"titulo": "Uma Igreja cheia do Espírito Santo", "data": "2025-07-27"},
+                {"titulo": "Uma Igreja cheia de amor", "data": "2025-08-03"},
+                {"titulo": "Uma Igreja não conivente com a mentira", "data": "2025-08-10"},
+                {"titulo": "Uma Igreja que não teme a perseguição", "data": "2025-08-17"},
+                {"titulo": "Uma Igreja que enfrenta os seus problemas", "data": "2025-08-24"},
+                {"titulo": "Uma Igreja que se arrisca", "data": "2025-08-31"},
+                {"titulo": "A expansão da Igreja", "data": "2025-09-07"},
+                {"titulo": "Uma igreja hebreia na casa de um estrangeiro", "data": "2025-09-14"},
+                {"titulo": "O caráter missionário da Igreja de Jerusalém", "data": "2025-09-21"},
+                {"titulo": "Assembleia de Jerusalém", "data": "2025-09-28"}
+            ],
+            "turma_ids": turma_ids,
+            "ativa": True,
+            "criada_em": datetime.utcnow().isoformat()
+        }
+        
+        await db.revistas.insert_one(revista_adultos)
+        
+        return {
+            "message": "Revista de adultos criada com sucesso",
+            "turmas_atendidas": [turma["nome"] for turma in turmas],
+            "total_licoes": len(revista_adultos["licoes"]),
+            "revista": revista_adultos
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao criar revista de adultos: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 

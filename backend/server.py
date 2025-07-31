@@ -562,6 +562,46 @@ async def get_users():
     users = await db.users.find({"ativo": True}).to_list(1000)
     return [User(**user) for user in users]
 
+@api_router.put("/users/{user_id}")
+async def update_user(user_id: str, user_update: UserCreate):
+    """Atualizar usuário existente"""
+    # Verificar se usuário existe
+    existing_user = await db.users.find_one({"id": user_id, "ativo": True})
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
+    # Se email foi alterado, verificar se não existe outro usuário com mesmo email
+    if user_update.email != existing_user.get("email"):
+        email_exists = await db.users.find_one({"email": user_update.email, "id": {"$ne": user_id}, "ativo": True})
+        if email_exists:
+            raise HTTPException(status_code=400, detail="Este email já está em uso")
+    
+    # Preparar dados de atualização
+    update_data = {
+        "nome": user_update.nome,
+        "email": user_update.email,
+        "tipo": user_update.tipo,
+        "turmas_permitidas": user_update.turmas_permitidas,
+        "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+    
+    # Só atualizar senha se foi fornecida
+    if user_update.senha and user_update.senha.strip():
+        update_data["senha"] = user_update.senha
+    
+    # Atualizar usuário
+    result = await db.users.update_one(
+        {"id": user_id},
+        {"$set": update_data}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=400, detail="Falha ao atualizar usuário")
+    
+    # Retornar usuário atualizado
+    updated_user = await db.users.find_one({"id": user_id})
+    return User(**updated_user)
+
 @api_router.delete("/users/{user_id}")
 async def delete_user(user_id: str):
     result = await db.users.update_one(

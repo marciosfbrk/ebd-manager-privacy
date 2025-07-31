@@ -2189,12 +2189,13 @@ function App() {
                     type="submit"
                     className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
                   >
-                    Criar Usuário
+                    {editingUser ? 'Atualizar Usuário' : 'Criar Usuário'}
                   </button>
                   <button
                     type="button"
                     onClick={() => {
                       setShowForm(false);
+                      setEditingUser(null);
                       setFormData({ nome: '', email: '', senha: '', tipo: 'professor', turmas_permitidas: [] });
                     }}
                     className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"

@@ -2501,7 +2501,10 @@ function App() {
         setFormData({
           tema: '',
           turma_ids: [],
-          licoes: initLicoes()
+          licoes: Array.from({length: 13}, (_, i) => ({
+            titulo: '',
+            data: ''
+          }))
         });
       }
       setShowForm(!showForm);

@@ -1076,7 +1076,12 @@ function App() {
 
     // Nova função para carregar dados da revista
     const loadRevistaData = async () => {
-      if (!selectedTurma) return;
+      if (!selectedTurma) {
+        // Limpar estados quando não há turma selecionada
+        setRevistaAtual(null);
+        setLicaoAtual(null);
+        return;
+      }
       
       try {
         const response = await axios.get(`${API}/revistas/turma/${selectedTurma}`);

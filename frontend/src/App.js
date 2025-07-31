@@ -2391,6 +2391,154 @@ function App() {
     );
   };
 
+  // Componente Revistas
+  const Revistas = () => {
+    const [loadingRevistas, setLoadingRevistas] = useState(false);
+    
+    useEffect(() => {
+      loadRevistas();
+    }, []);
+
+    const RevistaCard = ({ revista }) => {
+      const turmasNomes = turmas.filter(t => revista.turma_ids.includes(t.id)).map(t => t.nome);
+      const today = new Date().toISOString().split('T')[0];
+      const licaoHoje = revista.licoes.find(licao => licao.data === today);
+      
+      return (
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <div className="mb-4">
+            <h3 className="text-xl font-bold text-gray-800 mb-2">📖 Revista Trimestral</h3>
+            <p className="text-sm text-gray-600 mb-3">Turmas: {turmasNomes.join(', ')}</p>
+            <h4 className="text-lg font-semibold text-blue-600 mb-4">{revista.tema}</h4>
+          </div>
+
+          {licaoHoje && (
+            <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-6">
+              <h5 className="font-bold text-green-800 mb-1">🎯 Lição de Hoje ({today})</h5>
+              <p className="text-green-700">{licaoHoje.titulo}</p>
+            </div>
+          )}
+
+          <div className="mb-4">
+            <h5 className="font-semibold text-gray-700 mb-3">📚 Todas as Lições do Trimestre:</h5>
+            <div className="max-h-96 overflow-y-auto">
+              <div className="grid gap-2">
+                {revista.licoes.map((licao, index) => {
+                  const licaoDate = new Date(licao.data + 'T00:00:00');
+                  const isToday = licao.data === today;
+                  const isPast = licao.data < today;
+                  const isFuture = licao.data > today;
+                  
+                  return (
+                    <div 
+                      key={index} 
+                      className={`p-3 rounded-lg border-l-4 ${
+                        isToday 
+                          ? 'bg-green-100 border-green-500 text-green-800' 
+                          : isPast 
+                            ? 'bg-gray-100 border-gray-400 text-gray-600' 
+                            : 'bg-blue-50 border-blue-400 text-blue-700'
+                      }`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <span className="font-medium">
+                            {index + 1}. {licao.titulo}
+                          </span>
+                          {isToday && <span className="ml-2 text-xs font-bold">← HOJE</span>}
+                        </div>
+                        <span className="text-sm font-medium ml-2">
+                          {licaoDate.toLocaleDateString('pt-BR')}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="text-sm text-gray-500 border-t pt-3">
+            <p>Total de lições: {revista.licoes.length} | Criada em: {new Date(revista.criada_em).toLocaleDateString('pt-BR')}</p>
+          </div>
+        </div>
+      );
+    };
+
+    return (
+      <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-6">
+            <button
+              onClick={() => setCurrentView('dashboard')}
+              className="mb-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              ← Voltar ao Dashboard
+            </button>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">📖 Revistas Trimestrais</h1>
+            <p className="text-gray-600">Lições e cronograma das turmas</p>
+          </div>
+
+          {/* Botão de refresh */}
+          <div className="mb-6 text-right">
+            <button
+              onClick={() => {
+                setLoadingRevistas(true);
+                loadRevistas().finally(() => setLoadingRevistas(false));
+              }}
+              disabled={loadingRevistas}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 flex items-center gap-2 ml-auto"
+            >
+              {loadingRevistas ? (
+                <>
+                  <span className="animate-spin">⟳</span>
+                  Carregando...
+                </>
+              ) : (
+                <>
+                  🔄 Atualizar Revistas
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Lista de Revistas */}
+          {loadingRevistas ? (
+            <div className="text-center py-12">
+              <div className="animate-spin text-4xl mb-4">⟳</div>
+              <p className="text-gray-600">Carregando revistas...</p>
+            </div>
+          ) : revistas.length > 0 ? (
+            <div>
+              {revistas.map((revista) => (
+                <RevistaCard key={revista.id} revista={revista} />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+              <div className="text-6xl mb-4">📚</div>
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">Nenhuma revista encontrada</h3>
+              <p className="text-gray-500 mb-4">
+                Ainda não há revistas cadastradas no sistema.
+              </p>
+            </div>
+          )}
+
+          {/* Informações sobre revistas */}
+          <div className="mt-8 bg-blue-50 rounded-lg p-6">
+            <h4 className="font-semibold text-blue-800 mb-3">ℹ️ Sobre as Revistas:</h4>
+            <ul className="text-sm text-blue-700 space-y-2">
+              <li>• <strong>Lição de Hoje:</strong> Destacada em verde quando há aula programada</li>
+              <li>• <strong>Cronograma:</strong> 13 lições por trimestre, organizadas por data</li>
+              <li>• <strong>Turmas:</strong> Cada revista pode ser compartilhada entre várias turmas</li>
+              <li>• <strong>Planejamento:</strong> Professores podem se preparar vendo as próximas lições</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Renderização condicional
   const renderCurrentView = () => {
     // Se não está logado, mostrar apenas home

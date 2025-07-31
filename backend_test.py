@@ -639,6 +639,242 @@ def test_floating_point_precision():
         import traceback
         print(f"Full traceback: {traceback.format_exc()}")
 
+def test_revistas_endpoints():
+    """Test revista endpoints as requested in review"""
+    print("\n=== TESTING REVISTA ENDPOINTS (REVIEW REQUEST) ===")
+    
+    # First, initialize church data to have proper turmas
+    try:
+        response = requests.post(f"{BASE_URL}/init-church-data")
+        if response.status_code == 200:
+            results.success("POST /api/init-church-data - Initialize church data for revista tests")
+        else:
+            results.failure("POST /api/init-church-data", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("POST /api/init-church-data", str(e))
+    
+    # Get turmas to find specific ones mentioned in review
+    turmas_dict = {}
+    try:
+        response = requests.get(f"{BASE_URL}/turmas")
+        if response.status_code == 200:
+            turmas = response.json()
+            for turma in turmas:
+                turmas_dict[turma['nome']] = turma['id']
+            print(f"Available turmas: {list(turmas_dict.keys())}")
+        else:
+            results.failure("GET /api/turmas for revista test", f"Status {response.status_code}: {response.text}")
+            return
+    except Exception as e:
+        results.failure("GET /api/turmas for revista test", str(e))
+        return
+    
+    # Create the 5 new revistas mentioned in the review request
+    revistas_data = [
+        {
+            "tema": "A Liberdade em Cristo — Vivendo o verdadeiro Evangelho conforme a Carta de Paulo aos Gálatas",
+            "turma_nome": "Jovens",
+            "licoes_count": 13
+        },
+        {
+            "tema": "Grandes Cartas para Nós", 
+            "turma_nome": "Adolescentes",
+            "licoes_count": 13
+        },
+        {
+            "tema": "Recebendo o Batismo no Espírito Santo",
+            "turma_nome": "Pré-Adolescentes", 
+            "licoes_count": 13
+        },
+        {
+            "tema": "Verdades que Jesus ensinou",
+            "turma_nome": "Juniores",
+            "licoes_count": 13
+        },
+        {
+            "tema": "As aventuras de um Grande Missionário",
+            "turma_nome": "Primarios",
+            "licoes_count": 13
+        }
+    ]
+    
+    # Create revistas for each turma
+    created_revistas = []
+    for revista_info in revistas_data:
+        turma_nome = revista_info["turma_nome"]
+        if turma_nome not in turmas_dict:
+            results.failure(f"Create revista for {turma_nome}", f"Turma {turma_nome} not found")
+            continue
+        
+        # Generate 13 lições with proper dates (Sundays starting from 2025-07-06)
+        licoes = []
+        start_date = datetime(2025, 7, 6)  # First Sunday
+        for i in range(13):
+            licao_date = start_date + timedelta(weeks=i)
+            licoes.append({
+                "titulo": f"Lição {i+1} - {revista_info['tema'][:30]}...",
+                "data": licao_date.strftime("%Y-%m-%d")
+            })
+        
+        revista_data = {
+            "tema": revista_info["tema"],
+            "licoes": licoes,
+            "turma_ids": [turmas_dict[turma_nome]]
+        }
+        
+        try:
+            response = requests.post(f"{BASE_URL}/revistas", json=revista_data)
+            if response.status_code == 200:
+                result = response.json()
+                created_revistas.append(result["revista"])
+                results.success(f"POST /api/revistas - Create revista for {turma_nome}")
+            else:
+                results.failure(f"POST /api/revistas for {turma_nome}", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure(f"POST /api/revistas for {turma_nome}", str(e))
+    
+    # Also create the existing adult revista to have 6 total
+    try:
+        response = requests.post(f"{BASE_URL}/init-revista-adultos")
+        if response.status_code == 200:
+            results.success("POST /api/init-revista-adultos - Create adult revista")
+        else:
+            results.failure("POST /api/init-revista-adultos", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("POST /api/init-revista-adultos", str(e))
+    
+    # TEST 1: GET /api/revistas - should return all 6 revistas
+    try:
+        response = requests.get(f"{BASE_URL}/revistas")
+        if response.status_code == 200:
+            revistas = response.json()
+            if isinstance(revistas, list):
+                if len(revistas) == 6:
+                    results.success(f"GET /api/revistas - Returns all 6 revistas (found {len(revistas)})")
+                    
+                    # Verify each revista has required fields
+                    for revista in revistas:
+                        required_fields = ['id', 'tema', 'licoes', 'turma_ids', 'ativa']
+                        if all(field in revista for field in required_fields):
+                            results.success(f"GET /api/revistas - Revista '{revista['tema'][:50]}...' has all required fields")
+                        else:
+                            missing = [f for f in required_fields if f not in revista]
+                            results.failure(f"GET /api/revistas - Revista structure", f"Missing fields: {missing}")
+                else:
+                    results.failure("GET /api/revistas", f"Expected 6 revistas, got {len(revistas)}")
+            else:
+                results.failure("GET /api/revistas", f"Expected list, got: {type(revistas)}")
+        else:
+            results.failure("GET /api/revistas", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/revistas", str(e))
+    
+    # TEST 2: GET /api/revistas/turma/{turma_id} for Jovens specifically
+    if "Jovens" in turmas_dict:
+        jovens_turma_id = turmas_dict["Jovens"]
+        try:
+            response = requests.get(f"{BASE_URL}/revistas/turma/{jovens_turma_id}")
+            if response.status_code == 200:
+                revista = response.json()
+                if revista and "tema" in revista:
+                    expected_tema = "A Liberdade em Cristo — Vivendo o verdadeiro Evangelho conforme a Carta de Paulo aos Gálatas"
+                    if revista["tema"] == expected_tema:
+                        results.success("GET /api/revistas/turma/{turma_id} - Jovens revista has correct tema")
+                        
+                        # Verify 13 lições
+                        if "licoes" in revista and len(revista["licoes"]) == 13:
+                            results.success("GET /api/revistas/turma/{turma_id} - Jovens revista has exactly 13 lições")
+                            
+                            # Verify lições have titles and dates
+                            licoes_valid = True
+                            for licao in revista["licoes"]:
+                                if not ("titulo" in licao and "data" in licao):
+                                    licoes_valid = False
+                                    break
+                            
+                            if licoes_valid:
+                                results.success("GET /api/revistas/turma/{turma_id} - All lições have título and data")
+                            else:
+                                results.failure("GET /api/revistas/turma/{turma_id} - Lições structure", "Some lições missing título or data")
+                        else:
+                            results.failure("GET /api/revistas/turma/{turma_id} - Jovens lições", f"Expected 13 lições, got {len(revista.get('licoes', []))}")
+                    else:
+                        results.failure("GET /api/revistas/turma/{turma_id} - Jovens tema", f"Expected '{expected_tema}', got '{revista.get('tema', 'N/A')}'")
+                else:
+                    results.failure("GET /api/revistas/turma/{turma_id} - Jovens", "No revista found or invalid structure")
+            else:
+                results.failure("GET /api/revistas/turma/{turma_id} - Jovens", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("GET /api/revistas/turma/{turma_id} - Jovens", str(e))
+    
+    # TEST 3: Verify all 5 new revistas have correct data
+    expected_revistas = {
+        "Jovens": "A Liberdade em Cristo — Vivendo o verdadeiro Evangelho conforme a Carta de Paulo aos Gálatas",
+        "Adolescentes": "Grandes Cartas para Nós",
+        "Pré-Adolescentes": "Recebendo o Batismo no Espírito Santo", 
+        "Juniores": "Verdades que Jesus ensinou",
+        "Primarios": "As aventuras de um Grande Missionário"
+    }
+    
+    for turma_nome, expected_tema in expected_revistas.items():
+        if turma_nome in turmas_dict:
+            turma_id = turmas_dict[turma_nome]
+            try:
+                response = requests.get(f"{BASE_URL}/revistas/turma/{turma_id}")
+                if response.status_code == 200:
+                    revista = response.json()
+                    if revista and revista.get("tema") == expected_tema:
+                        results.success(f"Revista verification - {turma_nome} has correct tema")
+                        
+                        # Check 13 lições
+                        if len(revista.get("licoes", [])) == 13:
+                            results.success(f"Revista verification - {turma_nome} has exactly 13 lições")
+                        else:
+                            results.failure(f"Revista verification - {turma_nome} lições", f"Expected 13, got {len(revista.get('licoes', []))}")
+                        
+                        # Check turma_ids linkage
+                        if turma_id in revista.get("turma_ids", []):
+                            results.success(f"Revista verification - {turma_nome} turma_id correctly linked")
+                        else:
+                            results.failure(f"Revista verification - {turma_nome} linkage", f"turma_id {turma_id} not in turma_ids {revista.get('turma_ids', [])}")
+                    else:
+                        results.failure(f"Revista verification - {turma_nome}", f"Expected tema '{expected_tema}', got '{revista.get('tema', 'N/A')}'")
+                else:
+                    results.failure(f"Revista verification - {turma_nome}", f"Status {response.status_code}: {response.text}")
+            except Exception as e:
+                results.failure(f"Revista verification - {turma_nome}", str(e))
+    
+    # TEST 4: Verify dates are correct (Sundays starting from 2025-07-06)
+    if "Jovens" in turmas_dict:
+        try:
+            response = requests.get(f"{BASE_URL}/revistas/turma/{turmas_dict['Jovens']}")
+            if response.status_code == 200:
+                revista = response.json()
+                if revista and "licoes" in revista:
+                    licoes = revista["licoes"]
+                    if licoes:
+                        # Check first date
+                        first_date = licoes[0]["data"]
+                        if first_date == "2025-07-06":
+                            results.success("Revista dates - First lição starts on 2025-07-06")
+                        else:
+                            results.failure("Revista dates", f"Expected first date 2025-07-06, got {first_date}")
+                        
+                        # Check if all dates are Sundays
+                        all_sundays = True
+                        for licao in licoes:
+                            date_obj = datetime.strptime(licao["data"], "%Y-%m-%d")
+                            if date_obj.weekday() != 6:  # Sunday is 6
+                                all_sundays = False
+                                break
+                        
+                        if all_sundays:
+                            results.success("Revista dates - All lição dates are Sundays")
+                        else:
+                            results.failure("Revista dates", "Some lição dates are not Sundays")
+        except Exception as e:
+            results.failure("Revista dates verification", str(e))
+
 def main():
     """Run all tests in sequence"""
     print("=== EBD MANAGER BACKEND TEST SUITE ===\n")
@@ -673,6 +909,10 @@ def main():
     # Test 7: CRITICAL - Floating Point Precision Issue
     print("\n7. Testing Floating Point Precision (CRITICAL)...")
     test_floating_point_precision()
+    
+    # Test 8: REVISTA ENDPOINTS (REVIEW REQUEST)
+    print("\n8. Testing Revista Endpoints (Review Request)...")
+    test_revistas_endpoints()
     
     # Final summary
     results.summary()

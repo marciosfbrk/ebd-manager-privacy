@@ -2412,10 +2412,11 @@ function App() {
     });
 
     useEffect(() => {
+      // Carregar revistas apenas se não existirem
       if (revistas.length === 0) {
         loadRevistas();
       }
-    }, []);
+    }, []); // Array vazio - evita loop infinito
 
     // Inicializar lições vazias apenas quando necessário
     const initLicoes = () => {

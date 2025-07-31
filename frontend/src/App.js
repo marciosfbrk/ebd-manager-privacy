@@ -2141,13 +2141,15 @@ function App() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Senha {editingUser && <span className="text-sm text-gray-500">(deixe vazio para manter atual)</span>}
+                    </label>
                     <input
                       type="password"
                       value={formData.senha}
                       onChange={(e) => setFormData({...formData, senha: e.target.value})}
                       className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
+                      required={!editingUser} // Só obrigatório para novo usuário
                     />
                   </div>
                   <div>

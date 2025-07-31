@@ -1042,9 +1042,22 @@ async def get_turmas_ranking():
 async def get_revistas():
     """Buscar todas as revistas ativas"""
     try:
-        # Teste simples primeiro
-        count = await db.revistas.count_documents({"ativa": True})
-        return {"message": "Endpoint funcionando", "total_revistas": count}
+        revistas_cursor = db.revistas.find({"ativa": True})
+        revistas = []
+        
+        async for revista in revistas_cursor:
+            # Remove _id do MongoDB e converte para formato JSON serializable
+            revista_clean = {
+                "id": revista.get("id"),
+                "tema": revista.get("tema"),
+                "licoes": revista.get("licoes", []),
+                "turma_ids": revista.get("turma_ids", []),
+                "ativa": revista.get("ativa", True),
+                "criada_em": revista.get("criada_em")
+            }
+            revistas.append(revista_clean)
+        
+        return revistas
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao buscar revistas: {str(e)}")
 

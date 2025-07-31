@@ -639,6 +639,225 @@ def test_floating_point_precision():
         import traceback
         print(f"Full traceback: {traceback.format_exc()}")
 
+def test_user_management_endpoints():
+    """Test user management endpoints as requested in review"""
+    print("\n=== TESTING USER MANAGEMENT ENDPOINTS (REVIEW REQUEST) ===")
+    
+    # First, create initial admin if not exists
+    try:
+        response = requests.post(f"{BASE_URL}/init-admin")
+        if response.status_code == 200:
+            results.success("POST /api/init-admin - Create initial admin user")
+        elif response.status_code == 400:
+            results.success("POST /api/init-admin - Admin already exists (expected)")
+        else:
+            results.failure("POST /api/init-admin", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("POST /api/init-admin", str(e))
+    
+    # Get turmas for user permissions
+    turmas_dict = {}
+    try:
+        response = requests.get(f"{BASE_URL}/turmas")
+        if response.status_code == 200:
+            turmas = response.json()
+            for turma in turmas:
+                turmas_dict[turma['nome']] = turma['id']
+            print(f"Available turmas for user permissions: {list(turmas_dict.keys())}")
+        else:
+            results.failure("GET /api/turmas for user test", f"Status {response.status_code}: {response.text}")
+            return
+    except Exception as e:
+        results.failure("GET /api/turmas for user test", str(e))
+        return
+    
+    # Create user Kell with specific requirements
+    kell_user_id = None
+    try:
+        # Select some turmas for Kell's permissions
+        selected_turmas = list(turmas_dict.values())[:3] if turmas_dict else []
+        
+        kell_data = {
+            "nome": "Kell Silva",
+            "email": "kell@ebd.com",
+            "senha": "kell123",
+            "tipo": "professor",
+            "turmas_permitidas": selected_turmas
+        }
+        
+        response = requests.post(f"{BASE_URL}/users", json=kell_data)
+        if response.status_code == 200:
+            user = response.json()
+            kell_user_id = user['id']
+            results.success("POST /api/users - Create user Kell with email kell@ebd.com")
+            
+            # Verify user data
+            if user['email'] == "kell@ebd.com" and user['nome'] == "Kell Silva":
+                results.success("POST /api/users - Kell user has correct email and name")
+            else:
+                results.failure("POST /api/users - Kell data", f"Expected kell@ebd.com, got {user.get('email')}")
+            
+            # Verify turmas_permitidas
+            if user['turmas_permitidas'] == selected_turmas:
+                results.success("POST /api/users - Kell user has correct turmas_permitidas")
+            else:
+                results.failure("POST /api/users - Kell turmas", f"Expected {selected_turmas}, got {user.get('turmas_permitidas')}")
+        else:
+            results.failure("POST /api/users - Create Kell", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("POST /api/users - Create Kell", str(e))
+    
+    # TEST 1: GET /api/users - verify it returns correct user data including turmas_permitidas
+    try:
+        response = requests.get(f"{BASE_URL}/users")
+        if response.status_code == 200:
+            users = response.json()
+            if isinstance(users, list):
+                results.success("GET /api/users - Returns list of users")
+                
+                # Find Kell user
+                kell_user = None
+                for user in users:
+                    if user.get('email') == 'kell@ebd.com':
+                        kell_user = user
+                        break
+                
+                if kell_user:
+                    results.success("GET /api/users - Found user Kell with email kell@ebd.com")
+                    
+                    # Verify required fields
+                    required_fields = ['id', 'nome', 'email', 'tipo', 'turmas_permitidas', 'ativo']
+                    missing_fields = [field for field in required_fields if field not in kell_user]
+                    
+                    if not missing_fields:
+                        results.success("GET /api/users - Kell user has all required fields")
+                    else:
+                        results.failure("GET /api/users - Kell fields", f"Missing fields: {missing_fields}")
+                    
+                    # Verify turmas_permitidas is populated
+                    if 'turmas_permitidas' in kell_user and isinstance(kell_user['turmas_permitidas'], list):
+                        if len(kell_user['turmas_permitidas']) > 0:
+                            results.success("GET /api/users - Kell has populated turmas_permitidas")
+                        else:
+                            results.success("GET /api/users - Kell has empty turmas_permitidas (valid for admin)")
+                    else:
+                        results.failure("GET /api/users - Kell turmas_permitidas", "turmas_permitidas field missing or invalid")
+                else:
+                    results.failure("GET /api/users - Find Kell", "User Kell with email kell@ebd.com not found")
+                
+                # Verify admin user also exists
+                admin_user = None
+                for user in users:
+                    if user.get('email') == 'admin@ebd.com':
+                        admin_user = user
+                        break
+                
+                if admin_user:
+                    results.success("GET /api/users - Found admin user with email admin@ebd.com")
+                else:
+                    results.failure("GET /api/users - Find admin", "Admin user not found")
+                    
+            else:
+                results.failure("GET /api/users", f"Expected list, got: {type(users)}")
+        else:
+            results.failure("GET /api/users", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/users", str(e))
+    
+    # TEST 2: PUT /api/users/{user_id} - should work for updating users
+    if kell_user_id:
+        try:
+            # Update Kell's information
+            update_data = {
+                "nome": "Kell Silva Updated",
+                "email": "kell@ebd.com",  # Keep same email
+                "senha": "newpassword123",
+                "tipo": "professor",
+                "turmas_permitidas": list(turmas_dict.values())[:2] if turmas_dict else []  # Different turmas
+            }
+            
+            response = requests.put(f"{BASE_URL}/users/{kell_user_id}", json=update_data)
+            if response.status_code == 200:
+                updated_user = response.json()
+                results.success("PUT /api/users/{user_id} - Successfully updated user Kell")
+                
+                # Verify updates
+                if updated_user['nome'] == "Kell Silva Updated":
+                    results.success("PUT /api/users/{user_id} - Name updated correctly")
+                else:
+                    results.failure("PUT /api/users/{user_id} - Name update", f"Expected 'Kell Silva Updated', got '{updated_user.get('nome')}'")
+                
+                if updated_user['email'] == "kell@ebd.com":
+                    results.success("PUT /api/users/{user_id} - Email maintained correctly")
+                else:
+                    results.failure("PUT /api/users/{user_id} - Email", f"Expected 'kell@ebd.com', got '{updated_user.get('email')}'")
+                
+                if updated_user['tipo'] == "professor":
+                    results.success("PUT /api/users/{user_id} - Type updated correctly")
+                else:
+                    results.failure("PUT /api/users/{user_id} - Type", f"Expected 'professor', got '{updated_user.get('tipo')}'")
+                
+                if updated_user['turmas_permitidas'] == update_data['turmas_permitidas']:
+                    results.success("PUT /api/users/{user_id} - turmas_permitidas updated correctly")
+                else:
+                    results.failure("PUT /api/users/{user_id} - turmas_permitidas", f"Expected {update_data['turmas_permitidas']}, got {updated_user.get('turmas_permitidas')}")
+                    
+            else:
+                results.failure("PUT /api/users/{user_id}", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("PUT /api/users/{user_id}", str(e))
+        
+        # Test updating with invalid data
+        try:
+            invalid_update = {
+                "nome": "Kell Invalid",
+                "email": "admin@ebd.com",  # Try to use existing admin email
+                "senha": "password",
+                "tipo": "professor",
+                "turmas_permitidas": []
+            }
+            
+            response = requests.put(f"{BASE_URL}/users/{kell_user_id}", json=invalid_update)
+            if response.status_code == 400:
+                results.success("PUT /api/users/{user_id} - Validation: reject duplicate email")
+            else:
+                results.failure("PUT /api/users/{user_id} - Validation", f"Should reject duplicate email, got status {response.status_code}")
+        except Exception as e:
+            results.failure("PUT /api/users/{user_id} - Validation", str(e))
+    
+    # TEST 3: Verify user Kell final state
+    if kell_user_id:
+        try:
+            response = requests.get(f"{BASE_URL}/users")
+            if response.status_code == 200:
+                users = response.json()
+                kell_user = None
+                for user in users:
+                    if user.get('id') == kell_user_id:
+                        kell_user = user
+                        break
+                
+                if kell_user:
+                    print(f"\n--- Final Kell User Verification ---")
+                    print(f"ID: {kell_user.get('id')}")
+                    print(f"Nome: {kell_user.get('nome')}")
+                    print(f"Email: {kell_user.get('email')}")
+                    print(f"Tipo: {kell_user.get('tipo')}")
+                    print(f"Turmas Permitidas: {len(kell_user.get('turmas_permitidas', []))} turmas")
+                    print(f"Ativo: {kell_user.get('ativo')}")
+                    
+                    # Final verification
+                    if (kell_user.get('email') == 'kell@ebd.com' and 
+                        isinstance(kell_user.get('turmas_permitidas'), list) and
+                        kell_user.get('ativo') == True):
+                        results.success("Final verification - User Kell has correct email kell@ebd.com and populated turmas_permitidas")
+                    else:
+                        results.failure("Final verification - User Kell", "Does not meet all requirements")
+                else:
+                    results.failure("Final verification", "Could not find updated Kell user")
+        except Exception as e:
+            results.failure("Final verification", str(e))
+
 def test_revistas_endpoints():
     """Test revista endpoints as requested in review"""
     print("\n=== TESTING REVISTA ENDPOINTS (REVIEW REQUEST) ===")

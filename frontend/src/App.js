@@ -114,7 +114,10 @@ function App() {
     loadTurmas();
     loadStudents();
     loadDashboard();
-  }, []);
+    if (isLoggedIn) {
+      loadRevistas();
+    }
+  }, [isLoggedIn]);
 
   const loadInitialData = async () => {
     try {

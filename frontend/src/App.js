@@ -2699,8 +2699,11 @@ function App() {
     const [loadingRevistas, setLoadingRevistas] = useState(false);
     
     useEffect(() => {
-      loadRevistas();
-    }, []);
+      // Carregar revistas apenas uma vez quando entra na tela
+      if (revistas.length === 0) {
+        loadRevistas();
+      }
+    }, []); // Array vazio - só executa uma vez
 
     const RevistaCard = ({ revista }) => {
       const turmasNomes = turmas.filter(t => revista.turma_ids.includes(t.id)).map(t => t.nome);

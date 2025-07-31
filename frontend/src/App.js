@@ -2572,6 +2572,8 @@ function App() {
         return isLoggedIn && currentUser?.tipo === 'admin' ? <Turmas /> : <Dashboard />;
       case 'usuarios':
         return isLoggedIn && currentUser?.tipo === 'admin' ? <Usuarios /> : <Dashboard />;
+      case 'revistas':
+        return isLoggedIn ? <Revistas /> : <HomeCover />;
       default:
         return <HomeCover />;
     }

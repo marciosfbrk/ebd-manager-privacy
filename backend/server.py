@@ -1160,14 +1160,12 @@ async def init_revista_adultos():
         
         await db.revistas.insert_one(revista_adultos)
         
-        # Remover _id do MongoDB para serialização JSON
-        revista_adultos.pop('_id', None)
-        
         return {
             "message": "Revista de adultos criada com sucesso",
             "turmas_atendidas": [turma["nome"] for turma in turmas],
             "total_licoes": len(revista_adultos["licoes"]),
-            "revista": revista_adultos
+            "tema": revista_adultos["tema"],
+            "revista_id": revista_adultos["id"]
         }
         
     except Exception as e:

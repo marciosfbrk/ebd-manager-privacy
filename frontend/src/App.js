@@ -2115,7 +2115,9 @@ function App() {
 
           {showForm && (
             <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Novo Usuário</h2>
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                {editingUser ? 'Editar Usuário' : 'Novo Usuário'}
+              </h2>
               <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>

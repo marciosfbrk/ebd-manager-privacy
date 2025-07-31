@@ -1042,8 +1042,9 @@ async def get_turmas_ranking():
 async def get_revistas():
     """Buscar todas as revistas ativas"""
     try:
-        revistas = await db.revistas.find({"ativa": True}).to_list(100)
-        return revistas
+        # Teste simples primeiro
+        count = await db.revistas.count_documents({"ativa": True})
+        return {"message": "Endpoint funcionando", "total_revistas": count}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao buscar revistas: {str(e)}")
 

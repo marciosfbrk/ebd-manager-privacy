@@ -1982,6 +1982,7 @@ function App() {
   const Usuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
     const [showForm, setShowForm] = useState(false);
+    const [editingUser, setEditingUser] = useState(null); // Novo estado para edição
     const [formData, setFormData] = useState({
       nome: '',
       email: '',

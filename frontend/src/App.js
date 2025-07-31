@@ -2402,7 +2402,7 @@ function App() {
     );
   };
 
-  // Componente Admin Revistas
+  // Componente Admin Revistas - OTIMIZADO
   const AdminRevistas = () => {
     const [loadingRevistas, setLoadingRevistas] = useState(false);
     const [showForm, setShowForm] = useState(false);
@@ -2410,18 +2410,31 @@ function App() {
     const [formData, setFormData] = useState({
       tema: '',
       turma_ids: [],
-      licoes: Array.from({length: 13}, (_, i) => ({
-        titulo: '',
-        data: ''
-      }))
+      licoes: []
     });
 
     useEffect(() => {
-      loadRevistas();
+      if (revistas.length === 0) {
+        loadRevistas();
+      }
     }, []);
+
+    // Inicializar lições vazias apenas quando necessário
+    const initLicoes = () => {
+      return Array.from({length: 13}, (_, i) => ({
+        titulo: '',
+        data: ''
+      }));
+    };
 
     const handleSave = async (e) => {
       e.preventDefault();
+      
+      if (!formData.tema || formData.turma_ids.length === 0) {
+        alert('❌ Preencha o tema e selecione pelo menos uma turma');
+        return;
+      }
+
       setLoadingRevistas(true);
       
       try {
@@ -2433,31 +2446,33 @@ function App() {
 
         if (editingRevista) {
           await axios.put(`${API}/revistas/${editingRevista.id}`, revistaData);
-          alert('✅ Revista atualizada com sucesso!');
+          alert('✅ Revista atualizada!');
         } else {
           await axios.post(`${API}/revistas`, revistaData);
-          alert('✅ Revista criada com sucesso!');
+          alert('✅ Revista criada!');
         }
 
         await loadRevistas();
         resetForm();
       } catch (error) {
-        console.error('Erro ao salvar revista:', error);
-        alert('❌ Erro ao salvar revista');
+        console.error('Erro:', error);
+        alert('❌ Erro ao salvar');
       } finally {
         setLoadingRevistas(false);
       }
     };
 
     const handleDelete = async (revistaId) => {
-      if (window.confirm('Tem certeza que deseja desativar esta revista?')) {
+      if (window.confirm('Desativar esta revista?')) {
         try {
+          setLoadingRevistas(true);
           await axios.delete(`${API}/revistas/${revistaId}`);
-          alert('✅ Revista desativada com sucesso!');
+          alert('✅ Revista desativada!');
           await loadRevistas();
         } catch (error) {
-          console.error('Erro ao desativar revista:', error);
-          alert('❌ Erro ao desativar revista');
+          alert('❌ Erro ao desativar');
+        } finally {
+          setLoadingRevistas(false);
         }
       }
     };
@@ -2478,148 +2493,141 @@ function App() {
       setFormData({
         tema: '',
         turma_ids: [],
-        licoes: Array.from({length: 13}, (_, i) => ({
-          titulo: '',
-          data: ''
-        }))
+        licoes: []
       });
     };
 
-    const handleLicaoChange = (index, field, value) => {
-      const newLicoes = [...formData.licoes];
-      newLicoes[index][field] = value;
-      setFormData({...formData, licoes: newLicoes});
+    const handleShowForm = () => {
+      if (!showForm) {
+        setFormData({
+          tema: '',
+          turma_ids: [],
+          licoes: initLicoes()
+        });
+      }
+      setShowForm(!showForm);
     };
 
     return (
       <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
-        <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <div className="mb-6 sticky top-0 bg-gray-50 pb-4 border-b border-gray-200">
-            <div className="flex justify-between items-center mb-4">
-              <button
-                onClick={() => setCurrentView('revistas')}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
-              >
-                ← Voltar às Revistas  
-              </button>
-              
-              <button
-                onClick={() => setShowForm(!showForm)}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                {showForm ? '❌ Cancelar' : '➕ Nova Revista'}
-              </button>
-            </div>
+        <div className="max-w-4xl mx-auto">
+          {/* Header Simples */}
+          <div className="flex justify-between items-center mb-6">
+            <button
+              onClick={() => setCurrentView('revistas')}
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+            >
+              ← Voltar
+            </button>
             
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">⚙️ Gerencial de Revistas</h1>
-            <p className="text-gray-600">Administrar revistas trimestrais e suas lições</p>
+            <button
+              onClick={handleShowForm}
+              disabled={loadingRevistas}
+              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50"
+            >
+              {showForm ? '❌ Cancelar' : '➕ Nova Revista'}
+            </button>
           </div>
 
-          {/* Formulário */}
+          <h1 className="text-xl font-bold mb-6">⚙️ Administrar Revistas</h1>
+
+          {/* Formulário Simples - só aparece quando necessário */}
           {showForm && (
-            <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-              <h3 className="text-xl font-bold mb-4">
-                {editingRevista ? '✏️ Editar Revista' : '➕ Nova Revista'}
+            <div className="bg-white rounded-lg p-4 mb-6 border">
+              <h3 className="font-bold mb-4">
+                {editingRevista ? '✏️ Editar' : '➕ Nova Revista'}
               </h3>
               
-              <form onSubmit={handleSave}>
+              <form onSubmit={handleSave} className="space-y-4">
                 {/* Tema */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tema do Trimestre *
-                  </label>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Tema *</label>
                   <textarea
                     value={formData.tema}
                     onChange={(e) => setFormData({...formData, tema: e.target.value})}
                     required
-                    rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex: A Igreja em Jerusalém — Doutrina, Comunhão e Fé..."
+                    rows={2}
+                    className="w-full px-3 py-2 border rounded-md"
+                    placeholder="Tema do trimestre..."
                   />
                 </div>
 
-                {/* Turmas */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Turmas que usarão esta revista *
-                  </label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {turmas.map(turma => (
-                      <label key={turma.id} className="flex items-center">
+                {/* Turmas - Grid simples */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Turmas *</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {turmas.slice(0, 8).map(turma => (
+                      <label key={turma.id} className="flex items-center text-sm">
                         <input
                           type="checkbox"
                           checked={formData.turma_ids.includes(turma.id)}
                           onChange={(e) => {
-                            if (e.target.checked) {
-                              setFormData({
-                                ...formData,
-                                turma_ids: [...formData.turma_ids, turma.id]
-                              });
-                            } else {
-                              setFormData({
-                                ...formData,
-                                turma_ids: formData.turma_ids.filter(id => id !== turma.id)
-                              });
-                            }
+                            const newIds = e.target.checked 
+                              ? [...formData.turma_ids, turma.id]
+                              : formData.turma_ids.filter(id => id !== turma.id);
+                            setFormData({...formData, turma_ids: newIds});
                           }}
                           className="mr-2"
                         />
-                        <span className="text-sm">{turma.nome}</span>
+                        {turma.nome}
                       </label>
                     ))}
                   </div>
                 </div>
 
-                {/* Lições */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Lições do Trimestre (13 lições)
+                {/* Lições - Interface simplificada */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Lições (máx. 13) - Opcional
                   </label>
-                  <div className="max-h-96 overflow-y-auto border rounded-lg p-4">
-                    {formData.licoes.map((licao, index) => (
-                      <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-3 border rounded">
-                        <div>
-                          <label className="block text-xs font-medium text-gray-600 mb-1">
-                            Lição {index + 1} - Título
-                          </label>
-                          <input
-                            type="text"
-                            value={licao.titulo}
-                            onChange={(e) => handleLicaoChange(index, 'titulo', e.target.value)}
-                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            placeholder={`Título da lição ${index + 1}`}
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-600 mb-1">
-                            Data (YYYY-MM-DD)
-                          </label>
-                          <input
-                            type="date"
-                            value={licao.data}
-                            onChange={(e) => handleLicaoChange(index, 'data', e.target.value)}
-                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                          />
-                        </div>
-                      </div>
-                    ))}
+                  <div className="text-xs text-gray-600 mb-2">
+                    Deixe vazio para adicionar depois. Use formato: 2025-07-06
+                  </div>
+                  
+                  {formData.licoes.slice(0, 5).map((licao, index) => (
+                    <div key={index} className="grid grid-cols-2 gap-2 mb-2">
+                      <input
+                        type="text"
+                        value={licao.titulo}
+                        onChange={(e) => {
+                          const newLicoes = [...formData.licoes];
+                          newLicoes[index].titulo = e.target.value;
+                          setFormData({...formData, licoes: newLicoes});
+                        }}
+                        placeholder={`Lição ${index + 1}`}
+                        className="px-2 py-1 text-sm border rounded"
+                      />
+                      <input
+                        type="date"
+                        value={licao.data}
+                        onChange={(e) => {
+                          const newLicoes = [...formData.licoes];
+                          newLicoes[index].data = e.target.value;
+                          setFormData({...formData, licoes: newLicoes});
+                        }}
+                        className="px-2 py-1 text-sm border rounded"
+                      />
+                    </div>
+                  ))}
+                  
+                  <div className="text-xs text-gray-500 mt-2">
+                    Mostrando apenas 5 lições. Complete o resto após criar.
                   </div>
                 </div>
 
                 {/* Botões */}
-                <div className="flex gap-4">
+                <div className="flex gap-2">
                   <button
                     type="submit"
                     disabled={loadingRevistas}
-                    className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
                   >
-                    {loadingRevistas ? 'Salvando...' : editingRevista ? 'Atualizar' : 'Criar'}
+                    {loadingRevistas ? 'Salvando...' : 'Salvar'}
                   </button>
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                    className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
                   >
                     Cancelar
                   </button>
@@ -2628,57 +2636,60 @@ function App() {
             </div>
           )}
 
-          {/* Lista de Revistas */}
-          <div className="bg-white rounded-lg shadow-lg">
-            <div className="p-6">
-              <h3 className="text-xl font-bold mb-4">📚 Revistas Cadastradas</h3>
-              
-              {loadingRevistas ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin text-2xl mb-2">⟳</div>
-                  <p>Carregando...</p>
-                </div>
-              ) : revistas.length > 0 ? (
-                <div className="space-y-4">
-                  {revistas.map(revista => {
-                    const turmasNomes = turmas.filter(t => revista.turma_ids.includes(t.id)).map(t => t.nome);
-                    return (
-                      <div key={revista.id} className="border rounded-lg p-4">
-                        <div className="flex justify-between items-start mb-2">
-                          <div className="flex-1">
-                            <h4 className="font-semibold text-gray-800">{revista.tema}</h4>
-                            <p className="text-sm text-gray-600 mt-1">
-                              Turmas: {turmasNomes.join(', ')}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">
-                              {revista.licoes.length} lições | Criada em {new Date(revista.criada_em).toLocaleDateString('pt-BR')}
-                            </p>
-                          </div>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleEdit(revista)}
-                              className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
-                            >
-                              ✏️ Editar
-                            </button>
-                            <button
-                              onClick={() => handleDelete(revista.id)}
-                              className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
-                            >
-                              🗑️ Desativar
-                            </button>
-                          </div>
+          {/* Lista de Revistas - Interface simplificada */}
+          <div className="bg-white rounded-lg p-4">
+            <h3 className="font-bold mb-4">📚 Revistas ({revistas.length})</h3>
+            
+            {loadingRevistas ? (
+              <div className="text-center py-4">
+                <div className="animate-spin text-lg mb-2">⟳</div>
+                <p className="text-sm">Carregando...</p>
+              </div>
+            ) : revistas.length > 0 ? (
+              <div className="space-y-3">
+                {revistas.map(revista => {
+                  const turmasNomes = turmas
+                    .filter(t => revista.turma_ids.includes(t.id))
+                    .map(t => t.nome)
+                    .slice(0, 3)
+                    .join(', ');
+                  
+                  return (
+                    <div key={revista.id} className="border rounded p-3">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1 mr-4">
+                          <h4 className="font-medium text-sm leading-tight mb-1">
+                            {revista.tema.substring(0, 80)}
+                            {revista.tema.length > 80 ? '...' : ''}
+                          </h4>
+                          <p className="text-xs text-gray-600">
+                            {turmasNomes} • {revista.licoes.length} lições
+                          </p>
+                        </div>
+                        <div className="flex gap-1 flex-shrink-0">
+                          <button
+                            onClick={() => handleEdit(revista)}
+                            className="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+                          >
+                            Editar
+                          </button>
+                          <button
+                            onClick={() => handleDelete(revista.id)}
+                            className="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+                          >
+                            Remover
+                          </button>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <p>Nenhuma revista cadastrada</p>
-                </div>
-              )}
-            </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <p>Nenhuma revista cadastrada</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

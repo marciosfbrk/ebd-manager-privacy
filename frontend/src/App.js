@@ -1345,6 +1345,86 @@ function App() {
                   </div>
                 </div>
 
+            {/* Informações da Revista e Lição Atual - NOVA SEÇÃO */}
+            {selectedTurma && revistaAtual && (
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 md:p-6 mb-6 border-l-4 border-blue-500">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {/* Tema da Revista */}
+                  <div>
+                    <div className="flex items-center mb-2">
+                      <span className="text-2xl mr-2">📚</span>
+                      <h3 className="text-lg font-semibold text-blue-800">Revista Trimestral</h3>
+                    </div>
+                    <p className="text-sm text-blue-700 leading-relaxed">
+                      {revistaAtual.tema}
+                    </p>
+                  </div>
+                  
+                  {/* Lição do Dia */}
+                  <div>
+                    <div className="flex items-center mb-2">
+                      <span className="text-2xl mr-2">🎯</span>
+                      <h3 className="text-lg font-semibold text-green-800">
+                        {licaoAtual ? 'Lição de Hoje' : 'Lição da Data'}
+                      </h3>
+                    </div>
+                    {licaoAtual ? (
+                      <div>
+                        <p className="text-sm font-medium text-green-700 mb-1">
+                          {licaoAtual.titulo}
+                        </p>
+                        <p className="text-xs text-green-600">
+                          📅 {new Date(licaoAtual.data + 'T00:00:00').toLocaleDateString('pt-BR', {
+                            weekday: 'long',
+                            year: 'numeric', 
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-gray-600">
+                        <p>Nenhuma lição programada para esta data</p>
+                        {revistaAtual.licoes && revistaAtual.licoes.length > 0 && (
+                          <p className="text-xs mt-1">
+                            Próxima lição: {revistaAtual.licoes[0].titulo} ({revistaAtual.licoes[0].data})
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Indicador visual de disponibilidade */}
+                <div className="mt-4 pt-3 border-t border-blue-200">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-blue-600">
+                      📖 Total de lições: {revistaAtual.licoes ? revistaAtual.licoes.length : 0}
+                    </span>
+                    {licaoAtual && (
+                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full font-medium">
+                        ✨ Lição Disponível
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Aviso se não há revista configurada */}
+            {selectedTurma && !revistaAtual && (
+              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded-lg">
+                <div className="flex">
+                  <div className="ml-3">
+                    <p className="text-sm text-yellow-800">
+                      <strong>📚 Atenção:</strong> Não há revista configurada para esta turma. 
+                      Entre em contato com o administrador para configurar o material didático.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
                 {/* Lista de Presença Simples */}
                 <div className="bg-white border rounded-lg overflow-hidden mb-6">
                   <div className="bg-gray-100 px-4 py-4 border-b">

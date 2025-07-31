@@ -2007,19 +2007,52 @@ function App() {
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        await axios.post(`${API}/users`, formData);
+        if (editingUser) {
+          // Editando usuário existente
+          const updateData = {
+            nome: formData.nome,
+            email: formData.email,
+            tipo: formData.tipo,
+            turmas_permitidas: formData.turmas_permitidas
+          };
+          
+          // Só incluir senha se foi fornecida
+          if (formData.senha.trim()) {
+            updateData.senha = formData.senha;
+          }
+          
+          await axios.put(`${API}/users/${editingUser}`, updateData);
+          alert('Usuário atualizado com sucesso!');
+        } else {
+          // Criando novo usuário
+          await axios.post(`${API}/users`, formData);
+          alert('Usuário criado com sucesso!');
+        }
+        
         await loadUsuarios();
         setShowForm(false);
+        setEditingUser(null);
         setFormData({ nome: '', email: '', senha: '', tipo: 'professor', turmas_permitidas: [] });
-        alert('Usuário criado com sucesso!');
       } catch (error) {
-        console.error('Erro ao criar usuário:', error);
+        console.error('Erro ao salvar usuário:', error);
         if (error.response?.data?.detail) {
           alert(`Erro: ${error.response.data.detail}`);
         } else {
-          alert('Erro ao criar usuário');
+          alert(`Erro ao ${editingUser ? 'atualizar' : 'criar'} usuário`);
         }
       }
+    };
+
+    const handleEdit = (usuario) => {
+      setEditingUser(usuario.id);
+      setFormData({
+        nome: usuario.nome,
+        email: usuario.email,
+        senha: '', // Deixar vazio para não alterar senha obrigatoriamente
+        tipo: usuario.tipo,
+        turmas_permitidas: usuario.turmas_permitidas || []
+      });
+      setShowForm(true);
     };
 
     const handleDelete = async (userId) => {

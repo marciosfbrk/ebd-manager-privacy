@@ -9,7 +9,7 @@ import sys
 from datetime import datetime
 
 # URL do sistema hospedado
-BASE_URL = "https://341b9440-3e60-40b5-8139-767e514488b7.preview.emergentagent.com/api"
+BASE_URL = "https://981877f0-b4c4-4421-9128-c1c8e20ab73d.preview.emergentagent.com/api"
 
 # ID da turma "Professores e Oficiais"
 TURMA_ID = "2e827638-8fff-46cf-9dd3-cfa24ea045e1"

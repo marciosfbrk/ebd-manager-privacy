@@ -6,7 +6,7 @@ Script para registrar dados da turma Ebenezer (Obreiros)
 import json
 import requests
 
-BASE_URL = "https://341b9440-3e60-40b5-8139-767e514488b7.preview.emergentagent.com/api"
+BASE_URL = "https://981877f0-b4c4-4421-9128-c1c8e20ab73d.preview.emergentagent.com/api"
 TURMA_ID = "24ece9aa-2f57-47bf-8a9e-56d2874118ed"  # Ebenezer (Obreiros)
 
 # Dados fornecidos pelo usuário

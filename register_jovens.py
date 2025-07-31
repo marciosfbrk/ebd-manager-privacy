@@ -6,7 +6,7 @@ Script para registrar dados da turma Jovens
 import json
 import requests
 
-BASE_URL = "https://341b9440-3e60-40b5-8139-767e514488b7.preview.emergentagent.com/api"
+BASE_URL = "https://981877f0-b4c4-4421-9128-c1c8e20ab73d.preview.emergentagent.com/api"
 TURMA_ID = "49c33e68-2aaa-4e2b-b0b3-84d0ad1a2383"  # Jovens
 
 # Dados fornecidos pelo usuário

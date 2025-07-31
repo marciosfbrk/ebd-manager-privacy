@@ -1129,8 +1129,12 @@ def main():
     print("\n7. Testing Floating Point Precision (CRITICAL)...")
     test_floating_point_precision()
     
-    # Test 8: REVISTA ENDPOINTS (REVIEW REQUEST)
-    print("\n8. Testing Revista Endpoints (Review Request)...")
+    # Test 8: USER MANAGEMENT ENDPOINTS (REVIEW REQUEST)
+    print("\n8. Testing User Management Endpoints (Review Request)...")
+    test_user_management_endpoints()
+    
+    # Test 9: REVISTA ENDPOINTS (REVIEW REQUEST)
+    print("\n9. Testing Revista Endpoints (Review Request)...")
     test_revistas_endpoints()
     
     # Final summary

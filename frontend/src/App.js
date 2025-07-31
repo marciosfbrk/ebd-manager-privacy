@@ -21,6 +21,10 @@ function App() {
   const [rankingTurmas, setRankingTurmas] = useState([]);
   const [activeTab, setActiveTab] = useState('alunos');
   
+  // Estados de revistas
+  const [revistas, setRevistas] = useState([]);
+  const [revistaAtual, setRevistaAtual] = useState(null);
+  
   // Estados de autenticação
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);

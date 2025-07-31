@@ -2244,14 +2244,22 @@ function App() {
                         )}
                       </td>
                       <td className="border border-gray-300 px-4 py-2 text-center">
-                        {usuario.email !== 'admin@ebd.com' && (
+                        <div className="flex justify-center space-x-2">
                           <button
-                            onClick={() => handleDelete(usuario.id)}
-                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                            onClick={() => handleEdit(usuario)}
+                            className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
                           >
-                            Remover
+                            Editar
                           </button>
-                        )}
+                          {usuario.email !== 'admin@ebd.com' && (
+                            <button
+                              onClick={() => handleDelete(usuario.id)}
+                              className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
+                            >
+                              Remover
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}

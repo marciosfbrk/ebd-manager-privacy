@@ -1062,12 +1062,46 @@ function App() {
       visitantes_total: '',
       pos_chamada_total: ''
     });
+    
+    // Estados para revista e lição atual
+    const [revistaAtual, setRevistaAtual] = useState(null);
+    const [licaoAtual, setLicaoAtual] = useState(null);
 
     useEffect(() => {
       if (selectedTurma) {
         loadTurmaData();
+        loadRevistaData(); // Carregar dados da revista
       }
     }, [selectedTurma, selectedDate]);
+
+    // Nova função para carregar dados da revista
+    const loadRevistaData = async () => {
+      if (!selectedTurma) return;
+      
+      try {
+        const response = await axios.get(`${API}/revistas/turma/${selectedTurma}`);
+        const revista = response.data;
+        
+        if (revista && revista.tema) {
+          setRevistaAtual(revista);
+          
+          // Buscar lição do dia baseada na data selecionada
+          if (revista.licoes && revista.licoes.length > 0) {
+            const licaoHoje = revista.licoes.find(licao => licao.data === selectedDate);
+            setLicaoAtual(licaoHoje || null);
+          } else {
+            setLicaoAtual(null);
+          }
+        } else {
+          setRevistaAtual(null);
+          setLicaoAtual(null);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar revista:', error);
+        setRevistaAtual(null);
+        setLicaoAtual(null);
+      }
+    };
 
     const loadTurmaData = async () => {
       if (!selectedTurma) return;

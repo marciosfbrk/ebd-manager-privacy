@@ -145,6 +145,25 @@ function App() {
     }
   };
 
+  const loadRevistas = async () => {
+    try {
+      const response = await axios.get(`${API}/revistas`);
+      setRevistas(response.data);
+    } catch (error) {
+      console.error('Erro ao carregar revistas:', error);
+    }
+  };
+
+  const loadRevistaByTurma = async (turmaId) => {
+    try {
+      const response = await axios.get(`${API}/revistas/turma/${turmaId}`);
+      setRevistaAtual(response.data);
+    } catch (error) {
+      console.error('Erro ao carregar revista da turma:', error);
+      setRevistaAtual(null);
+    }
+  };
+
   const loadDashboard = async () => {
     try {
       const response = await axios.get(`${API}/reports/dashboard?data=${selectedDate}`);

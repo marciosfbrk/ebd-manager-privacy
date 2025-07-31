@@ -2873,6 +2873,8 @@ function App() {
         return isLoggedIn && currentUser?.tipo === 'admin' ? <Usuarios /> : <Dashboard />;
       case 'revistas':
         return isLoggedIn ? <Revistas /> : <HomeCover />;
+      case 'admin-revistas':
+        return isLoggedIn && currentUser?.tipo === 'admin' ? <AdminRevistas /> : <Dashboard />;
       default:
         return <HomeCover />;
     }

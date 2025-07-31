@@ -46,6 +46,23 @@ class Student(BaseModel):
     ativo: bool = True
     criado_em: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
 
+class Licao(BaseModel):
+    titulo: str
+    data: str  # Format: YYYY-MM-DD
+
+class Revista(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    tema: str
+    licoes: List[Licao]
+    turma_ids: List[str]  # IDs das turmas que usam esta revista
+    ativa: bool = True
+    criada_em: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+class RevistaCreate(BaseModel):
+    tema: str
+    licoes: List[Licao]
+    turma_ids: List[str]
+
 class StudentCreate(BaseModel):
     nome_completo: str
     data_nascimento: str

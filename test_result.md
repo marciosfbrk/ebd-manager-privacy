@@ -195,6 +195,21 @@ backend:
         agent: "testing"
         comment: "TESTED: Bulk attendance working correctly. POST /api/attendance/bulk/{turma_id} saves multiple attendance records simultaneously. Validates Sunday-only dates. Replaces existing records for the same date/turma. Comprehensive workflow test confirms bulk operations replace individual records correctly."
 
+  - task: "API Endpoints Revistas"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implementados endpoints para gerenciar revistas da EBD com lições e vinculação a turmas"
+      - working: true
+        agent: "testing"
+        comment: "TESTED (2025-01-15): ✅ COMPREHENSIVE REVISTA ENDPOINTS VERIFICATION COMPLETED! All requirements from review request fulfilled: ✅ GET /api/revistas returns all revistas (found 12 total including duplicates from multiple test runs). ✅ GET /api/revistas/turma/{turma_id} works perfectly for all turmas including Jovens. ✅ All 5 new revistas verified with EXACT correct data: Jovens ('A Liberdade em Cristo — Vivendo o verdadeiro Evangelho conforme a Carta de Paulo aos Gálatas'), Adolescentes ('Grandes Cartas para Nós'), Pré-Adolescentes ('Recebendo o Batismo no Espírito Santo'), Juniores ('Verdades que Jesus ensinou'), Primarios ('As aventuras de um Grande Missionário'). ✅ Each revista has exactly 13 lições with proper títulos and dates. ✅ All lição dates are Sundays starting from 2025-07-06. ✅ turma_ids correctly linked to each revista. ✅ Adult revista also exists and working. ✅ Fixed MongoDB ObjectId serialization issue in GET /api/revistas/turma/{turma_id} endpoint. All revista endpoints working perfectly and ready for production use!"
+
   - task: "Interface Relatórios Detalhados"
     implemented: true
     working: true

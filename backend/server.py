@@ -1133,7 +1133,7 @@ async def init_revista_adultos():
         # Verificar se já existe uma revista para essas turmas
         revista_existente = await db.revistas.find_one({"turma_ids": {"$in": turma_ids}, "ativa": True})
         if revista_existente:
-            return {"message": "Revista de adultos já existe", "revista": revista_existente}
+            return {"message": "Revista de adultos já existe", "revista_id": revista_existente.get("id", "")}
         
         # Dados da revista de adultos
         revista_adultos = {

@@ -2577,43 +2577,55 @@ function App() {
                   </div>
                 </div>
 
-                {/* Lições - Interface simplificada */}
+                {/* Lições - TODAS AS 13 */}
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Lições (máx. 13) - Opcional
+                    📚 Lições do Trimestre (13 lições)
                   </label>
-                  <div className="text-xs text-gray-600 mb-2">
-                    Deixe vazio para adicionar depois. Use formato: 2025-07-06
+                  <div className="text-xs text-gray-600 mb-3">
+                    Complete todas as lições com títulos e datas. Use formato: 2025-07-06
                   </div>
                   
-                  {formData.licoes.slice(0, 5).map((licao, index) => (
-                    <div key={index} className="grid grid-cols-2 gap-2 mb-2">
-                      <input
-                        type="text"
-                        value={licao.titulo}
-                        onChange={(e) => {
-                          const newLicoes = [...formData.licoes];
-                          newLicoes[index].titulo = e.target.value;
-                          setFormData({...formData, licoes: newLicoes});
-                        }}
-                        placeholder={`Lição ${index + 1}`}
-                        className="px-2 py-1 text-sm border rounded"
-                      />
-                      <input
-                        type="date"
-                        value={licao.data}
-                        onChange={(e) => {
-                          const newLicoes = [...formData.licoes];
-                          newLicoes[index].data = e.target.value;
-                          setFormData({...formData, licoes: newLicoes});
-                        }}
-                        className="px-2 py-1 text-sm border rounded"
-                      />
-                    </div>
-                  ))}
+                  <div className="max-h-80 overflow-y-auto border rounded-lg p-4 bg-gray-50">
+                    {formData.licoes.map((licao, index) => (
+                      <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 p-3 bg-white border rounded">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            📖 Lição {index + 1} - Título *
+                          </label>
+                          <input
+                            type="text"
+                            value={licao.titulo}
+                            onChange={(e) => {
+                              const newLicoes = [...formData.licoes];
+                              newLicoes[index].titulo = e.target.value;
+                              setFormData({...formData, licoes: newLicoes});
+                            }}
+                            placeholder={`Título da lição ${index + 1}`}
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            📅 Data da Aula *
+                          </label>
+                          <input
+                            type="date"
+                            value={licao.data}
+                            onChange={(e) => {
+                              const newLicoes = [...formData.licoes];
+                              newLicoes[index].data = e.target.value;
+                              setFormData({...formData, licoes: newLicoes});
+                            }}
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                   
-                  <div className="text-xs text-gray-500 mt-2">
-                    Mostrando apenas 5 lições. Complete o resto após criar.
+                  <div className="text-xs text-gray-600 mt-2 p-2 bg-blue-50 rounded">
+                    💡 <strong>Dica:</strong> Preencha pelo menos as primeiras lições para começar. Você pode deixar algumas vazias e completar depois editando a revista.
                   </div>
                 </div>
 

@@ -1068,7 +1068,17 @@ async def get_revista_by_turma(turma_id: str):
         revista = await db.revistas.find_one({"turma_ids": turma_id, "ativa": True})
         if not revista:
             return {"tema": None, "licoes": []}
-        return revista
+        
+        # Remove _id do MongoDB e converte para formato JSON serializable
+        revista_clean = {
+            "id": revista.get("id"),
+            "tema": revista.get("tema"),
+            "licoes": revista.get("licoes", []),
+            "turma_ids": revista.get("turma_ids", []),
+            "ativa": revista.get("ativa", True),
+            "criada_em": revista.get("criada_em")
+        }
+        return revista_clean
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao buscar revista da turma: {str(e)}")
 

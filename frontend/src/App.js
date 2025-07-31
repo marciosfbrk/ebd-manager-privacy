@@ -2479,13 +2479,26 @@ function App() {
     return (
       <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-6">
-            <button
-              onClick={() => setCurrentView('dashboard')}
-              className="mb-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
-            >
-              ← Voltar ao Dashboard
-            </button>
+          {/* Header fixo no topo */}
+          <div className="mb-6 sticky top-0 bg-gray-50 pb-4 border-b border-gray-200">
+            <div className="flex justify-between items-center mb-4">
+              <button
+                onClick={() => setCurrentView('dashboard')}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 flex items-center gap-2"
+              >
+                ← Voltar ao Dashboard
+              </button>
+              
+              {currentUser?.tipo === 'admin' && (
+                <button
+                  onClick={() => setCurrentView('admin-revistas')}
+                  className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center gap-2"
+                >
+                  ➕ Gerenciar Revistas
+                </button>
+              )}
+            </div>
+            
             <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">📖 Revistas Trimestrais</h1>
             <p className="text-gray-600">Lições e cronograma das turmas</p>
           </div>

@@ -104,6 +104,21 @@
 
 user_problem_statement: "Construir sistema EBD Manager para substituir planilha de controle de presença em escola bíblica dominical, com funcionalidades de cadastro de alunos, turmas, chamada dominical, ofertas, distribuição de materiais e relatórios consolidados."
 
+  - task: "Sistema de Revistas - Cadastro de 5 Revistas"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Cadastradas 5 novas revistas através de scripts Python: Jovens, Adolescentes, Pré-Adolescentes, Juniores, Primarios. Cada revista com 13 lições e dados completos."
+      - working: true
+        agent: "testing"
+        comment: "TESTED: All revista endpoints working correctly. ✅ GET /api/revistas returns all revistas (found 12 total including duplicates from multiple test runs). ✅ GET /api/revistas/turma/{turma_id} works perfectly for all turmas. ✅ All 5 new revistas verified with exact correct data and 13 lições each. ✅ Fixed critical MongoDB ObjectId serialization issue. Sistema ready for production use."
+
 backend:
   - task: "API CRUD Turmas"
     implemented: true

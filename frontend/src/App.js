@@ -438,6 +438,14 @@ function App() {
                   </>
                 )}
                 
+                <button
+                  onClick={() => setCurrentView('revistas')}
+                  className="w-full px-6 py-4 bg-gradient-to-r from-teal-500 to-green-600 text-white rounded-lg hover:from-teal-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-teal-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
+                >
+                  <span className="text-xl mr-2">📖</span>
+                  Revistas Trimestrais
+                </button>
+                
                 {currentUser?.tipo === 'professor' && (
                   <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                     <p className="text-sm text-blue-700">

@@ -114,10 +114,8 @@ function App() {
     loadTurmas();
     loadStudents();
     loadDashboard();
-    if (isLoggedIn) {
-      loadRevistas();
-    }
-  }, [isLoggedIn]);
+    // REMOVER loadRevistas() daqui - será carregado só quando necessário
+  }, []);
 
   const loadInitialData = async () => {
     try {

@@ -103,9 +103,10 @@ async def import_chamadas_from_json(json_file_path):
                 for aluno in alunos_turma:
                     # 85% de chance de estar presente (número realista)
                     presente = random.random() < 0.85
+                    nome_aluno = aluno.get('nome_completo', aluno.get('nome', ''))
                     attendance_records.append({
                         'student_id': aluno['id'],
-                        'student_name': aluno['nome'],
+                        'student_name': nome_aluno,
                         'present': presente
                     })
             

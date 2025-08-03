@@ -38,11 +38,14 @@ async def restore_backup(backup_file):
         print(f"📝 Descrição: {backup_data['backup_info']['description']}")
         print()
         
-        # Confirmar restauração
-        confirm = input("⚠️  Esta operação irá SOBRESCREVER todos os dados atuais. Confirma? (digite 'SIM'): ")
-        if confirm != 'SIM':
-            print("❌ Restauração cancelada.")
-            return False
+        # Confirmar restauração (pular confirmação se for automático)
+        if len(sys.argv) < 3 or sys.argv[2] != '--auto':
+            confirm = input("⚠️  Esta operação irá SOBRESCREVER todos os dados atuais. Confirma? (digite 'SIM'): ")
+            if confirm != 'SIM':
+                print("❌ Restauração cancelada.")
+                return False
+        else:
+            print("🤖 Modo automático - restaurando sem confirmação...")
         
         # Limpar collections existentes
         print("🧹 Limpando dados existentes...")

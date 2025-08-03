@@ -87,14 +87,15 @@ async def import_chamadas_from_json(json_file_path):
                     # Encontrar aluno
                     aluno_encontrado = None
                     for aluno in alunos_turma:
-                        if aluno['nome'].lower() == aluno_nome.lower():
+                        nome_aluno = aluno.get('nome_completo', aluno.get('nome', ''))
+                        if nome_aluno.lower() == aluno_nome.lower():
                             aluno_encontrado = aluno
                             break
                     
                     if aluno_encontrado:
                         attendance_records.append({
                             'student_id': aluno_encontrado['id'],
-                            'student_name': aluno_encontrado['nome'],
+                            'student_name': aluno_encontrado.get('nome_completo', aluno_encontrado.get('nome', '')),
                             'present': presente
                         })
             else:

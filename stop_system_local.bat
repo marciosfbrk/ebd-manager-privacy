@@ -1,13 +1,14 @@
 @echo off
 echo ================================================
-echo      EBD Manager - Parando Sistema Local
+echo        EBD Manager - Parar Sistema Local
 echo ================================================
 echo.
 
-echo 🛑 Parando processos do EBD Manager...
+echo 🛑 Parando todos os serviços do EBD Manager...
+echo.
 
-REM Parar processos Node.js (Frontend)
-echo    Parando Frontend React...
+REM Parar Frontend React
+echo ⚛️  Parando Frontend React...
 taskkill /F /IM node.exe 2>nul
 if %errorlevel% equ 0 (
     echo    ✅ Frontend parado
@@ -15,8 +16,8 @@ if %errorlevel% equ 0 (
     echo    ⚠️  Frontend já estava parado
 )
 
-REM Parar processos Python (Backend)
-echo    Parando Backend Python...
+REM Parar Backend Python  
+echo 🐍 Parando Backend Python...
 taskkill /F /IM python.exe 2>nul
 if %errorlevel% equ 0 (
     echo    ✅ Backend parado
@@ -24,11 +25,11 @@ if %errorlevel% equ 0 (
     echo    ⚠️  Backend já estava parado
 )
 
-REM Parar MongoDB (opcional)
+REM Perguntar sobre MongoDB
 echo.
 set /p stop_mongo="🗄️  Parar MongoDB também? (s/n): "
 if /i "%stop_mongo%"=="s" (
-    echo    Parando MongoDB...
+    echo    🛑 Parando MongoDB...
     taskkill /F /IM mongod.exe 2>nul
     if %errorlevel% equ 0 (
         echo    ✅ MongoDB parado
@@ -36,7 +37,7 @@ if /i "%stop_mongo%"=="s" (
         echo    ⚠️  MongoDB já estava parado
     )
 ) else (
-    echo    📊 MongoDB continuará rodando
+    echo    📊 MongoDB continuará rodando (recomendado)
 )
 
 echo.
@@ -44,7 +45,10 @@ echo ================================================
 echo ✅ Sistema parado com sucesso!
 echo ================================================
 echo.
-echo 🚀 Para reiniciar: start_system_local.bat
-echo 🔧 Para verificar: check_system_local.bat
+echo 🔄 Para reiniciar: start_system_local.bat
+echo 🔧 Para verificar: check_status_local.bat  
+echo 📊 Para resetar: python restore_backup.py backup_ebd_completo_20250803_015454.json
+echo.
+echo 💡 Dica: Deixe o MongoDB rodando para inicialização mais rápida
 echo.
 pause

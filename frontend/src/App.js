@@ -12,7 +12,7 @@ function App() {
   const [students, setStudents] = useState([]);
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);
-  const [selectedDate, setSelectedDate] = useState('2025-07-13');
+  const [selectedDate, setSelectedDate] = useState(() => getLastSunday());
   const [loading, setLoading] = useState(false);
   
   // Estados de ranking

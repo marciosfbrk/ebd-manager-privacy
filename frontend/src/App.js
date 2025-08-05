@@ -81,6 +81,9 @@ function App() {
       loadTurmas();
       loadStudents();
       loadDashboard();
+      
+      // Redirecionar para dashboard se já estiver logado
+      setCurrentView('dashboard');
     }
   }, []);
 

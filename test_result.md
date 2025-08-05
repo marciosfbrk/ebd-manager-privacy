@@ -30,15 +30,18 @@
 ##
 ##   - task: "Funcionalidade Datas Automáticas"
     implemented: true
-    working: "needs_testing"
+    working: false
     file: "/app/frontend/src/App.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implementadas funções getLastSunday() e getCurrentSunday() para cálculo automático de datas. Adicionado useEffect que monitora currentView e define automaticamente: relatórios = último domingo, chamadas = domingo atual/próximo."
+      - working: false
+        agent: "testing"
+        comment: "TESTED (2025-08-05): ❌ FUNCIONALIDADE DE DATAS AUTOMÁTICAS NÃO ESTÁ FUNCIONANDO. Problemas identificados: 1) Login funciona mas sessão não persiste corretamente - usuário fica preso na tela inicial mesmo após login bem-sucedido. 2) Não consegui acessar o dashboard para testar as datas automáticas. 3) Botões 'Fazer Chamada' e 'Relatórios Detalhados' não foram encontrados. 4) Nenhum campo de data foi localizado para verificar se as funções getLastSunday() e getCurrentSunday() estão funcionando. 5) Possível problema na navegação entre views ou no gerenciamento de estado do currentView. REQUER CORREÇÃO: Verificar gerenciamento de sessão/login e navegação entre telas antes de testar a funcionalidade de datas automáticas."
 
 frontend:
 ##   - task: "Task name"

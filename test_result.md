@@ -30,9 +30,9 @@
 ##
 ##   - task: "Funcionalidade Datas Automáticas"
     implemented: true
-    working: false
+    working: true
     file: "/app/frontend/src/App.js"
-    stuck_count: 1
+    stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
@@ -42,6 +42,9 @@
       - working: false
         agent: "testing"
         comment: "TESTED (2025-08-05): ❌ FUNCIONALIDADE DE DATAS AUTOMÁTICAS NÃO ESTÁ FUNCIONANDO. Problemas identificados: 1) Login funciona mas sessão não persiste corretamente - usuário fica preso na tela inicial mesmo após login bem-sucedido. 2) Não consegui acessar o dashboard para testar as datas automáticas. 3) Botões 'Fazer Chamada' e 'Relatórios Detalhados' não foram encontrados. 4) Nenhum campo de data foi localizado para verificar se as funções getLastSunday() e getCurrentSunday() estão funcionando. 5) Possível problema na navegação entre views ou no gerenciamento de estado do currentView. REQUER CORREÇÃO: Verificar gerenciamento de sessão/login e navegação entre telas antes de testar a funcionalidade de datas automáticas."
+      - working: true
+        agent: "testing"
+        comment: "TESTED (2025-08-05): 🎉 FUNCIONALIDADE DE DATAS AUTOMÁTICAS FUNCIONANDO PERFEITAMENTE! Após correção dos problemas de navegação, todos os testes foram bem-sucedidos: ✅ DASHBOARD: Mostra corretamente 2025-08-03 (último domingo) conforme esperado para terça-feira 05/08/2025. ✅ FAZER CHAMADA: Mostra corretamente 2025-08-10 (próximo domingo) quando navega para chamadas. ✅ RELATÓRIOS DETALHADOS: Mostra corretamente 2025-08-03 (último domingo) quando navega para relatórios. ✅ ALTERNÂNCIA ENTRE TELAS: Datas mudam automaticamente conforme a view atual - dashboard/relatórios usam getLastSunday(), chamadas usam getCurrentSunday(). ✅ VALIDAÇÃO DE DOMINGOS: Ambas as datas calculadas (2025-08-03 e 2025-08-10) são realmente domingos. ✅ FUNÇÕES JAVASCRIPT: getLastSunday() e getCurrentSunday() calculam corretamente baseado na data atual. ✅ USEEFFECT: Monitora currentView e atualiza selectedDate automaticamente. Sistema de datas automáticas está 100% funcional e pronto para produção!"
 
 frontend:
 ##   - task: "Task name"

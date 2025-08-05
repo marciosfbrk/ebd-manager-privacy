@@ -46,6 +46,17 @@ function App() {
     }
   }, []);
 
+  // Atualizar data automaticamente baseado na view atual
+  useEffect(() => {
+    if (currentView === 'chamada') {
+      // Para chamadas, usar o domingo atual/próximo
+      setSelectedDate(getCurrentSunday());
+    } else if (currentView === 'dashboard' || currentView === 'reports') {
+      // Para relatórios, usar o último domingo
+      setSelectedDate(getLastSunday());
+    }
+  }, [currentView]);
+
   // Função de login
   const handleLogin = async (email, senha) => {
     try {

@@ -28,7 +28,19 @@
 ##         -agent: "main"  # or "testing" or "user"
 ##         -comment: "Detailed comment about status"
 ##
-## frontend:
+##   - task: "Funcionalidade Datas Automáticas"
+    implemented: true
+    working: "needs_testing"
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implementadas funções getLastSunday() e getCurrentSunday() para cálculo automático de datas. Adicionado useEffect que monitora currentView e define automaticamente: relatórios = último domingo, chamadas = domingo atual/próximo."
+
+frontend:
 ##   - task: "Task name"
 ##     implemented: true
 ##     working: true  # or false or "NA"

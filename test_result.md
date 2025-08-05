@@ -349,7 +349,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Interface Rankings"
+    - "Funcionalidade Datas Automáticas"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

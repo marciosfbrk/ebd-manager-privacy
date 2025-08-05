@@ -117,6 +117,9 @@ function App() {
       await loadStudents();
       await loadDashboard();
       
+      // Redirecionar para dashboard após login bem-sucedido
+      setCurrentView('dashboard');
+      
       return { success: true };
     } catch (error) {
       console.error('Erro no login:', error);

@@ -6,6 +6,44 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 function App() {
+  // Funções utilitárias para cálculo de datas
+  const isSunday = (dateString) => {
+    const date = new Date(dateString + 'T00:00:00');
+    return date.getDay() === 0;
+  };
+
+  // Função para obter o último domingo (para relatórios)
+  const getLastSunday = () => {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 = domingo, 1 = segunda, etc.
+    
+    if (dayOfWeek === 0) {
+      // Se hoje é domingo, retorna hoje
+      return today.toISOString().split('T')[0];
+    } else {
+      // Se não é domingo, retorna o domingo anterior
+      const lastSunday = new Date(today);
+      lastSunday.setDate(today.getDate() - dayOfWeek);
+      return lastSunday.toISOString().split('T')[0];
+    }
+  };
+
+  // Função para obter o próximo domingo (para chamadas)
+  const getCurrentSunday = () => {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 = domingo, 1 = segunda, etc.
+    
+    if (dayOfWeek === 0) {
+      // Se hoje é domingo, retorna hoje
+      return today.toISOString().split('T')[0];
+    } else {
+      // Se não é domingo, retorna o próximo domingo
+      const nextSunday = new Date(today);
+      nextSunday.setDate(today.getDate() + (7 - dayOfWeek));
+      return nextSunday.toISOString().split('T')[0];
+    }
+  };
+
   const [currentView, setCurrentView] = useState('home');
   const [showApp, setShowApp] = useState(false);
   const [turmas, setTurmas] = useState([]);

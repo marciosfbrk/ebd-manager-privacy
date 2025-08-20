@@ -664,6 +664,71 @@ async def delete_user(user_id: str):
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     return {"message": "Usuário removido com sucesso"}
 
+# Model for password change
+class PasswordChangeRequest(BaseModel):
+    user_id: str
+    current_password: str
+    new_password: str
+    confirm_password: str
+
+# Endpoint para alteração de senha
+@api_router.put("/users/{user_id}/change-password")
+async def change_password(user_id: str, password_data: PasswordChangeRequest):
+    try:
+        # Verificar se as senhas coincidem
+        if password_data.new_password != password_data.confirm_password:
+            raise HTTPException(status_code=400, detail="Nova senha e confirmação não coincidem")
+        
+        # Verificar se a nova senha não é muito curta
+        if len(password_data.new_password) < 6:
+            raise HTTPException(status_code=400, detail="Nova senha deve ter pelo menos 6 caracteres")
+        
+        # Buscar usuário
+        user = await db.users.find_one({"id": user_id, "ativo": True})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuário não encontrado")
+        
+        # Verificar senha atual (apenas se não for primeira senha)
+        if not user.get("primeira_senha", False):
+            current_password_hash = hash_password(password_data.current_password)
+            if current_password_hash != user["senha_hash"]:
+                raise HTTPException(status_code=400, detail="Senha atual incorreta")
+        
+        # Atualizar senha
+        new_password_hash = hash_password(password_data.new_password)
+        result = await db.users.update_one(
+            {"id": user_id},
+            {
+                "$set": {
+                    "senha_hash": new_password_hash,
+                    "primeira_senha": False,  # Marcar que não é mais primeira senha
+                    "senha_alterada_em": datetime.now()
+                }
+            }
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Erro ao atualizar senha")
+        
+        return {"message": "Senha alterada com sucesso", "success": True}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro interno: {str(e)}")
+
+# Endpoint para verificar se usuário precisa alterar senha
+@api_router.get("/users/{user_id}/needs-password-change")
+async def needs_password_change(user_id: str):
+    user = await db.users.find_one({"id": user_id, "ativo": True})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
+    return {
+        "needs_change": user.get("primeira_senha", False),
+        "user_name": user.get("nome", "")
+    }
+
 # Middleware para verificar acesso
 async def verify_access(token: str, turma_id: str = None):
     # Verificar sessão

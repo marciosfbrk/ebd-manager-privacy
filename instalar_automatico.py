@@ -34,7 +34,7 @@ def check_requirements():
     # Verificar Python
     try:
         python_version = subprocess.run(['python', '--version'], 
-                                      capture_output=True, text=True, check=True)
+                                      capture_output=True, text=True, check=True, shell=True)
         print(f"✅ Python: {python_version.stdout.strip()}")
     except:
         print("❌ Python não encontrado. Instale Python 3.8+")
@@ -43,20 +43,26 @@ def check_requirements():
     # Verificar Node.js
     try:
         node_version = subprocess.run(['node', '--version'], 
-                                    capture_output=True, text=True, check=True)
+                                    capture_output=True, text=True, check=True, shell=True)
         print(f"✅ Node.js: {node_version.stdout.strip()}")
     except:
         print("❌ Node.js não encontrado. Instale Node.js LTS")
         return False
     
-    # Verificar npm
+    # Verificar npm (com shell=True para Windows)
     try:
         npm_version = subprocess.run(['npm', '--version'], 
-                                   capture_output=True, text=True, check=True)
+                                   capture_output=True, text=True, check=True, shell=True)
         print(f"✅ npm: {npm_version.stdout.strip()}")
     except:
-        print("❌ npm não encontrado. Reinstale Node.js")
-        return False
+        # Tentar caminho alternativo no Windows
+        try:
+            npm_version = subprocess.run('npm --version', 
+                                       capture_output=True, text=True, check=True, shell=True)
+            print(f"✅ npm: {npm_version.stdout.strip()}")
+        except:
+            print("❌ npm não encontrado. Reinstale Node.js")
+            return False
     
     return True
 

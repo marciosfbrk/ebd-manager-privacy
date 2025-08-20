@@ -778,7 +778,8 @@ function App() {
         .trim()
         .toLowerCase()
         .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, ''); // remove acentos
+        .replace(/[\u0300-\u036f]/g, '') // remove acentos
+        .replace(/[-]/g, ' '); // substitui hífens por espaços
     };
 
     // Whitelists dos departamentos (já normalizadas)

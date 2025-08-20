@@ -3296,6 +3296,8 @@ function App() {
         return isLoggedIn && currentUser?.tipo === 'admin' ? <Turmas /> : <Dashboard />;
       case 'usuarios':
         return isLoggedIn && currentUser?.tipo === 'admin' ? <Usuarios /> : <Dashboard />;
+      case 'alterar-senha':
+        return isLoggedIn ? <AlterarSenha /> : <HomeCover />;
       case 'revistas':
         return isLoggedIn ? <Revistas /> : <HomeCover />;
       case 'admin-revistas':

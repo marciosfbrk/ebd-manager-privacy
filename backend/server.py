@@ -10,6 +10,7 @@ from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime, date, timedelta
 from enum import Enum
+import hashlib
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -24,6 +25,57 @@ app = FastAPI()
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
+
+# Function to hash passwords
+def hash_password(password: str) -> str:
+    return hashlib.sha256(password.encode()).hexdigest()
+
+# Startup event to create initial users
+@app.on_event("startup")
+async def create_initial_users():
+    try:
+        # Check if admin user already exists
+        admin_exists = await db.users.find_one({"email": "admin@ebd.com"})
+        
+        if not admin_exists:
+            # Create initial admin user
+            admin_user = {
+                "id": str(uuid.uuid4()),
+                "nome": "Administrador",
+                "email": "admin@ebd.com",
+                "senha_hash": hash_password("123456"),
+                "tipo": "admin",
+                "turmas_permitidas": [],
+                "ativo": True,
+                "criado_em": datetime.now(),
+                "primeira_senha": True  # Flag to force password change
+            }
+            await db.users.insert_one(admin_user)
+            print("✅ Usuário admin criado automaticamente")
+        
+        # Check if professor user exists
+        professor_exists = await db.users.find_one({"email": "professor@ebd.com"})
+        
+        if not professor_exists:
+            # Create initial professor user
+            professor_user = {
+                "id": str(uuid.uuid4()),
+                "nome": "Professor",
+                "email": "professor@ebd.com", 
+                "senha_hash": hash_password("123456"),
+                "tipo": "professor",
+                "turmas_permitidas": [],
+                "ativo": True,
+                "criado_em": datetime.now(),
+                "primeira_senha": True  # Flag to force password change
+            }
+            await db.users.insert_one(professor_user)
+            print("✅ Usuário professor criado automaticamente")
+        
+        print("🚀 Sistema inicializado com usuários padrão")
+        
+    except Exception as e:
+        print(f"⚠️  Erro ao criar usuários iniciais: {e}")
 
 # Enums
 class AttendanceStatus(str, Enum):

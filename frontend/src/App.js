@@ -2335,6 +2335,170 @@ function App() {
     );
   };
 
+  // Componente Alterar Senha
+  const AlterarSenha = () => {
+    const [passwordData, setPasswordData] = useState({
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    });
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState(''); // 'success' or 'error'
+
+    const handleChange = (e) => {
+      setPasswordData({
+        ...passwordData,
+        [e.target.name]: e.target.value
+      });
+    };
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setMessage('');
+      setLoading(true);
+
+      try {
+        // Validações frontend
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+          throw new Error('Nova senha e confirmação não coincidem');
+        }
+
+        if (passwordData.newPassword.length < 6) {
+          throw new Error('Nova senha deve ter pelo menos 6 caracteres');
+        }
+
+        // Chamar API
+        const response = await axios.put(`${API}/users/${currentUser.user_id}/change-password`, {
+          user_id: currentUser.user_id,
+          current_password: passwordData.currentPassword,
+          new_password: passwordData.newPassword,
+          confirm_password: passwordData.confirmPassword
+        });
+
+        setMessage('Senha alterada com sucesso!');
+        setMessageType('success');
+        setPasswordData({
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: ''
+        });
+
+      } catch (error) {
+        setMessage(error.response?.data?.detail || error.message || 'Erro ao alterar senha');
+        setMessageType('error');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    return (
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+        <div className="max-w-2xl mx-auto py-8 px-4">
+          <div className="mb-6">
+            <button
+              onClick={() => setCurrentView('dashboard')}
+              className="mb-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              ← Voltar ao Dashboard
+            </button>
+            <h1 className="text-3xl font-bold text-gray-800">🔒 Alterar Senha</h1>
+            <p className="text-gray-600">Altere sua senha de acesso ao sistema</p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            {message && (
+              <div className={`mb-6 p-4 rounded-lg ${
+                messageType === 'success' 
+                  ? 'bg-green-100 border border-green-400 text-green-700' 
+                  : 'bg-red-100 border border-red-400 text-red-700'
+              }`}>
+                {message}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Senha Atual
+                </label>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  value={passwordData.currentPassword}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Digite sua senha atual"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Nova Senha
+                </label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  value={passwordData.newPassword}
+                  onChange={handleChange}
+                  required
+                  minLength={6}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Digite sua nova senha (mínimo 6 caracteres)"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Confirmar Nova Senha
+                </label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={passwordData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  minLength={6}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Confirme sua nova senha"
+                />
+              </div>
+
+              <div className="flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={() => setCurrentView('dashboard')}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  disabled={loading}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  disabled={loading}
+                >
+                  {loading ? 'Alterando...' : 'Alterar Senha'}
+                </button>
+              </div>
+            </form>
+
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+              <h3 className="text-sm font-semibold text-blue-800 mb-2">Dicas de Segurança:</h3>
+              <ul className="text-xs text-blue-700 space-y-1">
+                <li>• Use pelo menos 6 caracteres</li>
+                <li>• Combine letras, números e símbolos</li>
+                <li>• Não use informações pessoais óbvias</li>
+                <li>• Altere sua senha regularmente</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Componente Rankings
   const Rankings = () => {
     const [isLoadingRankings, setIsLoadingRankings] = useState(false);

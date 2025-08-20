@@ -488,6 +488,15 @@ function App() {
                     </button>
                   </>
                 )}
+
+                {/* Botão Alterar Senha - visível para todos */}
+                <button
+                  onClick={() => setCurrentView('alterar-senha')}
+                  className="w-full px-6 py-4 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
+                >
+                  <span className="text-xl mr-2">🔒</span>
+                  Alterar Senha
+                </button>
                 
                 <button
                   onClick={() => setCurrentView('revistas')}

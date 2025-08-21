@@ -586,7 +586,7 @@ function App() {
                   Fazer Chamada
                 </button>
                 
-                {currentUser?.tipo === 'admin' && (
+                {(currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') && (
                   <>
                     <button
                       onClick={() => setCurrentView('relatorios')}

@@ -442,13 +442,11 @@ function App() {
             <div className="flex items-center space-x-4">
               <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg p-1">
                 {/* Logo Ministério do Belém - Header */}
-                <div className="w-full h-full bg-gradient-to-b from-orange-400 via-yellow-500 to-green-500 rounded-full flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-red-600 rounded-full"></div>
-                  <div className="relative z-10 text-white text-lg font-bold">🛡️</div>
-                  {/* Para usar sua imagem real, substitua por:
-                      <img src="SUA_IMAGEM_BASE64" alt="Ministério do Belém" className="w-full h-full object-cover rounded-full" />
-                  */}
-                </div>
+                <img 
+                  src="/logo_belem.png" 
+                  alt="Ministério do Belém" 
+                  className="w-full h-full rounded-full object-cover"
+                />
               </div>
               <div className="text-center">
                 <h1 className="text-4xl font-bold tracking-wider">App EBD</h1>

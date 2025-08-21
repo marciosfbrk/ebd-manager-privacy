@@ -717,6 +717,177 @@ async def setup_deploy():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro no setup de deploy: {str(e)}")
 
+# Backup and Restore System
+@api_router.get("/backup/generate")
+async def generate_backup():
+    """
+    Gera backup completo de todos os dados do sistema
+    Retorna arquivo JSON com todos os dados
+    """
+    try:
+        backup_data = {}
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # Coleções para backup
+        collections = ['users', 'turmas', 'students', 'attendance', 'revistas', 'sessions']
+        
+        print(f"🔄 Iniciando backup completo - {timestamp}")
+        
+        for collection_name in collections:
+            try:
+                # Buscar todos os documentos da coleção
+                documents = await db[collection_name].find({}).to_list(None)
+                
+                # Converter ObjectId para string se necessário
+                clean_documents = []
+                for doc in documents:
+                    if '_id' in doc:
+                        doc['_id'] = str(doc['_id'])
+                    clean_documents.append(doc)
+                
+                backup_data[collection_name] = clean_documents
+                print(f"   ✅ {collection_name}: {len(clean_documents)} registros")
+                
+            except Exception as e:
+                print(f"   ⚠️ Erro na coleção {collection_name}: {e}")
+                backup_data[collection_name] = []
+        
+        # Metadados do backup
+        backup_metadata = {
+            "backup_timestamp": timestamp,
+            "backup_date": datetime.now().isoformat(),
+            "system_version": "EBD Manager v1.0",
+            "total_collections": len(collections),
+            "total_records": sum(len(backup_data[col]) for col in backup_data)
+        }
+        
+        # Estrutura final do backup
+        complete_backup = {
+            "metadata": backup_metadata,
+            "data": backup_data
+        }
+        
+        print(f"✅ Backup concluído: {backup_metadata['total_records']} registros totais")
+        
+        return {
+            "success": True,
+            "message": "Backup gerado com sucesso",
+            "backup": complete_backup,
+            "filename": f"ebd_backup_{timestamp}.json",
+            "size_mb": len(str(complete_backup)) / (1024 * 1024),
+            "summary": {
+                "users": len(backup_data.get('users', [])),
+                "turmas": len(backup_data.get('turmas', [])),
+                "students": len(backup_data.get('students', [])), 
+                "attendance": len(backup_data.get('attendance', [])),
+                "revistas": len(backup_data.get('revistas', []))
+            }
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao gerar backup: {str(e)}")
+
+@api_router.post("/backup/restore")
+async def restore_backup(backup_data: dict):
+    """
+    Restaura dados de um backup
+    CUIDADO: Substitui todos os dados existentes!
+    """
+    try:
+        if not backup_data or 'data' not in backup_data:
+            raise HTTPException(status_code=400, detail="Formato de backup inválido")
+        
+        restore_data = backup_data['data']
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        print(f"🔄 Iniciando restore de backup - {timestamp}")
+        
+        # Verificar metadados se existirem
+        metadata = backup_data.get('metadata', {})
+        if metadata:
+            print(f"   📊 Backup original: {metadata.get('backup_date', 'Data desconhecida')}")
+            print(f"   📈 Total de registros: {metadata.get('total_records', 'Desconhecido')}")
+        
+        restore_summary = {}
+        
+        # Coleções para restaurar
+        collections = ['users', 'turmas', 'students', 'attendance', 'revistas']
+        
+        for collection_name in collections:
+            if collection_name in restore_data:
+                try:
+                    # Limpar coleção existente
+                    await db[collection_name].delete_many({})
+                    
+                    # Inserir novos dados
+                    documents = restore_data[collection_name]
+                    if documents:
+                        # Limpar _id se for string para evitar conflitos
+                        clean_documents = []
+                        for doc in documents:
+                            if '_id' in doc and isinstance(doc['_id'], str):
+                                del doc['_id']
+                            clean_documents.append(doc)
+                        
+                        result = await db[collection_name].insert_many(clean_documents)
+                        restore_summary[collection_name] = len(result.inserted_ids)
+                        print(f"   ✅ {collection_name}: {len(result.inserted_ids)} registros restaurados")
+                    else:
+                        restore_summary[collection_name] = 0
+                        print(f"   ⚠️ {collection_name}: nenhum registro para restaurar")
+                        
+                except Exception as e:
+                    print(f"   ❌ Erro ao restaurar {collection_name}: {e}")
+                    restore_summary[collection_name] = 0
+            else:
+                restore_summary[collection_name] = 0
+                print(f"   ⚠️ {collection_name}: não encontrado no backup")
+        
+        # Garantir que usuários obrigatórios existam após restore
+        await ensure_deploy_ready()
+        
+        total_restored = sum(restore_summary.values())
+        print(f"✅ Restore concluído: {total_restored} registros restaurados")
+        
+        return {
+            "success": True,
+            "message": f"Backup restaurado com sucesso! {total_restored} registros importados",
+            "restore_summary": restore_summary,
+            "timestamp": timestamp,
+            "total_restored": total_restored
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao restaurar backup: {str(e)}")
+
+@api_router.get("/backup/download/{filename}")
+async def download_backup(filename: str):
+    """
+    Gera e faz download de backup como arquivo
+    """
+    from fastapi.responses import Response
+    import json
+    
+    try:
+        # Gerar backup
+        backup_response = await generate_backup()
+        backup_content = backup_response["backup"]
+        
+        # Converter para JSON string
+        json_content = json.dumps(backup_content, indent=2, ensure_ascii=False, default=str)
+        
+        return Response(
+            content=json_content,
+            media_type="application/json",
+            headers={
+                "Content-Disposition": f"attachment; filename={filename}",
+                "Content-Type": "application/json; charset=utf-8"
+            }
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao fazer download do backup: {str(e)}")
+
 # Routes - User Management
 @api_router.post("/login", response_model=LoginResponse)
 async def login(login_data: UserLogin):

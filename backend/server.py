@@ -620,7 +620,7 @@ class UserCreate(BaseModel):
     nome: str
     email: str
     senha: str
-    tipo: str  # 'admin' ou 'professor'
+    tipo: str  # 'admin', 'professor' ou 'moderador'
     turmas_permitidas: List[str] = []
 
 class UserUpdate(BaseModel):

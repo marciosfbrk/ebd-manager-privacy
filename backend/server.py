@@ -951,7 +951,7 @@ async def get_users():
     return [User(**user) for user in users]
 
 @api_router.put("/users/{user_id}")
-async def update_user(user_id: str, user_update: UserCreate):
+async def update_user(user_id: str, user_update: UserUpdate):
     """Atualizar usuário existente"""
     # Verificar se usuário existe
     existing_user = await db.users.find_one({"id": user_id, "ativo": True})
@@ -973,9 +973,9 @@ async def update_user(user_id: str, user_update: UserCreate):
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
     
-    # Só atualizar senha se foi fornecida
+    # Só atualizar senha se foi fornecida e não está vazia
     if user_update.senha and user_update.senha.strip():
-        update_data["senha"] = user_update.senha
+        update_data["senha_hash"] = hash_password(user_update.senha)
     
     # Atualizar usuário
     result = await db.users.update_one(

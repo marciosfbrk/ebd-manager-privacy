@@ -250,6 +250,144 @@ function App() {
     }
   };
 
+  // Funções de Backup e Restore
+  const generateBackup = async () => {
+    try {
+      setBackupLoading(true);
+      const response = await axios.get(`${API}/backup/generate`);
+      
+      if (response.data.success) {
+        const backup = response.data.backup;
+        const filename = response.data.filename;
+        
+        // Criar arquivo para download
+        const dataStr = JSON.stringify(backup, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(dataBlob);
+        
+        // Fazer download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        alert(`✅ Backup gerado com sucesso!\n\nArquivo: ${filename}\nTamanho: ${response.data.size_mb?.toFixed(2)} MB\n\nResumo:\n👥 Usuários: ${response.data.summary.users}\n🏫 Turmas: ${response.data.summary.turmas}\n📚 Alunos: ${response.data.summary.students}\n📊 Chamadas: ${response.data.summary.attendance}\n📖 Revistas: ${response.data.summary.revistas}`);
+        
+      } else {
+        alert('❌ Erro ao gerar backup: ' + response.data.message);
+      }
+    } catch (error) {
+      console.error('Erro ao gerar backup:', error);
+      alert('❌ Erro ao gerar backup: ' + (error.response?.data?.detail || error.message));
+    } finally {
+      setBackupLoading(false);
+    }
+  };
+
+  const handleRestoreFile = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const backupData = JSON.parse(e.target.result);
+          
+          // Validar estrutura do backup
+          if (!backupData.data && !backupData.metadata) {
+            alert('❌ Arquivo inválido: formato de backup não reconhecido');
+            return;
+          }
+          
+          // Mostrar informações do backup
+          const metadata = backupData.metadata || {};
+          const data = backupData.data || backupData; // Suporte a formatos antigos
+          
+          let confirmMessage = `📤 RESTORE DE BACKUP\n\n`;
+          if (metadata.backup_date) {
+            confirmMessage += `📅 Data do backup: ${new Date(metadata.backup_date).toLocaleString()}\n`;
+          }
+          if (metadata.total_records) {
+            confirmMessage += `📊 Total de registros: ${metadata.total_records}\n`;
+          }
+          
+          confirmMessage += `\n🔴 ATENÇÃO: Esta operação irá SUBSTITUIR todos os dados existentes!\n\n`;
+          confirmMessage += `📋 Dados que serão restaurados:\n`;
+          
+          Object.keys(data).forEach(collection => {
+            const count = data[collection]?.length || 0;
+            const collectionNames = {
+              users: '👤 Usuários',
+              turmas: '🏫 Turmas', 
+              students: '📚 Alunos',
+              attendance: '📊 Chamadas',
+              revistas: '📖 Revistas'
+            };
+            confirmMessage += `   ${collectionNames[collection] || collection}: ${count} registros\n`;
+          });
+          
+          confirmMessage += `\n❓ Deseja continuar com o restore?`;
+          
+          if (window.confirm(confirmMessage)) {
+            executeRestore(backupData);
+          }
+          
+        } catch (error) {
+          alert('❌ Erro ao ler arquivo: formato JSON inválido');
+        }
+      };
+      reader.readAsText(file);
+    }
+    
+    // Limpar input para permitir selecionar o mesmo arquivo novamente
+    event.target.value = '';
+  };
+
+  const executeRestore = async (backupData) => {
+    try {
+      setRestoreLoading(true);
+      
+      const response = await axios.post(`${API}/backup/restore`, backupData);
+      
+      if (response.data.success) {
+        const summary = response.data.restore_summary;
+        let successMessage = `✅ Backup restaurado com sucesso!\n\n📊 Registros restaurados:\n`;
+        
+        Object.keys(summary).forEach(collection => {
+          const count = summary[collection];
+          const collectionNames = {
+            users: '👤 Usuários',
+            turmas: '🏫 Turmas',
+            students: '📚 Alunos', 
+            attendance: '📊 Chamadas',
+            revistas: '📖 Revistas'
+          };
+          successMessage += `   ${collectionNames[collection] || collection}: ${count} registros\n`;
+        });
+        
+        successMessage += `\n🔄 Total: ${response.data.total_restored} registros\n\n🔄 Recarregando sistema...`;
+        
+        alert(successMessage);
+        
+        // Recarregar dados
+        await loadDashboard();
+        await loadTurmas();
+        await loadStudents();
+        await loadUsers();
+        
+      } else {
+        alert('❌ Erro ao restaurar backup: ' + response.data.message);
+      }
+    } catch (error) {
+      console.error('Erro ao restaurar backup:', error);
+      alert('❌ Erro ao restaurar backup: ' + (error.response?.data?.detail || error.message));
+    } finally {
+      setRestoreLoading(false);
+    }
+  };
+
   const loadAttendanceForTurma = async (turmaId, date) => {
     try {
       const response = await axios.get(`${API}/attendance?turma_id=${turmaId}&data=${date}`);

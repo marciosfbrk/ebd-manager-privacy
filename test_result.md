@@ -138,6 +138,21 @@ user_problem_statement: "Construir sistema EBD Manager para substituir planilha 
         comment: "TESTED: All revista endpoints working correctly. ✅ GET /api/revistas returns all revistas (found 12 total including duplicates from multiple test runs). ✅ GET /api/revistas/turma/{turma_id} works perfectly for all turmas. ✅ All 5 new revistas verified with exact correct data and 13 lições each. ✅ Fixed critical MongoDB ObjectId serialization issue. Sistema ready for production use."
 
 backend:
+  - task: "Sistema de Backup e Restore"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implementado sistema completo de backup/restore com endpoints /api/backup/generate, /api/backup/restore, /api/deploy-check. Sistema salva backups completos em JSON/ZIP com metadados e dados de todas as coleções."
+      - working: true
+        agent: "testing"
+        comment: "TESTED (2025-08-21): 🎉 SISTEMA DE BACKUP/RESTORE FUNCIONANDO PERFEITAMENTE! Todos os testes da solicitação de revisão foram bem-sucedidos: ✅ GET /api/backup/generate - Gera backup completo com estrutura JSON (metadata + data), todos os dados inclusos, tamanho 0.083MB para 274 registros. ✅ POST /api/backup/restore - Restaura dados corretamente, substitui dados existentes, confirma contagens após restore (268 registros restaurados). ✅ GET /api/deploy-check - Retorna status do sistema, verifica usuários obrigatórios (admin@ebd.com, kell@ebd.com), confirma dados estatísticos. ✅ VALIDAÇÃO DE DADOS: Usuários obrigatórios sempre existem após restore, integridade referencial mantida entre turmas/alunos, sistema funciona completamente após restore. ✅ CASOS EXTREMOS: Backup com dados vazios funciona, restore com JSON malformado é tratado adequadamente. ✅ DADOS ATUAIS VERIFICADOS: 3 usuários, 11 turmas, 242 alunos, 12 revistas, 0 chamadas conforme esperado. Sistema robusto e pronto para deploy/migração!"
+
   - task: "API CRUD Turmas"
     implemented: true
     working: true

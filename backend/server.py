@@ -627,7 +627,7 @@ class UserUpdate(BaseModel):
     nome: str
     email: str
     senha: Optional[str] = None  # Senha opcional para update
-    tipo: str  # 'admin' ou 'professor'
+    tipo: str  # 'admin', 'professor' ou 'moderador'
     turmas_permitidas: List[str] = []
 
 class UserLogin(BaseModel):

@@ -375,7 +375,6 @@ function App() {
         await loadDashboard();
         await loadTurmas();
         await loadStudents();
-        await loadUsers();
         
       } else {
         alert('❌ Erro ao restaurar backup: ' + response.data.message);

@@ -6,7 +6,7 @@ Script para registrar dados da turma Juniores (Pré-Adolescentes)
 import json
 import requests
 
-BASE_URL = "https://d90b01f8-fa6a-4cc2-9e8e-e9b9183d2552.preview.emergentagent.com/api"
+BASE_URL = "https://git-restore.preview.emergentagent.com/api"
 TURMA_ID = "c1811f9d-8f7d-4fdf-838d-0d6d5817b4b6"  # Juniores
 
 # Mapeamento dos alunos

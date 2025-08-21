@@ -6,7 +6,7 @@ Script rápido para registrar dados da turma Genesis (Alunos)
 import json
 import requests
 
-BASE_URL = "https://d90b01f8-fa6a-4cc2-9e8e-e9b9183d2552.preview.emergentagent.com/api"
+BASE_URL = "https://git-restore.preview.emergentagent.com/api"
 TURMA_ID = "3ed3f003-00ba-4547-a9ab-f73825ece0a7"  # Genesis
 
 # Mapeamento dos alunos

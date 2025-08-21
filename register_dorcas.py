@@ -6,7 +6,7 @@ Script para registrar dados da turma Dorcas (irmãs)
 import json
 import requests
 
-BASE_URL = "https://d90b01f8-fa6a-4cc2-9e8e-e9b9183d2552.preview.emergentagent.com/api"
+BASE_URL = "https://git-restore.preview.emergentagent.com/api"
 TURMA_ID = "d6b9855e-bfc5-4539-be92-414f6a3e6df2"  # Dorcas (irmãs)
 
 # Dados fornecidos pelo usuário

@@ -1569,40 +1569,44 @@ def main():
         results.summary()
         return
     
-    # Test 2: CRUD Turmas
-    print("\n2. Testing CRUD operations for Turmas...")
+    # Test 2: USER EDITING BUG FIX (PRIORITY TEST FROM REVIEW REQUEST)
+    print("\n2. Testing User Editing Bug Fix (PRIORITY - REVIEW REQUEST)...")
+    test_user_editing_bug_fix()
+    
+    # Test 3: CRUD Turmas
+    print("\n3. Testing CRUD operations for Turmas...")
     turma_id = test_turmas_crud()
     
-    # Test 3: CRUD Students
-    print("\n3. Testing CRUD operations for Students...")
+    # Test 4: CRUD Students
+    print("\n4. Testing CRUD operations for Students...")
     student_id = test_students_crud(turma_id)
     
-    # Test 4: Attendance System
-    print("\n4. Testing Attendance System...")
+    # Test 5: Attendance System
+    print("\n5. Testing Attendance System...")
     test_attendance_system(turma_id, student_id)
     
-    # Test 5: Bulk Attendance
-    print("\n5. Testing Bulk Attendance...")
+    # Test 6: Bulk Attendance
+    print("\n6. Testing Bulk Attendance...")
     test_bulk_attendance(turma_id)
     
-    # Test 6: Reports Dashboard
-    print("\n6. Testing Reports Dashboard...")
+    # Test 7: Reports Dashboard
+    print("\n7. Testing Reports Dashboard...")
     test_reports_dashboard()
     
-    # Test 7: CRITICAL - Floating Point Precision Issue
-    print("\n7. Testing Floating Point Precision (CRITICAL)...")
+    # Test 8: CRITICAL - Floating Point Precision Issue
+    print("\n8. Testing Floating Point Precision (CRITICAL)...")
     test_floating_point_precision()
     
-    # Test 8: USER MANAGEMENT ENDPOINTS (REVIEW REQUEST)
-    print("\n8. Testing User Management Endpoints (Review Request)...")
+    # Test 9: USER MANAGEMENT ENDPOINTS (REVIEW REQUEST)
+    print("\n9. Testing User Management Endpoints (Review Request)...")
     test_user_management_endpoints()
     
-    # Test 9: REVISTA ENDPOINTS (REVIEW REQUEST)
-    print("\n9. Testing Revista Endpoints (Review Request)...")
+    # Test 10: REVISTA ENDPOINTS (REVIEW REQUEST)
+    print("\n10. Testing Revista Endpoints (Review Request)...")
     test_revistas_endpoints()
     
-    # Test 10: BACKUP AND RESTORE SYSTEM (REVIEW REQUEST)
-    print("\n10. Testing Backup and Restore System (Review Request)...")
+    # Test 11: BACKUP AND RESTORE SYSTEM (REVIEW REQUEST)
+    print("\n11. Testing Backup and Restore System (Review Request)...")
     test_backup_restore_system()
     
     # Final summary

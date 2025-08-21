@@ -2497,7 +2497,7 @@ function App() {
                             ? 'bg-red-100 text-red-800' 
                             : 'bg-blue-100 text-blue-800'
                         }`}>
-                          {usuario.tipo === 'admin' ? 'Administrador' : 'Professor'}
+                          {usuario.tipo === 'admin' ? 'Administrador' : usuario.tipo === 'moderador' ? 'Moderador' : 'Professor'}
                         </span>
                       </td>
                       <td className="border border-gray-300 px-4 py-2 text-center">

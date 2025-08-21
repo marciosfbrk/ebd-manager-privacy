@@ -8,7 +8,8 @@ from pathlib import Path
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 import uuid
-from datetime import datetime, date, timedelta
+# Adicionar ao final dos imports existentes
+from datetime import datetime, timedelta, date, timedelta
 from enum import Enum
 import hashlib
 

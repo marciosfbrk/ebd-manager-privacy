@@ -945,10 +945,31 @@ async def create_user(user: UserCreate):
     await db.users.insert_one(user_obj.dict())
     return user_obj
 
-@api_router.get("/users", response_model=List[User])
+@api_router.get("/users")
 async def get_users():
-    users = await db.users.find({"ativo": True}).to_list(1000)
-    return [User(**user) for user in users]
+    """Listar usuários ativos - versão simplificada"""
+    try:
+        users = await db.users.find({"ativo": True}).to_list(1000)
+        
+        # Retornar dados limpos sem usar modelo Pydantic
+        clean_users = []
+        for user in users:
+            clean_user = {
+                "id": user.get("id"),
+                "nome": user.get("nome"),
+                "email": user.get("email"),
+                "tipo": user.get("tipo", "professor"),
+                "turmas_permitidas": user.get("turmas_permitidas", []),
+                "ativo": user.get("ativo", True),
+                "criado_em": user.get("criado_em")
+            }
+            clean_users.append(clean_user)
+        
+        return clean_users
+        
+    except Exception as e:
+        print(f"Erro ao listar usuários: {e}")
+        raise HTTPException(status_code=500, detail=f"Erro ao carregar usuários: {str(e)}")
 
 @api_router.put("/users/{user_id}")
 async def update_user(user_id: str, user_update: UserUpdate):

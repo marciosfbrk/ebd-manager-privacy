@@ -57,6 +57,11 @@ function App() {
   const [rankingAlunos, setRankingAlunos] = useState([]);
   const [rankingProfessores, setRankingProfessores] = useState([]);
   const [rankingTurmas, setRankingTurmas] = useState([]);
+  
+  // Estados para backup e restore
+  const [backupData, setBackupData] = useState(null);
+  const [restoreLoading, setRestoreLoading] = useState(false);
+  const [backupLoading, setBackupLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('alunos');
   
   // Estados de revistas

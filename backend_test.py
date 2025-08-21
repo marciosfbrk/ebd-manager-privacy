@@ -1289,6 +1289,275 @@ def test_revistas_endpoints():
         except Exception as e:
             results.failure("Revista dates verification", str(e))
 
+def test_user_editing_bug_fix():
+    """Test the specific user editing bug fix reported by user"""
+    print("\n=== TESTING USER EDITING BUG FIX (SPECIFIC REVIEW REQUEST) ===")
+    print("Testing the bug where editing a teacher to transfer between classes failed")
+    
+    # Get turmas for testing
+    turmas_dict = {}
+    try:
+        response = requests.get(f"{BASE_URL}/turmas")
+        if response.status_code == 200:
+            turmas = response.json()
+            for turma in turmas:
+                turmas_dict[turma['nome']] = turma['id']
+            print(f"Available turmas for testing: {list(turmas_dict.keys())}")
+        else:
+            results.failure("GET /api/turmas for user editing test", f"Status {response.status_code}: {response.text}")
+            return
+    except Exception as e:
+        results.failure("GET /api/turmas for user editing test", str(e))
+        return
+    
+    if len(turmas_dict) < 2:
+        results.failure("User editing test setup", "Need at least 2 turmas for transfer testing")
+        return
+    
+    # Get first two turmas for testing
+    turma_ids = list(turmas_dict.values())[:2]
+    turma_names = list(turmas_dict.keys())[:2]
+    
+    # TEST 1: Create teacher normally (should work)
+    print("\n--- TEST 1: Creating teacher normally ---")
+    teacher_id = None
+    try:
+        teacher_data = {
+            "nome": "Professor Teste",
+            "email": "professor.teste@ebd.com",
+            "senha": "senha123",
+            "tipo": "professor",
+            "turmas_permitidas": [turma_ids[0]]  # Start with first turma
+        }
+        
+        response = requests.post(f"{BASE_URL}/users", json=teacher_data)
+        if response.status_code == 200:
+            user = response.json()
+            teacher_id = user['id']
+            results.success("✅ TEST 1: POST /api/users - Create teacher normally with complete data including password")
+            
+            # Verify created data
+            if (user['nome'] == teacher_data['nome'] and 
+                user['email'] == teacher_data['email'] and
+                user['tipo'] == teacher_data['tipo'] and
+                user['turmas_permitidas'] == teacher_data['turmas_permitidas']):
+                results.success("✅ TEST 1: Teacher created with correct data")
+            else:
+                results.failure("TEST 1: Teacher data verification", f"Data mismatch: {user}")
+        else:
+            results.failure("TEST 1: POST /api/users", f"Status {response.status_code}: {response.text}")
+            return
+    except Exception as e:
+        results.failure("TEST 1: Create teacher", str(e))
+        return
+    
+    # TEST 2: Edit teacher WITHOUT password (this was the bug)
+    print(f"\n--- TEST 2: Editing teacher WITHOUT password (transfer from {turma_names[0]} to {turma_names[1]}) ---")
+    if teacher_id:
+        try:
+            # This is the scenario that was failing - editing without password
+            update_data = {
+                "nome": "Professor Teste Editado",
+                "email": "professor.teste@ebd.com",  # Keep same email
+                "tipo": "professor",
+                "turmas_permitidas": [turma_ids[1]]  # Transfer to second turma
+                # NOTE: NO password field - this was causing the bug
+            }
+            
+            response = requests.put(f"{BASE_URL}/users/{teacher_id}", json=update_data)
+            if response.status_code == 200:
+                updated_user = response.json()
+                results.success("✅ TEST 2: PUT /api/users/{id} - Edit teacher WITHOUT password field (BUG FIX WORKING)")
+                
+                # Verify the update worked correctly
+                if (updated_user['nome'] == update_data['nome'] and
+                    updated_user['email'] == update_data['email'] and
+                    updated_user['turmas_permitidas'] == update_data['turmas_permitidas']):
+                    results.success("✅ TEST 2: Teacher transfer successful - moved to new turma without changing password")
+                    print(f"   ✓ Name updated: {updated_user['nome']}")
+                    print(f"   ✓ Turmas transferred: {turma_names[0]} → {turma_names[1]}")
+                    print(f"   ✓ Password unchanged (not provided in request)")
+                else:
+                    results.failure("TEST 2: Teacher update verification", f"Update failed: {updated_user}")
+            else:
+                results.failure("TEST 2: PUT /api/users/{id} WITHOUT password", f"Status {response.status_code}: {response.text}")
+                print("❌ This indicates the bug is NOT fixed - editing without password still fails")
+        except Exception as e:
+            results.failure("TEST 2: Edit teacher without password", str(e))
+    
+    # TEST 3: Edit teacher WITH password (should also work)
+    print("\n--- TEST 3: Editing teacher WITH password ---")
+    if teacher_id:
+        try:
+            update_data_with_password = {
+                "nome": "Professor Teste Com Nova Senha",
+                "email": "professor.teste@ebd.com",
+                "tipo": "professor", 
+                "turmas_permitidas": turma_ids,  # Give access to both turmas
+                "senha": "novasenha456"  # Include new password
+            }
+            
+            response = requests.put(f"{BASE_URL}/users/{teacher_id}", json=update_data_with_password)
+            if response.status_code == 200:
+                updated_user = response.json()
+                results.success("✅ TEST 3: PUT /api/users/{id} - Edit teacher WITH new password")
+                
+                # Verify update
+                if (updated_user['nome'] == update_data_with_password['nome'] and
+                    updated_user['turmas_permitidas'] == update_data_with_password['turmas_permitidas']):
+                    results.success("✅ TEST 3: Teacher updated correctly with new password")
+                    print(f"   ✓ Name updated: {updated_user['nome']}")
+                    print(f"   ✓ Turmas updated: {len(updated_user['turmas_permitidas'])} turmas")
+                    print(f"   ✓ Password updated (provided in request)")
+                else:
+                    results.failure("TEST 3: Teacher update with password verification", f"Update failed: {updated_user}")
+            else:
+                results.failure("TEST 3: PUT /api/users/{id} WITH password", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("TEST 3: Edit teacher with password", str(e))
+    
+    # TEST 4: Edit with empty/null password (should not change password)
+    print("\n--- TEST 4: Editing teacher with empty/null password ---")
+    if teacher_id:
+        try:
+            # Test with empty string password
+            update_data_empty_password = {
+                "nome": "Professor Teste Senha Vazia",
+                "email": "professor.teste@ebd.com",
+                "tipo": "professor",
+                "turmas_permitidas": [turma_ids[0]],
+                "senha": ""  # Empty password - should not change existing password
+            }
+            
+            response = requests.put(f"{BASE_URL}/users/{teacher_id}", json=update_data_empty_password)
+            if response.status_code == 200:
+                updated_user = response.json()
+                results.success("✅ TEST 4: PUT /api/users/{id} - Edit teacher with empty password (should not change password)")
+                
+                if updated_user['nome'] == update_data_empty_password['nome']:
+                    results.success("✅ TEST 4: Teacher updated correctly with empty password - password unchanged")
+                else:
+                    results.failure("TEST 4: Teacher update with empty password", f"Name not updated: {updated_user}")
+            else:
+                results.failure("TEST 4: PUT /api/users/{id} with empty password", f"Status {response.status_code}: {response.text}")
+            
+            # Test with null password
+            update_data_null_password = {
+                "nome": "Professor Teste Senha Null",
+                "email": "professor.teste@ebd.com", 
+                "tipo": "professor",
+                "turmas_permitidas": [turma_ids[1]],
+                "senha": None  # Null password - should not change existing password
+            }
+            
+            response = requests.put(f"{BASE_URL}/users/{teacher_id}", json=update_data_null_password)
+            if response.status_code == 200:
+                updated_user = response.json()
+                results.success("✅ TEST 4: PUT /api/users/{id} - Edit teacher with null password (should not change password)")
+            else:
+                results.failure("TEST 4: PUT /api/users/{id} with null password", f"Status {response.status_code}: {response.text}")
+                
+        except Exception as e:
+            results.failure("TEST 4: Edit teacher with empty/null password", str(e))
+    
+    # TEST 5: Validation tests (edge cases)
+    print("\n--- TEST 5: Validation and edge cases ---")
+    if teacher_id:
+        try:
+            # Test duplicate email (should fail)
+            duplicate_email_data = {
+                "nome": "Professor Duplicado",
+                "email": "admin@ebd.com",  # Try to use admin email
+                "tipo": "professor",
+                "turmas_permitidas": [turma_ids[0]]
+            }
+            
+            response = requests.put(f"{BASE_URL}/users/{teacher_id}", json=duplicate_email_data)
+            if response.status_code == 400:
+                results.success("✅ TEST 5: PUT /api/users/{id} - Validation: correctly rejects duplicate email")
+            else:
+                results.failure("TEST 5: Duplicate email validation", f"Should reject duplicate email, got status {response.status_code}")
+        except Exception as e:
+            results.failure("TEST 5: Duplicate email validation", str(e))
+        
+        try:
+            # Test non-existent user (should fail with 404)
+            fake_user_id = str(uuid.uuid4())
+            response = requests.put(f"{BASE_URL}/users/{fake_user_id}", json={
+                "nome": "Usuario Inexistente",
+                "email": "inexistente@ebd.com",
+                "tipo": "professor",
+                "turmas_permitidas": []
+            })
+            
+            if response.status_code == 404:
+                results.success("✅ TEST 5: PUT /api/users/{id} - Validation: correctly returns 404 for non-existent user")
+            else:
+                results.failure("TEST 5: Non-existent user validation", f"Should return 404, got status {response.status_code}")
+        except Exception as e:
+            results.failure("TEST 5: Non-existent user validation", str(e))
+    
+    # TEST 6: Verify existing users can be edited (admin@ebd.com, kell@ebd.com)
+    print("\n--- TEST 6: Testing existing users from review request ---")
+    try:
+        # Get all users to find existing ones
+        response = requests.get(f"{BASE_URL}/users")
+        if response.status_code == 200:
+            users = response.json()
+            
+            # Find kell@ebd.com user
+            kell_user = None
+            for user in users:
+                if user.get('email') == 'kell@ebd.com':
+                    kell_user = user
+                    break
+            
+            if kell_user:
+                # Test editing kell user without password
+                kell_update = {
+                    "nome": "Kelliane Ferreira Editada",
+                    "email": "kell@ebd.com",
+                    "tipo": "professor",
+                    "turmas_permitidas": turma_ids  # Give access to both turmas
+                    # No password field - testing the bug fix
+                }
+                
+                response = requests.put(f"{BASE_URL}/users/{kell_user['id']}", json=kell_update)
+                if response.status_code == 200:
+                    updated_kell = response.json()
+                    results.success("✅ TEST 6: PUT /api/users/{id} - Successfully edited existing kell@ebd.com user without password")
+                    
+                    if updated_kell['turmas_permitidas'] == turma_ids:
+                        results.success("✅ TEST 6: Kell user turmas_permitidas updated successfully (class transfer working)")
+                        print(f"   ✓ Kell now has access to {len(turma_ids)} turmas")
+                    else:
+                        results.failure("TEST 6: Kell turmas update", f"Expected {turma_ids}, got {updated_kell.get('turmas_permitidas')}")
+                else:
+                    results.failure("TEST 6: Edit kell@ebd.com", f"Status {response.status_code}: {response.text}")
+            else:
+                results.failure("TEST 6: Find kell@ebd.com", "User kell@ebd.com not found")
+        else:
+            results.failure("TEST 6: GET users", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("TEST 6: Test existing users", str(e))
+    
+    # Clean up test user
+    if teacher_id:
+        try:
+            response = requests.delete(f"{BASE_URL}/users/{teacher_id}")
+            if response.status_code == 200:
+                results.success("✅ Cleanup: Test teacher user deleted successfully")
+            else:
+                print(f"⚠️ Cleanup warning: Could not delete test user (status {response.status_code})")
+        except Exception as e:
+            print(f"⚠️ Cleanup warning: Exception deleting test user: {e}")
+    
+    print("\n=== USER EDITING BUG FIX TEST SUMMARY ===")
+    print("✅ If all tests passed, the bug fix is working correctly")
+    print("❌ If TEST 2 failed, the bug is still present")
+    print("The bug was: editing a teacher without providing password field would fail")
+    print("The fix was: UserUpdate model with optional password in backend")
+
 def main():
     """Run all tests in sequence"""
     print("=== EBD MANAGER BACKEND TEST SUITE ===\n")

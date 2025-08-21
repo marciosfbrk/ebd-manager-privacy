@@ -643,6 +643,80 @@ def hash_password(password: str) -> str:
 def verify_password(password: str, hashed: str) -> bool:
     return hash_password(password) == hashed
 
+@api_router.get("/deploy-check")
+async def deploy_check():
+    """
+    Endpoint para verificar se o sistema está pronto para deploy
+    Retorna informações sobre usuários e dados do sistema
+    """
+    try:
+        # Verificar usuários obrigatórios
+        admin_user = await db.users.find_one({"email": "admin@ebd.com"})
+        prof_user = await db.users.find_one({"email": "kell@ebd.com"})
+        
+        # Contar dados do sistema
+        users_count = await db.users.count_documents({})
+        turmas_count = await db.turmas.count_documents({})
+        students_count = await db.students.count_documents({})
+        revistas_count = await db.revistas.count_documents({})
+        
+        deploy_status = {
+            "deploy_ready": bool(admin_user and prof_user),
+            "users": {
+                "total": users_count,
+                "admin_exists": bool(admin_user),
+                "professor_exists": bool(prof_user),
+                "admin_email": "admin@ebd.com" if admin_user else None,
+                "professor_email": "kell@ebd.com" if prof_user else None
+            },
+            "data": {
+                "turmas": turmas_count,
+                "students": students_count, 
+                "revistas": revistas_count
+            },
+            "credentials": {
+                "admin": "admin@ebd.com / 123456" if admin_user else "não disponível",
+                "professor": "kell@ebd.com / 123456" if prof_user else "não disponível"
+            },
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        return {
+            "success": True,
+            "message": "Sistema pronto para deploy" if deploy_status["deploy_ready"] else "Sistema precisa de configuração",
+            "status": deploy_status
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao verificar deploy: {str(e)}")
+
+@api_router.post("/setup-deploy")
+async def setup_deploy():
+    """
+    Endpoint para executar setup completo do sistema para deploy
+    Garante que usuários obrigatórios existam
+    """
+    try:
+        users_created = await ensure_deploy_ready()
+        
+        # Verificar status final
+        admin_user = await db.users.find_one({"email": "admin@ebd.com"})
+        prof_user = await db.users.find_one({"email": "kell@ebd.com"})
+        
+        return {
+            "success": True,
+            "message": "Setup de deploy executado com sucesso",
+            "users_created": users_created,
+            "deploy_ready": bool(admin_user and prof_user),
+            "credentials": {
+                "admin": "admin@ebd.com / 123456",
+                "professor": "kell@ebd.com / 123456"
+            }
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro no setup de deploy: {str(e)}")
+
 # Routes - User Management
 @api_router.post("/login", response_model=LoginResponse)
 async def login(login_data: UserLogin):

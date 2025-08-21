@@ -623,6 +623,13 @@ class UserCreate(BaseModel):
     tipo: str  # 'admin' ou 'professor'
     turmas_permitidas: List[str] = []
 
+class UserUpdate(BaseModel):
+    nome: str
+    email: str
+    senha: Optional[str] = None  # Senha opcional para update
+    tipo: str  # 'admin' ou 'professor'
+    turmas_permitidas: List[str] = []
+
 class UserLogin(BaseModel):
     email: str
     senha: str

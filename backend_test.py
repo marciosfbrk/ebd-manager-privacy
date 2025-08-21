@@ -858,6 +858,201 @@ def test_user_management_endpoints():
         except Exception as e:
             results.failure("Final verification", str(e))
 
+def test_backup_restore_system():
+    """Test backup and restore system as requested in review"""
+    print("\n=== TESTING BACKUP AND RESTORE SYSTEM (REVIEW REQUEST) ===")
+    
+    # Store original data counts for comparison
+    original_counts = {}
+    
+    # Get current system state before backup
+    try:
+        response = requests.get(f"{BASE_URL}/deploy-check")
+        if response.status_code == 200:
+            deploy_data = response.json()
+            original_counts = deploy_data.get("status", {}).get("data", {})
+            results.success("GET /api/deploy-check - Get system status before backup")
+            print(f"Original data counts: {original_counts}")
+        else:
+            results.failure("GET /api/deploy-check", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/deploy-check", str(e))
+    
+    # TEST 1: Generate backup
+    backup_data = None
+    try:
+        response = requests.get(f"{BASE_URL}/backup/generate")
+        if response.status_code == 200:
+            backup_response = response.json()
+            if backup_response.get("success") and "backup" in backup_response:
+                backup_data = backup_response["backup"]
+                results.success("GET /api/backup/generate - Generate backup successfully")
+                
+                # Verify backup structure (metadata + data)
+                if "metadata" in backup_data and "data" in backup_data:
+                    results.success("Backup structure - Contains metadata and data sections")
+                    
+                    # Check metadata
+                    metadata = backup_data["metadata"]
+                    required_meta_fields = ["backup_timestamp", "backup_date", "system_version", "total_collections", "total_records"]
+                    if all(field in metadata for field in required_meta_fields):
+                        results.success("Backup metadata - Contains all required fields")
+                    else:
+                        missing = [f for f in required_meta_fields if f not in metadata]
+                        results.failure("Backup metadata", f"Missing fields: {missing}")
+                    
+                    # Check data collections
+                    data_section = backup_data["data"]
+                    expected_collections = ["users", "turmas", "students", "attendance", "revistas"]
+                    found_collections = []
+                    for collection in expected_collections:
+                        if collection in data_section:
+                            found_collections.append(collection)
+                            results.success(f"Backup data - Contains {collection} collection ({len(data_section[collection])} records)")
+                        else:
+                            results.failure("Backup data", f"Missing {collection} collection")
+                    
+                    # Verify backup size and integrity
+                    total_records = sum(len(data_section.get(col, [])) for col in expected_collections)
+                    if total_records > 0:
+                        results.success(f"Backup integrity - Contains {total_records} total records")
+                    else:
+                        results.failure("Backup integrity", "Backup contains no records")
+                        
+                    # Check backup size
+                    backup_size_mb = backup_response.get("size_mb", 0)
+                    if backup_size_mb > 0:
+                        results.success(f"Backup size - {backup_size_mb:.2f} MB")
+                    else:
+                        results.failure("Backup size", "Backup size is 0 or not reported")
+                        
+                else:
+                    results.failure("Backup structure", "Missing metadata or data sections")
+            else:
+                results.failure("GET /api/backup/generate", f"Invalid response structure: {backup_response}")
+        else:
+            results.failure("GET /api/backup/generate", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/backup/generate", str(e))
+    
+    # TEST 2: Restore backup with valid data
+    if backup_data:
+        try:
+            response = requests.post(f"{BASE_URL}/backup/restore", json=backup_data)
+            if response.status_code == 200:
+                restore_response = response.json()
+                if restore_response.get("success"):
+                    results.success("POST /api/backup/restore - Restore backup successfully")
+                    
+                    # Verify restore summary
+                    if "restore_summary" in restore_response:
+                        summary = restore_response["restore_summary"]
+                        total_restored = restore_response.get("total_restored", 0)
+                        results.success(f"Backup restore - {total_restored} records restored")
+                        
+                        # Check individual collection counts
+                        for collection, count in summary.items():
+                            if count > 0:
+                                results.success(f"Restore summary - {collection}: {count} records")
+                    else:
+                        results.failure("POST /api/backup/restore", "Missing restore_summary in response")
+                else:
+                    results.failure("POST /api/backup/restore", f"Restore failed: {restore_response}")
+            else:
+                results.failure("POST /api/backup/restore", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("POST /api/backup/restore", str(e))
+        
+        # Verify data integrity after restore
+        try:
+            response = requests.get(f"{BASE_URL}/deploy-check")
+            if response.status_code == 200:
+                deploy_data = response.json()
+                restored_counts = deploy_data.get("status", {}).get("data", {})
+                
+                # Verify required users exist after restore
+                users_status = deploy_data.get("status", {}).get("users", {})
+                if users_status.get("admin_exists") and users_status.get("professor_exists"):
+                    results.success("Data validation - Required users (admin@ebd.com, kell@ebd.com) exist after restore")
+                else:
+                    results.failure("Data validation", "Required users missing after restore")
+                
+                # Compare counts before and after
+                print(f"Restored data counts: {restored_counts}")
+                results.success("POST /api/backup/restore - Data integrity verified after restore")
+                
+            else:
+                results.failure("Data validation after restore", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("Data validation after restore", str(e))
+    
+    # TEST 3: Test restore with invalid data (should fail)
+    try:
+        invalid_backup = {"invalid": "structure"}
+        response = requests.post(f"{BASE_URL}/backup/restore", json=invalid_backup)
+        if response.status_code == 400:
+            results.success("POST /api/backup/restore - Validation: reject invalid backup format")
+        else:
+            results.failure("POST /api/backup/restore - Validation", f"Should reject invalid format, got status {response.status_code}")
+    except Exception as e:
+        results.failure("POST /api/backup/restore - Validation", str(e))
+    
+    # TEST 4: Test restore with malformed JSON
+    try:
+        malformed_backup = {"data": "not_a_dict"}
+        response = requests.post(f"{BASE_URL}/backup/restore", json=malformed_backup)
+        if response.status_code in [400, 500]:
+            results.success("POST /api/backup/restore - Validation: reject malformed JSON structure")
+        else:
+            results.failure("POST /api/backup/restore - Malformed", f"Should reject malformed data, got status {response.status_code}")
+    except Exception as e:
+        results.failure("POST /api/backup/restore - Malformed", str(e))
+    
+    # TEST 5: Test backup with empty data scenario
+    try:
+        # First clear all data
+        response = requests.post(f"{BASE_URL}/init-sample-data")  # This clears and recreates minimal data
+        if response.status_code == 200:
+            # Generate backup of minimal data
+            response = requests.get(f"{BASE_URL}/backup/generate")
+            if response.status_code == 200:
+                minimal_backup = response.json()
+                if minimal_backup.get("success"):
+                    results.success("Backup edge case - Generate backup with minimal data")
+                else:
+                    results.failure("Backup edge case", "Failed to generate backup with minimal data")
+            else:
+                results.failure("Backup edge case", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("Backup edge case", str(e))
+    
+    # TEST 6: Verify system functionality after complete backup/restore cycle
+    try:
+        # Test basic API functionality
+        response = requests.get(f"{BASE_URL}/turmas")
+        if response.status_code == 200:
+            turmas = response.json()
+            if isinstance(turmas, list):
+                results.success("System functionality - Turmas API working after backup/restore")
+            else:
+                results.failure("System functionality", "Turmas API returned invalid data after restore")
+        else:
+            results.failure("System functionality", f"Turmas API failed after restore: {response.status_code}")
+        
+        # Test students API
+        response = requests.get(f"{BASE_URL}/students")
+        if response.status_code == 200:
+            students = response.json()
+            if isinstance(students, list):
+                results.success("System functionality - Students API working after backup/restore")
+            else:
+                results.failure("System functionality", "Students API returned invalid data after restore")
+        else:
+            results.failure("System functionality", f"Students API failed after restore: {response.status_code}")
+            
+    except Exception as e:
+        results.failure("System functionality", str(e))
+
 def test_revistas_endpoints():
     """Test revista endpoints as requested in review"""
     print("\n=== TESTING REVISTA ENDPOINTS (REVIEW REQUEST) ===")

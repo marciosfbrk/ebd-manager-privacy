@@ -30,6 +30,57 @@ api_router = APIRouter(prefix="/api")
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
+# Deploy setup function
+async def ensure_deploy_ready():
+    """Garantir que o sistema está pronto para deploy"""
+    try:
+        # Lista de usuários obrigatórios
+        required_users = [
+            {
+                "email": "admin@ebd.com",
+                "nome": "Márcio Ferreira",
+                "tipo": "admin",
+                "senha": "123456"
+            },
+            {
+                "email": "kell@ebd.com",
+                "nome": "Kelliane Ferreira",
+                "tipo": "professor", 
+                "senha": "123456"
+            }
+        ]
+        
+        users_created = 0
+        for user_data in required_users:
+            existing_user = await db.users.find_one({"email": user_data["email"]})
+            
+            user_doc = {
+                "id": str(uuid.uuid4()) if not existing_user else existing_user.get("id", str(uuid.uuid4())),
+                "nome": user_data["nome"],
+                "email": user_data["email"],
+                "senha_hash": hash_password(user_data["senha"]),
+                "tipo": user_data["tipo"],
+                "turmas_permitidas": [],
+                "ativo": True,
+                "criado_em": existing_user.get("criado_em", datetime.now()) if existing_user else datetime.now(),
+                "deploy_ready": True
+            }
+            
+            if existing_user:
+                await db.users.update_one(
+                    {"email": user_data["email"]},
+                    {"$set": user_doc}
+                )
+            else:
+                await db.users.insert_one(user_doc)
+                users_created += 1
+        
+        return users_created
+        
+    except Exception as e:
+        print(f"Erro no deploy setup: {e}")
+        return 0
+
 # Startup event to create initial users
 @app.on_event("startup")
 async def create_initial_users():

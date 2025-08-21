@@ -34,48 +34,81 @@ def hash_password(password: str) -> str:
 @app.on_event("startup")
 async def create_initial_users():
     try:
-        # Check if admin user already exists
-        admin_exists = await db.users.find_one({"email": "admin@ebd.com"})
+        print("🚀 Inicializando usuários padrão do sistema...")
         
-        if not admin_exists:
-            # Create initial admin user
-            admin_user = {
-                "id": str(uuid.uuid4()),
-                "nome": "Administrador",
+        # Lista de usuários padrão que sempre devem existir
+        default_users = [
+            {
                 "email": "admin@ebd.com",
-                "senha_hash": hash_password("123456"),
+                "nome": "Márcio Ferreira",
                 "tipo": "admin",
-                "turmas_permitidas": [],
-                "ativo": True,
-                "criado_em": datetime.now(),
-                "primeira_senha": True  # Flag to force password change
-            }
-            await db.users.insert_one(admin_user)
-            print("✅ Usuário admin criado automaticamente")
-        
-        # Check if professor user exists
-        professor_exists = await db.users.find_one({"email": "professor@ebd.com"})
-        
-        if not professor_exists:
-            # Create initial professor user
-            professor_user = {
-                "id": str(uuid.uuid4()),
-                "nome": "Professor",
-                "email": "professor@ebd.com", 
-                "senha_hash": hash_password("123456"),
+                "senha": "123456"
+            },
+            {
+                "email": "kell@ebd.com", 
+                "nome": "Kelliane Ferreira",
                 "tipo": "professor",
-                "turmas_permitidas": [],
-                "ativo": True,
-                "criado_em": datetime.now(),
-                "primeira_senha": True  # Flag to force password change
+                "senha": "123456"
             }
-            await db.users.insert_one(professor_user)
-            print("✅ Usuário professor criado automaticamente")
+        ]
         
-        print("🚀 Sistema inicializado com usuários padrão")
+        for user_data in default_users:
+            # Verificar se usuário já existe
+            existing_user = await db.users.find_one({"email": user_data["email"]})
+            
+            if not existing_user:
+                # Criar novo usuário
+                new_user = {
+                    "id": str(uuid.uuid4()),
+                    "nome": user_data["nome"],
+                    "email": user_data["email"],
+                    "senha_hash": hash_password(user_data["senha"]),
+                    "tipo": user_data["tipo"],
+                    "turmas_permitidas": [],
+                    "ativo": True,
+                    "criado_em": datetime.now(),
+                    "deploy_ready": True  # Marca usuário como criado automaticamente
+                }
+                await db.users.insert_one(new_user)
+                print(f"✅ Usuário criado: {user_data['nome']} ({user_data['email']}) - {user_data['tipo']}")
+            else:
+                # Verificar se precisa atualizar dados do usuário existente
+                needs_update = False
+                update_data = {}
+                
+                # Verificar se a senha está correta (usuários do deploy devem ter senha 123456)
+                if existing_user.get("senha_hash") != hash_password("123456"):
+                    update_data["senha_hash"] = hash_password("123456")
+                    needs_update = True
+                
+                # Verificar se nome precisa ser atualizado
+                if existing_user.get("nome") != user_data["nome"]:
+                    update_data["nome"] = user_data["nome"]
+                    needs_update = True
+                
+                # Garantir que está ativo
+                if not existing_user.get("ativo", True):
+                    update_data["ativo"] = True
+                    needs_update = True
+                
+                if needs_update:
+                    update_data["deploy_ready"] = True
+                    await db.users.update_one(
+                        {"email": user_data["email"]}, 
+                        {"$set": update_data}
+                    )
+                    print(f"🔄 Usuário atualizado: {user_data['nome']} ({user_data['email']})")
+                else:
+                    print(f"✓ Usuário já existe: {user_data['nome']} ({user_data['email']})")
+        
+        print("🎉 Sistema pronto para deploy com usuários garantidos!")
+        print("   👤 Admin: admin@ebd.com / 123456")
+        print("   👨‍🏫 Prof: kell@ebd.com / 123456")
         
     except Exception as e:
-        print(f"⚠️  Erro ao criar usuários iniciais: {e}")
+        print(f"❌ Erro ao criar usuários iniciais: {e}")
+        # Não falhar o startup por causa disso
+        pass
 
 # Enums
 class AttendanceStatus(str, Enum):

@@ -1332,6 +1332,10 @@ def main():
     print("\n9. Testing Revista Endpoints (Review Request)...")
     test_revistas_endpoints()
     
+    # Test 10: BACKUP AND RESTORE SYSTEM (REVIEW REQUEST)
+    print("\n10. Testing Backup and Restore System (Review Request)...")
+    test_backup_restore_system()
+    
     # Final summary
     results.summary()
     

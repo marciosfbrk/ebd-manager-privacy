@@ -3483,21 +3483,21 @@ function App() {
       case 'chamada':
         return isLoggedIn ? <Chamada /> : <HomeCover />;
       case 'relatorios':
-        return isLoggedIn && currentUser?.tipo === 'admin' ? <Relatorios /> : <Dashboard />;
+        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <Relatorios /> : <Dashboard />;
       case 'ranking':
-        return isLoggedIn && currentUser?.tipo === 'admin' ? <Rankings /> : <Dashboard />;
+        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <Rankings /> : <Dashboard />;
       case 'alunos':
-        return isLoggedIn && currentUser?.tipo === 'admin' ? <Alunos /> : <Dashboard />;
+        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <Alunos /> : <Dashboard />;
       case 'turmas':
-        return isLoggedIn && currentUser?.tipo === 'admin' ? <Turmas /> : <Dashboard />;
+        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <Turmas /> : <Dashboard />;
       case 'usuarios':
-        return isLoggedIn && currentUser?.tipo === 'admin' ? <Usuarios /> : <Dashboard />;
+        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <Usuarios /> : <Dashboard />;
       case 'alterar-senha':
         return isLoggedIn ? <AlterarSenha /> : <HomeCover />;
       case 'revistas':
         return isLoggedIn ? <Revistas /> : <HomeCover />;
       case 'admin-revistas':
-        return isLoggedIn && currentUser?.tipo === 'admin' ? <AdminRevistas /> : <Dashboard />;
+        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <AdminRevistas /> : <Dashboard />;
       default:
         return <HomeCover />;
     }

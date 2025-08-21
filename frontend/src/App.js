@@ -3393,7 +3393,7 @@ function App() {
                 ← Voltar ao Dashboard
               </button>
               
-              {currentUser?.tipo === 'admin' && (
+              {(currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') && (
                 <button
                   onClick={() => setCurrentView('admin-revistas')}
                   className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center gap-2"

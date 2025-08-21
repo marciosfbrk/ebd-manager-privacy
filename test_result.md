@@ -272,6 +272,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "TESTED (2025-01-15): ✅ USER MANAGEMENT ENDPOINTS FULLY FUNCTIONAL! All review request requirements met: ✅ PUT /api/users/{user_id} works perfectly for updating users (nome, email, tipo, turmas_permitidas). ✅ GET /api/users returns correct user data including turmas_permitidas field. ✅ User Kell verified with email kell@ebd.com and populated turmas_permitidas. ✅ Validation working (rejects duplicate emails). ✅ Data integrity maintained across all operations. ✅ 12/12 tests passed with zero failures. All user management functionality ready for production use!"
+      - working: true
+        agent: "testing"
+        comment: "TESTED (2025-08-21): 🎉 USER EDITING BUG FIX VERIFIED WORKING PERFECTLY! Specific bug reported by user has been successfully fixed: ✅ CREATION TEST: POST /api/users with complete data including password works normally. ✅ EDITING WITHOUT PASSWORD (THE BUG): PUT /api/users/{id} sending only name, email, type, turmas_permitidas WITHOUT password field now works perfectly - this was the main issue that was failing before. ✅ EDITING WITH PASSWORD: PUT /api/users/{id} including new password works correctly. ✅ CLASS TRANSFER VALIDATION: Successfully edited teacher and changed turmas_permitidas (transferred from Gênesis to Primários). ✅ EDGE CASES: Empty/null password handled correctly, duplicate email validation working, non-existent user returns 404. ✅ EXISTING USERS: Successfully edited kell@ebd.com user without password and updated turmas_permitidas. ✅ The UserUpdate model with optional password is working as intended. The specific workflow that was failing (edit professor to transfer classes without changing password) is now 100% functional!"
 
   - task: "Interface Relatórios Detalhados"
     implemented: true

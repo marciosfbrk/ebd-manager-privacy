@@ -611,7 +611,7 @@ class User(BaseModel):
     nome: str
     email: str
     senha_hash: str
-    tipo: str  # 'admin' ou 'professor'
+    tipo: str  # 'admin', 'professor' ou 'moderador'
     turmas_permitidas: List[str] = []  # IDs das turmas que pode acessar (vazio = todas para admin)
     ativo: bool = True
     criado_em: str = Field(default_factory=lambda: datetime.utcnow().isoformat())

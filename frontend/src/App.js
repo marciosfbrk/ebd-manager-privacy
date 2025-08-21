@@ -460,7 +460,7 @@ function App() {
               <div className="text-sm text-blue-200">
                 <p>Logado como:</p>
                 <p className="font-semibold text-white">{currentUser?.nome}</p>
-                <p className="text-xs">({currentUser?.tipo === 'admin' ? 'Administrador' : 'Professor'})</p>
+                <p className="text-xs">({currentUser?.tipo === 'admin' ? 'Administrador' : currentUser?.tipo === 'moderador' ? 'Moderador' : 'Professor'})</p>
               </div>
               <button 
                 onClick={handleLogout}

@@ -628,6 +628,62 @@ function App() {
                       <span className="text-xl mr-2">🔐</span>
                       Gerenciar Usuários
                     </button>
+                    
+                    {/* Seção de Backup e Restore */}
+                    <div className="border-t pt-4 mt-4">
+                      <h4 className="text-sm font-semibold text-gray-600 mb-3 flex items-center">
+                        <span className="text-lg mr-1">💾</span>
+                        Backup & Restore
+                      </h4>
+                      
+                      <div className="space-y-2">
+                        {/* Botão Gerar Backup */}
+                        <button
+                          onClick={generateBackup}
+                          disabled={backupLoading}
+                          className="w-full px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-md transition-all duration-200 flex items-center justify-center font-medium disabled:opacity-50"
+                        >
+                          {backupLoading ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                              Gerando...
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-lg mr-2">⬇️</span>
+                              Gerar Backup
+                            </>
+                          )}
+                        </button>
+                        
+                        {/* Botão Restaurar Backup */}
+                        <div className="relative">
+                          <input
+                            type="file"
+                            accept=".json,.zip"
+                            onChange={handleRestoreFile}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            id="restore-file-input"
+                          />
+                          <button
+                            disabled={restoreLoading}
+                            className="w-full px-4 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-md transition-all duration-200 flex items-center justify-center font-medium disabled:opacity-50"
+                          >
+                            {restoreLoading ? (
+                              <>
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                Restaurando...
+                              </>
+                            ) : (
+                              <>
+                                <span className="text-lg mr-2">⬆️</span>
+                                Restaurar Backup
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </>
                 )}
 

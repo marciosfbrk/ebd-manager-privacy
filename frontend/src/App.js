@@ -628,7 +628,7 @@ function App() {
                     </button>
                     
                     {/* Seção de Backup e Restore - Apenas para Admin */}
-                    {(currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') && (
+                    {currentUser?.tipo === 'admin' && (
                       <div className="border-t pt-4 mt-4">
                         <h4 className="text-sm font-semibold text-gray-600 mb-3 flex items-center">
                           <span className="text-lg mr-1">💾</span>

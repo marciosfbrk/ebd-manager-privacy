@@ -62,6 +62,11 @@ function App() {
   const [backupData, setBackupData] = useState(null);
   const [restoreLoading, setRestoreLoading] = useState(false);
   const [backupLoading, setBackupLoading] = useState(false);
+  
+  // Estados para logs de acesso - NOVO
+  const [accessLogs, setAccessLogs] = useState([]);
+  const [logStats, setLogStats] = useState({});
+  const [logsLoading, setLogsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('alunos');
   
   // Estados de revistas

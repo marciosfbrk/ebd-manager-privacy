@@ -161,8 +161,8 @@ function App() {
   const getFilteredTurmas = () => {
     if (!currentUser) return turmas;
     
-    if (currentUser.tipo === 'admin') {
-      return turmas; // Admin vê todas
+    if (currentUser.tipo === 'admin' || currentUser.tipo === 'moderador') {
+      return turmas; // Admin e Moderador veem todas
     } else {
       // Professor vê apenas suas turmas
       return turmas.filter(turma => currentUser.turmas_permitidas.includes(turma.id));

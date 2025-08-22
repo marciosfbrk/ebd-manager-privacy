@@ -899,22 +899,33 @@ async def download_backup(filename: str):
 # Routes - User Management
 @api_router.post("/login", response_model=LoginResponse)
 async def login(login_data: UserLogin, request: Request):
+    print(f"=== LOGIN ATTEMPT ===")
+    print(f"Email: {login_data.email}")
+    
     # Buscar usuário por email
     user = await db.users.find_one({"email": login_data.email, "ativo": True})
     if not user:
+        print(f"User not found: {login_data.email}")
         raise HTTPException(status_code=401, detail="Email ou senha incorretos")
     
     # Verificar senha
     if not verify_password(login_data.senha, user["senha_hash"]):
+        print(f"Wrong password for: {login_data.email}")
         raise HTTPException(status_code=401, detail="Email ou senha incorretos")
+    
+    print(f"LOGIN SUCCESS: {user.get('nome')} - {user.get('email')}")
     
     # Registrar log de acesso - NOVO
     try:
         client_ip = request.client.host if request.client else "unknown"
         user_agent = request.headers.get("user-agent", "unknown")
+        print(f"Calling create_access_log...")
         await create_access_log(user, "login", client_ip, user_agent)
+        print(f"create_access_log completed")
     except Exception as e:
         print(f"Erro ao registrar log de login: {e}")
+        import traceback
+        traceback.print_exc()
     
     # Gerar token simples (você deveria usar JWT em produção)
     token = str(uuid.uuid4())

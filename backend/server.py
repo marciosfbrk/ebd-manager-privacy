@@ -582,14 +582,10 @@ async def bulk_attendance(turma_id: str, data: str = Query(...), attendance_list
     pode_editar = await pode_editar_chamada(data, user_tipo)
     
     if not pode_editar:
-        # Buscar configuração para mostrar horário no erro
-        config = await db.system_config.find_one({})
-        horario_bloqueio = config.get("horario_bloqueio", "13:00") if config else "13:00"
-        
         if user_tipo == 'professor':
             raise HTTPException(
                 status_code=403, 
-                detail=f"Professores não podem editar chamadas após às {horario_bloqueio}. Apenas moderadores e administradores podem fazer alterações."
+                detail="Professores não podem editar chamadas após às 13:00 do mesmo dia. Apenas moderadores e administradores podem fazer alterações."
             )
         else:
             raise HTTPException(status_code=403, detail="Sem permissão para editar esta chamada")

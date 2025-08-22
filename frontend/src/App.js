@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
 
-// API URL - Forçado para produção
-const API = "https://git-restore.emergent.host/api";
+// API URL - Usar variável de ambiente
+const API = process.env.REACT_APP_BACKEND_URL;
 
 function App() {
   // Funções utilitárias para cálculo de datas

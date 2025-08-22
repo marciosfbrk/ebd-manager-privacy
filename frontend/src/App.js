@@ -283,6 +283,34 @@ function App() {
     }
   };
 
+  // Funções para Configurações do Sistema - NOVO
+  const loadSystemConfig = async () => {
+    try {
+      setConfigLoading(true);
+      const response = await axios.get(`${API}/system-config`);
+      setSystemConfig(response.data || {});
+    } catch (error) {
+      console.error('Erro ao carregar configurações:', error);
+      setSystemConfig({});
+    } finally {
+      setConfigLoading(false);
+    }
+  };
+
+  const updateSystemConfig = async (bloqueioAtivo, horario = "13:00") => {
+    try {
+      setConfigLoading(true);
+      await axios.put(`${API}/system-config?bloqueio_ativo=${bloqueioAtivo}&user_id=${currentUser.id}&horario=${horario}`);
+      await loadSystemConfig(); // Recarregar configurações
+      alert('Configurações atualizadas com sucesso!');
+    } catch (error) {
+      console.error('Erro ao atualizar configurações:', error);
+      alert('Erro ao atualizar configurações');
+    } finally {
+      setConfigLoading(false);
+    }
+  };
+
   // Funções de Backup e Restore
   const generateBackup = async () => {
     try {

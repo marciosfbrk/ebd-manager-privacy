@@ -138,6 +138,18 @@ user_problem_statement: "Construir sistema EBD Manager para substituir planilha 
         comment: "TESTED: All revista endpoints working correctly. ✅ GET /api/revistas returns all revistas (found 12 total including duplicates from multiple test runs). ✅ GET /api/revistas/turma/{turma_id} works perfectly for all turmas. ✅ All 5 new revistas verified with exact correct data and 13 lições each. ✅ Fixed critical MongoDB ObjectId serialization issue. Sistema ready for production use."
 
 backend:
+  - task: "Sistema de Logs de Acesso"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implementado sistema de logs de acesso com endpoints GET /api/access-logs e GET /api/access-logs/stats. Sistema registra automaticamente logins de usuários na coleção access_logs do MongoDB com informações de IP, user agent, timestamp e duração de sessão."
+
   - task: "Sistema de Backup e Restore"
     implemented: true
     working: true

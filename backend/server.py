@@ -1776,22 +1776,25 @@ async def get_access_logs(limit: int = 100, user_id: str = None):
         
         logs = await db.access_logs.find(query).sort("timestamp", -1).limit(limit).to_list(None)
         
-        # Converter datetime para string e remover _id do MongoDB
+        # Mapear os logs para estrutura mais simples
         clean_logs = []
         for log in logs:
-            # Remove _id do MongoDB se existir
-            if '_id' in log:
-                del log['_id']
+            clean_log = {
+                "user_id": log.get("user_id", ""),
+                "user_name": log.get("user_name", ""),
+                "login_time": log.get("timestamp", ""),
+                "logout_time": log.get("logout_time", ""),
+                "ip_address": log.get("ip_address", ""),
+                "user_agent": log.get("user_agent", "")
+            }
             
-            # Converter datetime para string
-            if log.get("timestamp"):
-                if hasattr(log["timestamp"], "isoformat"):
-                    log["timestamp"] = log["timestamp"].isoformat()
-            if log.get("logout_time"):
-                if hasattr(log["logout_time"], "isoformat"):
-                    log["logout_time"] = log["logout_time"].isoformat()
+            # Converter datetime para string se necessário
+            if hasattr(clean_log["login_time"], "isoformat"):
+                clean_log["login_time"] = clean_log["login_time"].isoformat()
+            if clean_log["logout_time"] and hasattr(clean_log["logout_time"], "isoformat"):
+                clean_log["logout_time"] = clean_log["logout_time"].isoformat()
             
-            clean_logs.append(log)
+            clean_logs.append(clean_log)
         
         return clean_logs
         

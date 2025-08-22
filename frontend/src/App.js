@@ -1568,6 +1568,8 @@ function App() {
 
         await axios.post(`${API}/attendance/bulk/${selectedTurma}?data=${selectedDate}&user_tipo=${currentUser.tipo}&user_id=${currentUser.id}`, attendanceList);
         
+        console.log("DEBUG: Usuario logado:", currentUser.tipo, currentUser.nome);
+        
         await loadDashboard();
         alert('Chamada salva com sucesso!');
       } catch (error) {

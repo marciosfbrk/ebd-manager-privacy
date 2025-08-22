@@ -1718,6 +1718,116 @@ async def init_revista_adultos():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao criar revista de adultos: {str(e)}")
 
+# Sistema de Logs de Acesso - NOVO
+async def create_access_log(user_data: dict, action: str, ip_address: str = None, user_agent: str = None):
+    """Criar log de acesso"""
+    try:
+        log_entry = {
+            "id": str(uuid.uuid4()),
+            "user_id": user_data.get("id"),
+            "user_name": user_data.get("nome"),
+            "user_email": user_data.get("email"),
+            "user_type": user_data.get("tipo"),
+            "action": action,  # login, logout, chamada, relatorio, etc
+            "timestamp": datetime.now(),
+            "ip_address": ip_address,
+            "user_agent": user_agent,
+            "session_duration": None  # Será calculado no logout
+        }
+        
+        await db.access_logs.insert_one(log_entry)
+        return log_entry["id"]
+        
+    except Exception as e:
+        print(f"Erro ao criar log: {e}")
+        return None
+
+async def update_logout_log(user_id: str, login_timestamp: datetime):
+    """Atualizar log com informações de logout"""
+    try:
+        logout_time = datetime.now()
+        duration = logout_time - login_timestamp
+        duration_str = str(duration).split('.')[0]  # Remove microsegundos
+        
+        await db.access_logs.update_one(
+            {
+                "user_id": user_id,
+                "action": "login",
+                "timestamp": {"$gte": login_timestamp - timedelta(minutes=5)}
+            },
+            {
+                "$set": {
+                    "logout_time": logout_time,
+                    "session_duration": duration_str
+                }
+            }
+        )
+        
+    except Exception as e:
+        print(f"Erro ao atualizar logout: {e}")
+
+@api_router.get("/access-logs")
+async def get_access_logs(limit: int = 100, user_id: str = None):
+    """Buscar logs de acesso (apenas admin)"""
+    try:
+        query = {}
+        if user_id:
+            query["user_id"] = user_id
+        
+        logs = await db.access_logs.find(query).sort("timestamp", -1).limit(limit).to_list(None)
+        
+        # Converter datetime para string
+        for log in logs:
+            if log.get("timestamp"):
+                log["timestamp"] = log["timestamp"].isoformat()
+            if log.get("logout_time"):
+                log["logout_time"] = log["logout_time"].isoformat()
+        
+        return logs
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar logs: {str(e)}")
+
+@api_router.get("/access-logs/stats")
+async def get_access_stats():
+    """Estatísticas de acesso (apenas admin)"""
+    try:
+        # Últimos 30 dias
+        thirty_days_ago = datetime.now() - timedelta(days=30)
+        
+        # Total de logins últimos 30 dias
+        total_logins = await db.access_logs.count_documents({
+            "action": "login",
+            "timestamp": {"$gte": thirty_days_ago}
+        })
+        
+        # Usuários únicos
+        unique_users = len(await db.access_logs.distinct("user_id", {
+            "action": "login",
+            "timestamp": {"$gte": thirty_days_ago}
+        }))
+        
+        # Usuário mais ativo
+        pipeline = [
+            {"$match": {"action": "login", "timestamp": {"$gte": thirty_days_ago}}},
+            {"$group": {"_id": "$user_name", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}},
+            {"$limit": 1}
+        ]
+        
+        most_active = await db.access_logs.aggregate(pipeline).to_list(None)
+        most_active_user = most_active[0] if most_active else {"_id": "N/A", "count": 0}
+        
+        return {
+            "total_logins_30_days": total_logins,
+            "unique_users_30_days": unique_users,
+            "most_active_user": most_active_user["_id"],
+            "most_active_logins": most_active_user["count"]
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao gerar estatísticas: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 

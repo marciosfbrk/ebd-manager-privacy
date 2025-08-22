@@ -300,12 +300,14 @@ function App() {
   const updateSystemConfig = async (bloqueioAtivo, horario = "13:00") => {
     try {
       setConfigLoading(true);
-      await axios.put(`${API}/system-config?bloqueio_ativo=${bloqueioAtivo}&user_id=${currentUser.id}&horario=${horario}`);
+      console.log("DEBUG updateConfig:", bloqueioAtivo, currentUser);
+      await axios.put(`${API}/system-config?bloqueio_ativo=${bloqueioAtivo}&user_id=${currentUser.user_id || currentUser.id}&horario=${horario}`);
       await loadSystemConfig(); // Recarregar configurações
       alert('Configurações atualizadas com sucesso!');
     } catch (error) {
       console.error('Erro ao atualizar configurações:', error);
-      alert('Erro ao atualizar configurações');
+      console.error('Error details:', error.response?.data);
+      alert(`Erro ao atualizar configurações: ${error.response?.data?.detail || error.message}`);
     } finally {
       setConfigLoading(false);
     }

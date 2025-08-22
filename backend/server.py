@@ -1935,6 +1935,68 @@ async def get_access_stats():
             "sessoes_ativas": 0
         }
 
+# Rotas para Configurações do Sistema - NOVO
+@api_router.get("/system-config")
+async def get_system_config():
+    """Buscar configurações do sistema (apenas admin/moderador)"""
+    try:
+        config = await db.system_config.find_one({})
+        if not config:
+            # Criar configuração padrão
+            config = {
+                "id": str(uuid.uuid4()),
+                "bloqueio_chamada_ativo": True,
+                "horario_bloqueio": "13:00",
+                "atualizado_em": datetime.utcnow().isoformat(),
+                "atualizado_por": "system"
+            }
+            await db.system_config.insert_one(config)
+        
+        # Remover _id do MongoDB
+        if '_id' in config:
+            del config['_id']
+            
+        return config
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar configurações: {str(e)}")
+
+@api_router.put("/system-config")
+async def update_system_config(bloqueio_ativo: bool, user_id: str, horario: str = "13:00"):
+    """Atualizar configurações do sistema (apenas admin/moderador)"""
+    try:
+        # Buscar configuração existente
+        config = await db.system_config.find_one({})
+        
+        if config:
+            # Atualizar configuração existente
+            await db.system_config.update_one(
+                {"id": config["id"]},
+                {
+                    "$set": {
+                        "bloqueio_chamada_ativo": bloqueio_ativo,
+                        "horario_bloqueio": horario,
+                        "atualizado_em": datetime.utcnow().isoformat(),
+                        "atualizado_por": user_id
+                    }
+                }
+            )
+        else:
+            # Criar nova configuração
+            new_config = {
+                "id": str(uuid.uuid4()),
+                "bloqueio_chamada_ativo": bloqueio_ativo,
+                "horario_bloqueio": horario,
+                "atualizado_em": datetime.utcnow().isoformat(),
+                "atualizado_por": user_id
+            }
+            await db.system_config.insert_one(new_config)
+        
+        return {"message": "Configurações atualizadas com sucesso"}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao atualizar configurações: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 

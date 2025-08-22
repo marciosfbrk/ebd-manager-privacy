@@ -2779,6 +2779,137 @@ function App() {
     );
   };
 
+  // Componente Configuração de Chamadas - NOVO
+  const ConfigChamadas = () => {
+    const [localConfig, setLocalConfig] = useState({
+      bloqueio_chamada_ativo: true,
+      horario_bloqueio: "13:00"
+    });
+
+    useEffect(() => {
+      if (systemConfig.bloqueio_chamada_ativo !== undefined) {
+        setLocalConfig({
+          bloqueio_chamada_ativo: systemConfig.bloqueio_chamada_ativo,
+          horario_bloqueio: systemConfig.horario_bloqueio || "13:00"
+        });
+      }
+    }, [systemConfig]);
+
+    const handleSave = async () => {
+      await updateSystemConfig(localConfig.bloqueio_chamada_ativo, localConfig.horario_bloqueio);
+    };
+
+    return (
+      <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
+        <div className="max-w-4xl mx-auto">
+          <button
+            onClick={() => setCurrentView('dashboard')}
+            className="mb-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            ← Voltar ao Dashboard
+          </button>
+
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">Configurar Chamadas</h1>
+              <p className="text-gray-600">Controle quando professores podem editar chamadas</p>
+            </div>
+
+            {configLoading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+                <p className="mt-2 text-gray-600">Carregando configurações...</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* Toggle Principal */}
+                <div className="border rounded-lg p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-800">Bloqueio de Edição</h3>
+                      <p className="text-gray-600 text-sm mt-1">
+                        Quando ativo, professores só podem editar chamadas até o horário definido
+                      </p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={localConfig.bloqueio_chamada_ativo}
+                        onChange={(e) => setLocalConfig({
+                          ...localConfig,
+                          bloqueio_chamada_ativo: e.target.checked
+                        })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Configuração de Horário */}
+                {localConfig.bloqueio_chamada_ativo && (
+                  <div className="border rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Horário Limite</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Horário de Bloqueio
+                        </label>
+                        <input
+                          type="time"
+                          value={localConfig.horario_bloqueio}
+                          onChange={(e) => setLocalConfig({
+                            ...localConfig,
+                            horario_bloqueio: e.target.value
+                          })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <h4 className="font-medium text-blue-800 mb-2">Como funciona:</h4>
+                        <p className="text-sm text-blue-700">
+                          Professores podem editar chamadas até às <strong>{localConfig.horario_bloqueio}</strong> do dia que foi feita.
+                          Após esse horário, apenas moderadores e administradores podem fazer alterações.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Explicação do Sistema */}
+                <div className="bg-gray-50 border rounded-lg p-6">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">ℹ️ Informações Importantes</h3>
+                  <div className="space-y-2 text-sm text-gray-700">
+                    <p><strong>• Professores:</strong> {localConfig.bloqueio_chamada_ativo ? `Podem editar chamadas até às ${localConfig.horario_bloqueio} do mesmo dia` : 'Podem editar qualquer chamada'}</p>
+                    <p><strong>• Moderadores e Administradores:</strong> Sempre podem editar qualquer chamada</p>
+                    <p><strong>• Objetivo:</strong> Manter integridade dos dados históricos e relatórios</p>
+                  </div>
+                </div>
+
+                {/* Botões de Ação */}
+                <div className="flex justify-end space-x-3 pt-4 border-t">
+                  <button
+                    onClick={() => setCurrentView('dashboard')}
+                    className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={handleSave}
+                    disabled={configLoading}
+                    className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  >
+                    {configLoading ? 'Salvando...' : 'Salvar Configurações'}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Componente Rankings
   const Rankings = () => {
     const [isLoadingRankings, setIsLoadingRankings] = useState(false);

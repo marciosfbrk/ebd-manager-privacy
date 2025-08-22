@@ -603,7 +603,23 @@ async def get_dashboard_report(data: Optional[str] = None):
 
 # Routes - Bulk Attendance for a turma
 @api_router.post("/attendance/bulk/{turma_id}")
-async def bulk_attendance(turma_id: str, data: str = Query(...), attendance_list: List[BulkAttendanceItem] = []):
+async def bulk_attendance(turma_id: str, data: str = Query(...), attendance_list: List[BulkAttendanceItem] = [], user_tipo: str = Query(...), user_id: str = Query(...)):
+    # Verificar permissão para editar chamada - NOVO
+    pode_editar = await pode_editar_chamada(data, user_tipo)
+    
+    if not pode_editar:
+        # Buscar configuração para mostrar horário no erro
+        config = await db.system_config.find_one({})
+        horario_bloqueio = config.get("horario_bloqueio", "13:00") if config else "13:00"
+        
+        if user_tipo == 'professor':
+            raise HTTPException(
+                status_code=403, 
+                detail=f"Professores não podem editar chamadas após às {horario_bloqueio}. Apenas moderadores e administradores podem fazer alterações."
+            )
+        else:
+            raise HTTPException(status_code=403, detail="Sem permissão para editar esta chamada")
+    
     # Verificar se é domingo
     if not is_sunday(data):
         raise HTTPException(status_code=400, detail="Chamada só pode ser feita aos domingos")

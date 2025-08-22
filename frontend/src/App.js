@@ -255,6 +255,29 @@ function App() {
     }
   };
 
+  // Funções de Logs de Acesso - NOVO
+  const loadAccessLogs = async () => {
+    try {
+      setLogsLoading(true);
+      const response = await axios.get(`${API}/access-logs?limit=50`);
+      setAccessLogs(response.data);
+    } catch (error) {
+      console.error('Erro ao carregar logs de acesso:', error);
+      alert('Erro ao carregar logs de acesso');
+    } finally {
+      setLogsLoading(false);
+    }
+  };
+
+  const loadAccessStats = async () => {
+    try {
+      const response = await axios.get(`${API}/access-logs/stats`);
+      setLogStats(response.data);
+    } catch (error) {
+      console.error('Erro ao carregar estatísticas de logs:', error);
+    }
+  };
+
   // Funções de Backup e Restore
   const generateBackup = async () => {
     try {

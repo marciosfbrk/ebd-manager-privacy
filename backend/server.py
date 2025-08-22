@@ -1046,6 +1046,14 @@ class PasswordChangeRequest(BaseModel):
     user_id: str
     current_password: str
     new_password: str
+
+# Modelo para Configurações do Sistema - NOVO
+class SystemConfig(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    bloqueio_chamada_ativo: bool = True  # Por padrão, bloqueio ativo
+    horario_bloqueio: str = "13:00"  # Horário de bloqueio
+    atualizado_em: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    atualizado_por: str = ""  # ID do usuário que fez a alteração
     confirm_password: str
 
 # Endpoint para alteração de senha

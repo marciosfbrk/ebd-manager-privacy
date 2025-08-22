@@ -2208,10 +2208,21 @@ def test_access_logs_system():
 def main():
     """Run all tests in sequence"""
     print("=== EBD MANAGER BACKEND TEST SUITE ===\n")
+    print("TESTING NEW CALL CONTROL SYSTEM (SISTEMA DE CONTROLE DE CHAMADAS)")
+    print("Focus: system-config endpoints and pode_editar_chamada function\n")
     
-    # Test 1: ACCESS LOGS SYSTEM (PRIORITY TEST FROM REVIEW REQUEST)
-    print("1. Testing Access Logs System (PRIORITY - REVIEW REQUEST)...")
-    test_access_logs_system()
+    # Initialize sample data first
+    print("0. Initializing sample data...")
+    if not test_init_sample_data():
+        print("❌ Failed to initialize sample data. Some tests may fail.")
+    
+    # Test 1: LOGIN WITH SPECIFIC CREDENTIALS
+    print("\n1. Testing login with specific credentials...")
+    test_login_with_credentials()
+    
+    # Test 2: CALL CONTROL SYSTEM (MAIN FOCUS)
+    print("\n2. Testing Call Control System (MAIN FOCUS - REVIEW REQUEST)...")
+    test_call_control_system()
     
     # Show final results
     results.summary()

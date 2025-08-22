@@ -1770,11 +1770,19 @@ async def update_logout_log(user_id: str, login_timestamp: datetime):
 async def get_access_logs(limit: int = 100, user_id: str = None):
     """Buscar logs de acesso (apenas admin)"""
     try:
+        # Verificar se a coleção existe
+        collections = await db.list_collection_names()
+        if "access_logs" not in collections:
+            return []
+        
         query = {}
         if user_id:
             query["user_id"] = user_id
         
         logs = await db.access_logs.find(query).sort("timestamp", -1).limit(limit).to_list(None)
+        
+        if not logs:
+            return []
         
         # Converter datetime para string e remover _id do MongoDB
         clean_logs = []
@@ -1787,16 +1795,22 @@ async def get_access_logs(limit: int = 100, user_id: str = None):
             if log.get("timestamp"):
                 if hasattr(log["timestamp"], "isoformat"):
                     log["timestamp"] = log["timestamp"].isoformat()
+                else:
+                    log["timestamp"] = str(log["timestamp"])
+            
             if log.get("logout_time"):
                 if hasattr(log["logout_time"], "isoformat"):
                     log["logout_time"] = log["logout_time"].isoformat()
+                else:
+                    log["logout_time"] = str(log["logout_time"])
             
             clean_logs.append(log)
         
         return clean_logs
         
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro ao buscar logs: {str(e)}")
+        print(f"Erro ao buscar logs: {e}")
+        return []
 
 @api_router.get("/access-logs/stats")
 async def get_access_stats():

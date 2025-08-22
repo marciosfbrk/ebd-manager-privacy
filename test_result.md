@@ -388,7 +388,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Funcionalidade Datas Automáticas"
+    - "Sistema de Logs de Acesso"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

@@ -473,7 +473,7 @@ function App() {
         revistas_entregues: parseInt(att.revistas_entregues) || 0
       }));
 
-      const response = await axios.post(`${API}/attendance/bulk/${turmaId}?data=${date}&user_tipo=${currentUser.tipo}&user_id=${currentUser.id}`, attendanceData);
+      const response = await axios.post(`${API}/attendance/bulk/${turmaId}?data=${date}&user_tipo=${currentUser.tipo}&user_id=${currentUser.user_id || currentUser.id}`, attendanceData);
       
       await loadDashboard();
       alert('Chamada salva com sucesso!');

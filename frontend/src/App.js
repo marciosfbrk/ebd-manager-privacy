@@ -3849,6 +3849,8 @@ function App() {
         return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <Usuarios /> : <Dashboard />;
       case 'alterar-senha':
         return isLoggedIn ? <AlterarSenha /> : <HomeCover />;
+      case 'config-chamadas':
+        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <ConfigChamadas /> : <Dashboard />;
       case 'revistas':
         return isLoggedIn ? <Revistas /> : <HomeCover />;
       case 'admin-revistas':

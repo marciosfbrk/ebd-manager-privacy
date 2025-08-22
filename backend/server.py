@@ -506,7 +506,29 @@ async def get_attendance(turma_id: Optional[str] = None, data: Optional[str] = N
     return [Attendance(**att) for att in attendance]
 
 @api_router.put("/attendance/{attendance_id}", response_model=Attendance)
-async def update_attendance(attendance_id: str, attendance_update: AttendanceUpdate):
+async def update_attendance(attendance_id: str, attendance_update: AttendanceUpdate, user_tipo: str = Query(...), user_id: str = Query(...)):
+    # Primeiro, buscar o registro de chamada para pegar a data
+    attendance_record = await db.attendance.find_one({"id": attendance_id})
+    if not attendance_record:
+        raise HTTPException(status_code=404, detail="Registro de chamada não encontrado")
+    
+    # Verificar se pode editar baseado na data e tipo de usuário
+    data_chamada = attendance_record.get("data")
+    pode_editar = await pode_editar_chamada(data_chamada, user_tipo)
+    
+    if not pode_editar:
+        # Buscar configuração para mostrar horário no erro
+        config = await db.system_config.find_one({})
+        horario_bloqueio = config.get("horario_bloqueio", "13:00") if config else "13:00"
+        
+        if user_tipo == 'professor':
+            raise HTTPException(
+                status_code=403, 
+                detail=f"Professores não podem editar chamadas após as {horario_bloqueio}. Apenas moderadores e administradores podem fazer alterações."
+            )
+        else:
+            raise HTTPException(status_code=403, detail="Sem permissão para editar esta chamada")
+    
     update_dict = {k: v for k, v in attendance_update.dict().items() if v is not None}
     
     if not update_dict:

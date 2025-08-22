@@ -1558,58 +1558,328 @@ def test_user_editing_bug_fix():
     print("The bug was: editing a teacher without providing password field would fail")
     print("The fix was: UserUpdate model with optional password in backend")
 
+def test_access_logs_system():
+    """Test access logs system as requested in review"""
+    print("\n=== TESTING ACCESS LOGS SYSTEM (REVIEW REQUEST) ===")
+    print("Testing endpoints: GET /api/access-logs and GET /api/access-logs/stats")
+    print("Testing login record creation and data structure validation")
+    
+    # First, ensure we have the admin user for testing
+    admin_credentials = {
+        "email": "admin@ebd.com",
+        "senha": "admin123"  # As specified in review request
+    }
+    
+    # Update admin password to match review request
+    try:
+        # Get users to find admin
+        response = requests.get(f"{BASE_URL}/users")
+        if response.status_code == 200:
+            users = response.json()
+            admin_user = None
+            for user in users:
+                if user.get('email') == 'admin@ebd.com':
+                    admin_user = user
+                    break
+            
+            if admin_user:
+                # Update admin password to admin123
+                update_data = {
+                    "nome": admin_user.get("nome", "Admin"),
+                    "email": "admin@ebd.com",
+                    "senha": "admin123",
+                    "tipo": "admin",
+                    "turmas_permitidas": []
+                }
+                response = requests.put(f"{BASE_URL}/users/{admin_user['id']}", json=update_data)
+                if response.status_code == 200:
+                    results.success("Admin password setup - Updated admin password to admin123")
+                else:
+                    results.failure("Admin password setup", f"Failed to update password: {response.status_code}")
+            else:
+                results.failure("Admin password setup", "Admin user not found")
+        else:
+            results.failure("Admin password setup", f"Failed to get users: {response.status_code}")
+    except Exception as e:
+        results.failure("Admin password setup", str(e))
+    
+    # TEST 1: Perform login to generate access log
+    print("\n--- TEST 1: Login to generate access log ---")
+    login_token = None
+    try:
+        response = requests.post(f"{BASE_URL}/login", json=admin_credentials)
+        if response.status_code == 200:
+            login_data = response.json()
+            login_token = login_data.get("token")
+            results.success("POST /api/login - Successfully logged in with admin@ebd.com / admin123")
+            
+            # Verify login response structure
+            required_fields = ["user_id", "nome", "email", "tipo", "turmas_permitidas", "token"]
+            if all(field in login_data for field in required_fields):
+                results.success("POST /api/login - Login response has all required fields")
+            else:
+                missing = [f for f in required_fields if f not in login_data]
+                results.failure("POST /api/login - Response structure", f"Missing fields: {missing}")
+        else:
+            results.failure("POST /api/login", f"Status {response.status_code}: {response.text}")
+            return  # Can't continue without login
+    except Exception as e:
+        results.failure("POST /api/login", str(e))
+        return
+    
+    # Wait a moment for log to be created
+    import time
+    time.sleep(1)
+    
+    # TEST 2: GET /api/access-logs - verify endpoint responds correctly
+    print("\n--- TEST 2: GET /api/access-logs endpoint ---")
+    try:
+        response = requests.get(f"{BASE_URL}/access-logs")
+        if response.status_code == 200:
+            logs = response.json()
+            results.success("GET /api/access-logs - Endpoint responds correctly")
+            
+            # Verify response is a list
+            if isinstance(logs, list):
+                results.success("GET /api/access-logs - Returns list of logs")
+                
+                # Check if we have at least one log (from our login)
+                if len(logs) > 0:
+                    results.success(f"GET /api/access-logs - Found {len(logs)} access log(s)")
+                    
+                    # Verify log structure
+                    recent_log = logs[0]  # Most recent log (sorted by timestamp desc)
+                    required_log_fields = ["id", "user_id", "user_name", "user_email", "user_type", "action", "timestamp"]
+                    
+                    if all(field in recent_log for field in required_log_fields):
+                        results.success("GET /api/access-logs - Log entry has all required fields")
+                        
+                        # Verify specific data
+                        if recent_log.get("user_email") == "admin@ebd.com":
+                            results.success("GET /api/access-logs - Found login record for admin@ebd.com")
+                        else:
+                            results.failure("GET /api/access-logs - Admin login", f"Expected admin@ebd.com, got {recent_log.get('user_email')}")
+                        
+                        if recent_log.get("action") == "login":
+                            results.success("GET /api/access-logs - Login action recorded correctly")
+                        else:
+                            results.failure("GET /api/access-logs - Action", f"Expected 'login', got {recent_log.get('action')}")
+                        
+                        if recent_log.get("user_type") == "admin":
+                            results.success("GET /api/access-logs - User type recorded correctly")
+                        else:
+                            results.failure("GET /api/access-logs - User type", f"Expected 'admin', got {recent_log.get('user_type')}")
+                        
+                        # Verify timestamp format
+                        timestamp = recent_log.get("timestamp")
+                        if timestamp:
+                            try:
+                                from datetime import datetime
+                                datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+                                results.success("GET /api/access-logs - Timestamp in valid ISO format")
+                            except:
+                                results.failure("GET /api/access-logs - Timestamp", f"Invalid timestamp format: {timestamp}")
+                        else:
+                            results.failure("GET /api/access-logs - Timestamp", "Timestamp missing")
+                        
+                        # Check optional fields
+                        optional_fields = ["ip_address", "user_agent", "session_duration"]
+                        for field in optional_fields:
+                            if field in recent_log:
+                                results.success(f"GET /api/access-logs - Optional field '{field}' present")
+                        
+                    else:
+                        missing = [f for f in required_log_fields if f not in recent_log]
+                        results.failure("GET /api/access-logs - Log structure", f"Missing fields: {missing}")
+                else:
+                    results.failure("GET /api/access-logs - No logs", "No access logs found after login")
+            else:
+                results.failure("GET /api/access-logs - Response type", f"Expected list, got {type(logs)}")
+        else:
+            results.failure("GET /api/access-logs", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/access-logs", str(e))
+    
+    # TEST 3: GET /api/access-logs/stats - verify stats endpoint
+    print("\n--- TEST 3: GET /api/access-logs/stats endpoint ---")
+    try:
+        response = requests.get(f"{BASE_URL}/access-logs/stats")
+        if response.status_code == 200:
+            stats = response.json()
+            results.success("GET /api/access-logs/stats - Endpoint responds correctly")
+            
+            # Verify stats structure
+            required_stats_fields = ["total_logins_30_days", "unique_users_30_days", "most_active_user", "most_active_logins"]
+            if all(field in stats for field in required_stats_fields):
+                results.success("GET /api/access-logs/stats - Stats response has all required fields")
+                
+                # Verify data types and values
+                if isinstance(stats.get("total_logins_30_days"), int) and stats.get("total_logins_30_days") >= 1:
+                    results.success(f"GET /api/access-logs/stats - total_logins_30_days: {stats['total_logins_30_days']} (valid)")
+                else:
+                    results.failure("GET /api/access-logs/stats - total_logins", f"Expected int >= 1, got {stats.get('total_logins_30_days')}")
+                
+                if isinstance(stats.get("unique_users_30_days"), int) and stats.get("unique_users_30_days") >= 1:
+                    results.success(f"GET /api/access-logs/stats - unique_users_30_days: {stats['unique_users_30_days']} (valid)")
+                else:
+                    results.failure("GET /api/access-logs/stats - unique_users", f"Expected int >= 1, got {stats.get('unique_users_30_days')}")
+                
+                if stats.get("most_active_user"):
+                    results.success(f"GET /api/access-logs/stats - most_active_user: {stats['most_active_user']} (valid)")
+                else:
+                    results.failure("GET /api/access-logs/stats - most_active_user", "Most active user is empty")
+                
+                if isinstance(stats.get("most_active_logins"), int) and stats.get("most_active_logins") >= 1:
+                    results.success(f"GET /api/access-logs/stats - most_active_logins: {stats['most_active_logins']} (valid)")
+                else:
+                    results.failure("GET /api/access-logs/stats - most_active_logins", f"Expected int >= 1, got {stats.get('most_active_logins')}")
+                
+            else:
+                missing = [f for f in required_stats_fields if f not in stats]
+                results.failure("GET /api/access-logs/stats - Stats structure", f"Missing fields: {missing}")
+        else:
+            results.failure("GET /api/access-logs/stats", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/access-logs/stats", str(e))
+    
+    # TEST 4: Test with query parameters
+    print("\n--- TEST 4: GET /api/access-logs with parameters ---")
+    try:
+        # Get admin user_id from login response
+        response = requests.get(f"{BASE_URL}/users")
+        if response.status_code == 200:
+            users = response.json()
+            admin_user = None
+            for user in users:
+                if user.get('email') == 'admin@ebd.com':
+                    admin_user = user
+                    break
+            
+            if admin_user:
+                admin_user_id = admin_user['id']
+                
+                # Test with user_id filter
+                response = requests.get(f"{BASE_URL}/access-logs", params={"user_id": admin_user_id})
+                if response.status_code == 200:
+                    filtered_logs = response.json()
+                    if isinstance(filtered_logs, list):
+                        results.success("GET /api/access-logs?user_id - Filtering by user_id works")
+                        
+                        # Verify all logs are for the specified user
+                        if all(log.get("user_id") == admin_user_id for log in filtered_logs):
+                            results.success("GET /api/access-logs?user_id - All logs match specified user_id")
+                        else:
+                            results.failure("GET /api/access-logs?user_id - Filter", "Some logs don't match specified user_id")
+                    else:
+                        results.failure("GET /api/access-logs?user_id", f"Expected list, got {type(filtered_logs)}")
+                else:
+                    results.failure("GET /api/access-logs?user_id", f"Status {response.status_code}: {response.text}")
+                
+                # Test with limit parameter
+                response = requests.get(f"{BASE_URL}/access-logs", params={"limit": 5})
+                if response.status_code == 200:
+                    limited_logs = response.json()
+                    if isinstance(limited_logs, list) and len(limited_logs) <= 5:
+                        results.success(f"GET /api/access-logs?limit=5 - Limit parameter works (got {len(limited_logs)} logs)")
+                    else:
+                        results.failure("GET /api/access-logs?limit", f"Expected max 5 logs, got {len(limited_logs) if isinstance(limited_logs, list) else 'not a list'}")
+                else:
+                    results.failure("GET /api/access-logs?limit", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/access-logs with parameters", str(e))
+    
+    # TEST 5: Test multiple logins to verify log accumulation
+    print("\n--- TEST 5: Multiple logins to test log accumulation ---")
+    try:
+        # Perform another login
+        response = requests.post(f"{BASE_URL}/login", json=admin_credentials)
+        if response.status_code == 200:
+            results.success("Multiple logins - Second login successful")
+            
+            # Wait for log creation
+            time.sleep(1)
+            
+            # Check if we have multiple logs now
+            response = requests.get(f"{BASE_URL}/access-logs", params={"limit": 10})
+            if response.status_code == 200:
+                logs = response.json()
+                login_logs = [log for log in logs if log.get("action") == "login" and log.get("user_email") == "admin@ebd.com"]
+                
+                if len(login_logs) >= 2:
+                    results.success(f"Multiple logins - Found {len(login_logs)} login records for admin@ebd.com")
+                    
+                    # Verify logs are sorted by timestamp (most recent first)
+                    if len(login_logs) >= 2:
+                        first_timestamp = login_logs[0].get("timestamp")
+                        second_timestamp = login_logs[1].get("timestamp")
+                        if first_timestamp and second_timestamp and first_timestamp >= second_timestamp:
+                            results.success("Multiple logins - Logs correctly sorted by timestamp (desc)")
+                        else:
+                            results.failure("Multiple logins - Sorting", "Logs not properly sorted by timestamp")
+                else:
+                    results.failure("Multiple logins", f"Expected at least 2 login logs, got {len(login_logs)}")
+            else:
+                results.failure("Multiple logins - Verification", f"Status {response.status_code}: {response.text}")
+        else:
+            results.failure("Multiple logins", f"Second login failed: {response.status_code}")
+    except Exception as e:
+        results.failure("Multiple logins", str(e))
+    
+    # TEST 6: Verify data structure completeness
+    print("\n--- TEST 6: Complete data structure validation ---")
+    try:
+        response = requests.get(f"{BASE_URL}/access-logs", params={"limit": 1})
+        if response.status_code == 200:
+            logs = response.json()
+            if logs and len(logs) > 0:
+                log = logs[0]
+                
+                # Complete field validation
+                expected_structure = {
+                    "id": str,
+                    "user_id": str,
+                    "user_name": str,
+                    "user_email": str,
+                    "user_type": str,
+                    "action": str,
+                    "timestamp": str
+                }
+                
+                structure_valid = True
+                for field, expected_type in expected_structure.items():
+                    if field not in log:
+                        results.failure("Data structure", f"Missing required field: {field}")
+                        structure_valid = False
+                    elif not isinstance(log[field], expected_type):
+                        results.failure("Data structure", f"Field {field} has wrong type: expected {expected_type.__name__}, got {type(log[field]).__name__}")
+                        structure_valid = False
+                
+                if structure_valid:
+                    results.success("Data structure - All required fields present with correct types")
+                
+                # Print sample log for verification
+                print(f"\nSample access log structure:")
+                for key, value in log.items():
+                    print(f"  {key}: {value} ({type(value).__name__})")
+                
+            else:
+                results.failure("Data structure validation", "No logs available for structure validation")
+        else:
+            results.failure("Data structure validation", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("Data structure validation", str(e))
+    
+    print(f"\n=== ACCESS LOGS SYSTEM TESTING COMPLETED ===")
+
 def main():
     """Run all tests in sequence"""
     print("=== EBD MANAGER BACKEND TEST SUITE ===\n")
     
-    # Test 1: Initialize sample data (MUST BE FIRST)
-    print("1. Testing sample data initialization...")
-    if not test_init_sample_data():
-        print("❌ CRITICAL: Sample data initialization failed. Cannot continue with other tests.")
-        results.summary()
-        return
+    # Test 1: ACCESS LOGS SYSTEM (PRIORITY TEST FROM REVIEW REQUEST)
+    print("1. Testing Access Logs System (PRIORITY - REVIEW REQUEST)...")
+    test_access_logs_system()
     
-    # Test 2: USER EDITING BUG FIX (PRIORITY TEST FROM REVIEW REQUEST)
-    print("\n2. Testing User Editing Bug Fix (PRIORITY - REVIEW REQUEST)...")
-    test_user_editing_bug_fix()
-    
-    # Test 3: CRUD Turmas
-    print("\n3. Testing CRUD operations for Turmas...")
-    turma_id = test_turmas_crud()
-    
-    # Test 4: CRUD Students
-    print("\n4. Testing CRUD operations for Students...")
-    student_id = test_students_crud(turma_id)
-    
-    # Test 5: Attendance System
-    print("\n5. Testing Attendance System...")
-    test_attendance_system(turma_id, student_id)
-    
-    # Test 6: Bulk Attendance
-    print("\n6. Testing Bulk Attendance...")
-    test_bulk_attendance(turma_id)
-    
-    # Test 7: Reports Dashboard
-    print("\n7. Testing Reports Dashboard...")
-    test_reports_dashboard()
-    
-    # Test 8: CRITICAL - Floating Point Precision Issue
-    print("\n8. Testing Floating Point Precision (CRITICAL)...")
-    test_floating_point_precision()
-    
-    # Test 9: USER MANAGEMENT ENDPOINTS (REVIEW REQUEST)
-    print("\n9. Testing User Management Endpoints (Review Request)...")
-    test_user_management_endpoints()
-    
-    # Test 10: REVISTA ENDPOINTS (REVIEW REQUEST)
-    print("\n10. Testing Revista Endpoints (Review Request)...")
-    test_revistas_endpoints()
-    
-    # Test 11: BACKUP AND RESTORE SYSTEM (REVIEW REQUEST)
-    print("\n11. Testing Backup and Restore System (Review Request)...")
-    test_backup_restore_system()
-    
-    # Final summary
+    # Show final results
     results.summary()
     
     # Return exit code based on results

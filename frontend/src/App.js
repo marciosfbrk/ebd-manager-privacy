@@ -3617,7 +3617,7 @@ function App() {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {formatarData(log.login_time)}
+                            {formatarData(log.timestamp)}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {log.logout_time ? formatarData(log.logout_time) : (
@@ -3627,7 +3627,7 @@ function App() {
                             )}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {formatarDuracao(log.login_time, log.logout_time)}
+                            {formatarDuracao(log.timestamp, log.logout_time)}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {log.ip_address || 'N/A'}

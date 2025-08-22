@@ -6,7 +6,7 @@ Script para registrar dados da turma Soldados de Cristo
 import json
 import requests
 
-BASE_URL = "https://git-restore.preview.emergentagent.com/api"
+BASE_URL = "https://sunday-bible.preview.emergentagent.com/api"
 TURMA_ID = "16d372d3-fd23-46d1-b560-32a4e18ce9ee"  # Soldados de Cristo
 
 # Dados fornecidos pelo usuário

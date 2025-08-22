@@ -13,7 +13,7 @@ from datetime import datetime
 import sys
 
 # Configurações
-API_BASE = "https://git-restore.preview.emergentagent.com/api"
+API_BASE = "https://sunday-bible.preview.emergentagent.com/api"
 
 class ImportadorChamadasMultiplas:
     def __init__(self):

@@ -6,7 +6,7 @@ Script para registrar dados da turma Pré-Adolescentes (Adolescentes)
 import json
 import requests
 
-BASE_URL = "https://git-restore.preview.emergentagent.com/api"
+BASE_URL = "https://sunday-bible.preview.emergentagent.com/api"
 TURMA_ID = "b468abca-485b-4cf6-8131-ecf82e8eb14a"  # Pré-Adolescentes
 
 # Mapeamento dos alunos (baseado na consulta anterior)

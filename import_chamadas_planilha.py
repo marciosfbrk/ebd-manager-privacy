@@ -15,7 +15,7 @@ import sys
 import os
 
 # Configurações
-API_BASE = "https://git-restore.preview.emergentagent.com/api"
+API_BASE = "https://sunday-bible.preview.emergentagent.com/api"
 
 class ImportadorChamadas:
     def __init__(self):

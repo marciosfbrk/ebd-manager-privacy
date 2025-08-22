@@ -3510,6 +3510,155 @@ function App() {
     );
   };
 
+  // Componente Logs de Acesso - NOVO
+  const LogsAcesso = () => {
+    const formatarData = (timestamp) => {
+      if (!timestamp) return 'N/A';
+      return new Date(timestamp).toLocaleString('pt-BR');
+    };
+
+    const formatarDuracao = (loginTime, logoutTime) => {
+      if (!loginTime || !logoutTime) return 'N/A';
+      const inicio = new Date(loginTime);
+      const fim = new Date(logoutTime);
+      const duracao = Math.round((fim - inicio) / 1000 / 60); // em minutos
+      return duracao < 60 ? `${duracao}min` : `${Math.floor(duracao/60)}h${duracao%60}min`;
+    };
+
+    return (
+      <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-6">
+            <button
+              onClick={() => setCurrentView('dashboard')}
+              className="mb-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              ← Voltar ao Dashboard
+            </button>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Logs de Acesso</h1>
+            <p className="text-gray-600">Histórico de acessos ao sistema</p>
+          </div>
+
+          {/* Estatísticas Rápidas */}
+          {logStats && Object.keys(logStats).length > 0 && (
+            <div className="bg-white rounded-lg shadow p-6 mb-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Estatísticas</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-blue-50 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-blue-600">{logStats.total_logins || 0}</div>
+                  <div className="text-sm text-blue-500">Total de Logins</div>
+                </div>
+                <div className="bg-green-50 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-green-600">{logStats.usuarios_ativos || 0}</div>
+                  <div className="text-sm text-green-500">Usuários Ativos</div>
+                </div>
+                <div className="bg-purple-50 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-purple-600">{logStats.sessoes_ativas || 0}</div>
+                  <div className="text-sm text-purple-500">Sessões Ativas</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tabela de Logs */}
+          <div className="bg-white rounded-lg shadow">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-semibold text-gray-800">Histórico de Acesso</h2>
+                <button
+                  onClick={() => {
+                    loadAccessLogs();
+                    loadAccessStats();
+                  }}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  🔄 Atualizar
+                </button>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              {logsLoading ? (
+                <div className="p-8 text-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+                  <p className="mt-2 text-gray-600">Carregando logs...</p>
+                </div>
+              ) : (
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Usuário
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Login
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Logout
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Duração
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        IP
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {accessLogs.length > 0 ? (
+                      accessLogs.map((log, index) => (
+                        <tr key={index} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div>
+                                <div className="text-sm font-medium text-gray-900">{log.user_name}</div>
+                                <div className="text-sm text-gray-500">ID: {log.user_id}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {formatarData(log.login_time)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {log.logout_time ? formatarData(log.logout_time) : (
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Ativo
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {formatarDuracao(log.login_time, log.logout_time)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {log.ip_address || 'N/A'}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                          Nenhum log de acesso encontrado
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              )}
+            </div>
+
+            {accessLogs.length > 0 && (
+              <div className="px-6 py-3 bg-gray-50 border-t border-gray-200">
+                <p className="text-sm text-gray-700">
+                  Exibindo {accessLogs.length} registros mais recentes
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Renderização condicional
   const renderCurrentView = () => {
     // Se não está logado, mostrar apenas home

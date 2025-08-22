@@ -1776,14 +1776,24 @@ async def get_access_logs(limit: int = 100, user_id: str = None):
         
         logs = await db.access_logs.find(query).sort("timestamp", -1).limit(limit).to_list(None)
         
-        # Converter datetime para string
+        # Converter datetime para string e remover _id do MongoDB
+        clean_logs = []
         for log in logs:
+            # Remove _id do MongoDB se existir
+            if '_id' in log:
+                del log['_id']
+            
+            # Converter datetime para string
             if log.get("timestamp"):
-                log["timestamp"] = log["timestamp"].isoformat()
+                if hasattr(log["timestamp"], "isoformat"):
+                    log["timestamp"] = log["timestamp"].isoformat()
             if log.get("logout_time"):
-                log["logout_time"] = log["logout_time"].isoformat()
+                if hasattr(log["logout_time"], "isoformat"):
+                    log["logout_time"] = log["logout_time"].isoformat()
+            
+            clean_logs.append(log)
         
-        return logs
+        return clean_logs
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao buscar logs: {str(e)}")

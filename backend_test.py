@@ -1289,6 +1289,340 @@ def test_revistas_endpoints():
         except Exception as e:
             results.failure("Revista dates verification", str(e))
 
+def test_call_control_system():
+    """Test the new call control system (sistema de controle de chamadas)"""
+    print("\n=== TESTING CALL CONTROL SYSTEM (REVIEW REQUEST) ===")
+    print("Testing system-config endpoints and pode_editar_chamada function")
+    
+    # TEST 1: GET /api/system-config - should return default configurations
+    try:
+        response = requests.get(f"{BASE_URL}/system-config")
+        if response.status_code == 200:
+            config = response.json()
+            results.success("GET /api/system-config - Returns system configuration")
+            
+            # Verify default configuration structure
+            expected_fields = ['id', 'bloqueio_chamada_ativo', 'horario_bloqueio', 'atualizado_em', 'atualizado_por']
+            missing_fields = [field for field in expected_fields if field not in config]
+            
+            if not missing_fields:
+                results.success("GET /api/system-config - Contains all required fields")
+            else:
+                results.failure("GET /api/system-config - Structure", f"Missing fields: {missing_fields}")
+            
+            # Verify default values
+            if config.get('bloqueio_chamada_ativo') == True:
+                results.success("GET /api/system-config - Default bloqueio_chamada_ativo is True")
+            else:
+                results.failure("GET /api/system-config - Default value", f"Expected bloqueio_chamada_ativo=True, got {config.get('bloqueio_chamada_ativo')}")
+            
+            if config.get('horario_bloqueio') == "13:00":
+                results.success("GET /api/system-config - Default horario_bloqueio is 13:00")
+            else:
+                results.failure("GET /api/system-config - Default value", f"Expected horario_bloqueio='13:00', got {config.get('horario_bloqueio')}")
+                
+        else:
+            results.failure("GET /api/system-config", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/system-config", str(e))
+    
+    # TEST 2: PUT /api/system-config - activate/deactivate blocking
+    try:
+        # Test activating blocking with custom time
+        update_data = {
+            "bloqueio_ativo": True,
+            "user_id": "test-admin-id",
+            "horario": "14:00"
+        }
+        
+        response = requests.put(f"{BASE_URL}/system-config", params=update_data)
+        if response.status_code == 200:
+            result = response.json()
+            if "message" in result and "sucesso" in result["message"]:
+                results.success("PUT /api/system-config - Activate blocking with custom time (14:00)")
+            else:
+                results.failure("PUT /api/system-config - Response", f"Unexpected response: {result}")
+        else:
+            results.failure("PUT /api/system-config - Activate", f"Status {response.status_code}: {response.text}")
+        
+        # Verify the configuration was updated
+        response = requests.get(f"{BASE_URL}/system-config")
+        if response.status_code == 200:
+            config = response.json()
+            if config.get('bloqueio_chamada_ativo') == True and config.get('horario_bloqueio') == "14:00":
+                results.success("PUT /api/system-config - Configuration updated correctly")
+            else:
+                results.failure("PUT /api/system-config - Verification", f"Config not updated: {config}")
+        
+        # Test deactivating blocking
+        update_data = {
+            "bloqueio_ativo": False,
+            "user_id": "test-admin-id",
+            "horario": "13:00"
+        }
+        
+        response = requests.put(f"{BASE_URL}/system-config", params=update_data)
+        if response.status_code == 200:
+            results.success("PUT /api/system-config - Deactivate blocking")
+        else:
+            results.failure("PUT /api/system-config - Deactivate", f"Status {response.status_code}: {response.text}")
+            
+    except Exception as e:
+        results.failure("PUT /api/system-config", str(e))
+    
+    # TEST 3: Test PUT /api/attendance/{id} with user_tipo and user_id parameters
+    # First, create some attendance data to test with
+    try:
+        # Get a turma and student for testing
+        response = requests.get(f"{BASE_URL}/turmas")
+        if response.status_code != 200:
+            results.failure("Attendance control test setup", "Could not get turmas")
+            return
+        
+        turmas = response.json()
+        if not turmas:
+            results.failure("Attendance control test setup", "No turmas available")
+            return
+        
+        turma_id = turmas[0]['id']
+        
+        # Get students for this turma
+        response = requests.get(f"{BASE_URL}/students", params={"turma_id": turma_id})
+        if response.status_code != 200:
+            results.failure("Attendance control test setup", "Could not get students")
+            return
+        
+        students = response.json()
+        if not students:
+            results.failure("Attendance control test setup", "No students available")
+            return
+        
+        student_id = students[0]['id']
+        
+        # Create attendance record for today (to test time-based restrictions)
+        today = datetime.now().strftime("%Y-%m-%d")
+        # Find next Sunday for valid attendance
+        today_date = datetime.now().date()
+        days_ahead = 6 - today_date.weekday()  # Sunday is 6
+        if days_ahead <= 0:
+            days_ahead += 7
+        next_sunday = today_date + timedelta(days_ahead)
+        
+        attendance_data = {
+            "aluno_id": student_id,
+            "turma_id": turma_id,
+            "data": next_sunday.isoformat(),
+            "status": "presente",
+            "oferta": 10.0,
+            "biblias_entregues": 1,
+            "revistas_entregues": 1
+        }
+        
+        response = requests.post(f"{BASE_URL}/attendance", json=attendance_data)
+        if response.status_code != 200:
+            results.failure("Attendance control test setup", f"Could not create attendance: {response.text}")
+            return
+        
+        attendance_record = response.json()
+        attendance_id = attendance_record['id']
+        
+        print(f"Created attendance record {attendance_id} for testing")
+        
+        # TEST 3A: Admin should always be able to edit
+        try:
+            update_data = {
+                "status": "ausente",
+                "oferta": 15.0
+            }
+            
+            response = requests.put(f"{BASE_URL}/attendance/{attendance_id}", 
+                                  json=update_data,
+                                  params={"user_tipo": "admin", "user_id": "admin-test-id"})
+            
+            if response.status_code == 200:
+                results.success("PUT /api/attendance/{id} - Admin can always edit attendance")
+            else:
+                results.failure("PUT /api/attendance/{id} - Admin edit", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("PUT /api/attendance/{id} - Admin edit", str(e))
+        
+        # TEST 3B: Moderator should always be able to edit
+        try:
+            update_data = {
+                "status": "presente",
+                "oferta": 20.0
+            }
+            
+            response = requests.put(f"{BASE_URL}/attendance/{attendance_id}", 
+                                  json=update_data,
+                                  params={"user_tipo": "moderador", "user_id": "moderador-test-id"})
+            
+            if response.status_code == 200:
+                results.success("PUT /api/attendance/{id} - Moderator can always edit attendance")
+            else:
+                results.failure("PUT /api/attendance/{id} - Moderator edit", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("PUT /api/attendance/{id} - Moderator edit", str(e))
+        
+        # TEST 3C: Professor restrictions based on time and date
+        # First, ensure blocking is active
+        try:
+            update_config = {
+                "bloqueio_ativo": True,
+                "user_id": "test-admin-id",
+                "horario": "13:00"
+            }
+            requests.put(f"{BASE_URL}/system-config", params=update_config)
+        except:
+            pass
+        
+        # Create attendance for today to test time restrictions
+        today_sunday = None
+        current_date = datetime.now().date()
+        
+        # If today is Sunday, use today; otherwise find next Sunday
+        if current_date.weekday() == 6:  # Today is Sunday
+            today_sunday = current_date
+        else:
+            # Find next Sunday
+            days_ahead = 6 - current_date.weekday()
+            if days_ahead <= 0:
+                days_ahead += 7
+            today_sunday = current_date + timedelta(days_ahead)
+        
+        # Create attendance for the Sunday we're testing
+        today_attendance_data = {
+            "aluno_id": student_id,
+            "turma_id": turma_id,
+            "data": today_sunday.isoformat(),
+            "status": "presente",
+            "oferta": 5.0,
+            "biblias_entregues": 0,
+            "revistas_entregues": 0
+        }
+        
+        # Delete any existing attendance for this date first
+        try:
+            requests.delete(f"{BASE_URL}/attendance/bulk/{turma_id}", params={"data": today_sunday.isoformat()})
+        except:
+            pass
+        
+        response = requests.post(f"{BASE_URL}/attendance", json=today_attendance_data)
+        if response.status_code == 200:
+            today_attendance = response.json()
+            today_attendance_id = today_attendance['id']
+            
+            # Test professor editing - behavior depends on current time
+            current_hour = datetime.now().hour
+            
+            try:
+                update_data = {
+                    "status": "ausente",
+                    "oferta": 0.0
+                }
+                
+                response = requests.put(f"{BASE_URL}/attendance/{today_attendance_id}", 
+                                      json=update_data,
+                                      params={"user_tipo": "professor", "user_id": "professor-test-id"})
+                
+                if current_hour < 13:
+                    # Before 13:00 - professor should be able to edit
+                    if response.status_code == 200:
+                        results.success("PUT /api/attendance/{id} - Professor can edit before 13:00")
+                    else:
+                        results.failure("PUT /api/attendance/{id} - Professor before 13:00", f"Should allow edit, got status {response.status_code}: {response.text}")
+                else:
+                    # After 13:00 - professor should be blocked
+                    if response.status_code == 403:
+                        results.success("PUT /api/attendance/{id} - Professor blocked after 13:00")
+                    else:
+                        results.failure("PUT /api/attendance/{id} - Professor after 13:00", f"Should block edit, got status {response.status_code}")
+                        
+            except Exception as e:
+                results.failure("PUT /api/attendance/{id} - Professor time restriction", str(e))
+        
+        # TEST 3D: Test with blocking disabled
+        try:
+            # Disable blocking
+            update_config = {
+                "bloqueio_ativo": False,
+                "user_id": "test-admin-id",
+                "horario": "13:00"
+            }
+            requests.put(f"{BASE_URL}/system-config", params=update_config)
+            
+            # Professor should now be able to edit regardless of time
+            update_data = {
+                "status": "presente",
+                "oferta": 25.0
+            }
+            
+            response = requests.put(f"{BASE_URL}/attendance/{attendance_id}", 
+                                  json=update_data,
+                                  params={"user_tipo": "professor", "user_id": "professor-test-id"})
+            
+            if response.status_code == 200:
+                results.success("PUT /api/attendance/{id} - Professor can edit when blocking is disabled")
+            else:
+                results.failure("PUT /api/attendance/{id} - Professor with blocking disabled", f"Status {response.status_code}: {response.text}")
+                
+        except Exception as e:
+            results.failure("PUT /api/attendance/{id} - Professor with blocking disabled", str(e))
+        
+    except Exception as e:
+        results.failure("Attendance control system test", str(e))
+    
+    print("Call control system testing completed")
+
+def test_login_with_credentials():
+    """Test login with specific credentials mentioned in review request"""
+    print("\n=== TESTING LOGIN WITH SPECIFIC CREDENTIALS ===")
+    print("Testing admin@ebd.com / 123456 and kell@ebd.com / 123456")
+    
+    # TEST 1: Login with admin credentials
+    try:
+        admin_login = {
+            "email": "admin@ebd.com",
+            "senha": "123456"
+        }
+        
+        response = requests.post(f"{BASE_URL}/login", json=admin_login)
+        if response.status_code == 200:
+            login_result = response.json()
+            if login_result.get('tipo') == 'admin':
+                results.success("POST /api/login - Admin login successful with admin@ebd.com / 123456")
+                admin_token = login_result.get('token')
+                admin_user_id = login_result.get('user_id')
+                print(f"Admin logged in: {login_result.get('nome')} - {login_result.get('email')}")
+            else:
+                results.failure("POST /api/login - Admin type", f"Expected tipo='admin', got {login_result.get('tipo')}")
+        else:
+            results.failure("POST /api/login - Admin", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("POST /api/login - Admin", str(e))
+    
+    # TEST 2: Login with teacher credentials
+    try:
+        teacher_login = {
+            "email": "kell@ebd.com",
+            "senha": "123456"
+        }
+        
+        response = requests.post(f"{BASE_URL}/login", json=teacher_login)
+        if response.status_code == 200:
+            login_result = response.json()
+            if login_result.get('tipo') == 'professor':
+                results.success("POST /api/login - Teacher login successful with kell@ebd.com / 123456")
+                teacher_token = login_result.get('token')
+                teacher_user_id = login_result.get('user_id')
+                print(f"Teacher logged in: {login_result.get('nome')} - {login_result.get('email')}")
+            else:
+                results.failure("POST /api/login - Teacher type", f"Expected tipo='professor', got {login_result.get('tipo')}")
+        else:
+            results.failure("POST /api/login - Teacher", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("POST /api/login - Teacher", str(e))
+
 def test_user_editing_bug_fix():
     """Test the specific user editing bug fix reported by user"""
     print("\n=== TESTING USER EDITING BUG FIX (SPECIFIC REVIEW REQUEST) ===")

@@ -1973,7 +1973,7 @@ async def get_access_stats():
             "sessoes_ativas": 0
         }
 
-# Rotas para Configurações do Sistema - NOVO
+# Rotas para Configurações do Sistema - NOVO  
 @api_router.get("/system-config")
 async def get_system_config():
     """Buscar configurações do sistema (apenas admin/moderador)"""

@@ -69,6 +69,10 @@ function App() {
   const [logsLoading, setLogsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('alunos');
   
+  // Estados para configurações do sistema - NOVO
+  const [systemConfig, setSystemConfig] = useState({});
+  const [configLoading, setConfigLoading] = useState(false);
+  
   // Estados de revistas
   const [revistas, setRevistas] = useState([]);
   const [revistaAtual, setRevistaAtual] = useState(null);

@@ -406,41 +406,18 @@ async def transfer_student(student_id: str, transfer_data: StudentTransfer):
     updated_student = await db.students.find_one({"id": student_id})
     return Student(**updated_student)
 
-# Função para verificar se pode editar chamada - NOVO
+# Função para verificar se pode editar chamada - SIMPLIFICADA
 async def pode_editar_chamada(data_chamada: str, user_tipo: str) -> bool:
     """
-    Verifica se o usuário pode editar uma chamada baseado na data e configurações
-    
-    Args:
-        data_chamada: Data da chamada no formato YYYY-MM-DD
-        user_tipo: Tipo do usuário ('professor', 'moderador', 'admin')
-    
-    Returns:
-        True se pode editar, False se não pode
+    Verifica se o usuário pode editar uma chamada baseado na data e tipo de usuário
+    REGRA FIXA: Professores só podem editar até às 13:00 do mesmo dia
     """
     try:
         # Admin e moderador sempre podem editar
         if user_tipo in ['admin', 'moderador']:
             return True
         
-        # Buscar configuração do sistema
-        config = await db.system_config.find_one({})
-        if not config:
-            # Se não existe config, criar uma padrão
-            config = {
-                "id": str(uuid.uuid4()),
-                "bloqueio_chamada_ativo": True,
-                "horario_bloqueio": "13:00",
-                "atualizado_em": datetime.utcnow().isoformat(),
-                "atualizado_por": "system"
-            }
-            await db.system_config.insert_one(config)
-        
-        # Se bloqueio está desativado, professor pode editar
-        if not config.get("bloqueio_chamada_ativo", True):
-            return True
-        
-        # Verificar horário de bloqueio
+        # Verificar horário de bloqueio FIXO às 13:00
         from datetime import datetime, date, time
         
         # Converter data da chamada para objeto date
@@ -451,14 +428,11 @@ async def pode_editar_chamada(data_chamada: str, user_tipo: str) -> bool:
         if data_chamada_obj != hoje:
             return False
         
-        # Se é hoje, verificar horário
-        horario_bloqueio = config.get("horario_bloqueio", "13:00")
-        hora_bloqueio, min_bloqueio = map(int, horario_bloqueio.split(":"))
-        
+        # Se é hoje, verificar se passou das 13:00
         agora = datetime.now()
-        horario_limite = datetime.combine(hoje, time(hora_bloqueio, min_bloqueio))
+        horario_limite = datetime.combine(hoje, time(13, 0))  # 13:00 fixo
         
-        # Se passou do horário limite, professor não pode editar
+        # Se passou das 13:00, professor não pode editar
         if agora > horario_limite:
             return False
         

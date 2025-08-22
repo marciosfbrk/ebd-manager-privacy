@@ -3676,8 +3676,6 @@ function App() {
         return isLoggedIn ? <Revistas /> : <HomeCover />;
       case 'admin-revistas':
         return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <AdminRevistas /> : <Dashboard />;
-      case 'logs':
-        return isLoggedIn && currentUser?.tipo === 'admin' ? <LogsAcesso /> : <Dashboard />;
       default:
         return <HomeCover />;
     }

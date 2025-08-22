@@ -1801,41 +1801,34 @@ async def get_access_logs(limit: int = 100, user_id: str = None):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao buscar logs: {str(e)}")
 
-@api_router.get("/access-logs/stats")
+@api_router.get("/access-logs/stats") 
 async def get_access_stats():
-    """Estatísticas de acesso (apenas admin)"""
+    """Buscar estatísticas de acesso (apenas admin)"""
     try:
-        # Últimos 30 dias
-        thirty_days_ago = datetime.now() - timedelta(days=30)
+        # Estatísticas básicas - simplificar
+        total_logins = await db.access_logs.count_documents({"action": "login"})
         
-        # Total de logins últimos 30 dias
-        total_logins = await db.access_logs.count_documents({
-            "action": "login",
-            "timestamp": {"$gte": thirty_days_ago}
-        })
-        
-        # Usuários únicos
-        unique_users = len(await db.access_logs.distinct("user_id", {
-            "action": "login",
-            "timestamp": {"$gte": thirty_days_ago}
-        }))
-        
-        # Usuário mais ativo
+        # Contar usuários únicos que fizeram login
         pipeline = [
-            {"$match": {"action": "login", "timestamp": {"$gte": thirty_days_ago}}},
-            {"$group": {"_id": "$user_name", "count": {"$sum": 1}}},
-            {"$sort": {"count": -1}},
-            {"$limit": 1}
+            {"$match": {"action": "login"}},
+            {"$group": {"_id": "$user_id"}},
+            {"$count": "total"}
         ]
         
-        most_active = await db.access_logs.aggregate(pipeline).to_list(None)
-        most_active_user = most_active[0] if most_active else {"_id": "N/A", "count": 0}
+        result = await db.access_logs.aggregate(pipeline).to_list(None)
+        usuarios_ativos = result[0]["total"] if result else 0
+        
+        # Sessões ativas (aproximação simples)
+        hoje = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        sessoes_hoje = await db.access_logs.count_documents({
+            "action": "login", 
+            "timestamp": {"$gte": hoje}
+        })
         
         return {
-            "total_logins_30_days": total_logins,
-            "unique_users_30_days": unique_users,
-            "most_active_user": most_active_user["_id"],
-            "most_active_logins": most_active_user["count"]
+            "total_logins": total_logins,
+            "usuarios_ativos": usuarios_ativos,
+            "sessoes_ativas": sessoes_hoje
         }
         
     except Exception as e:

@@ -260,10 +260,10 @@ function App() {
     try {
       setLogsLoading(true);
       const response = await axios.get(`${API}/access-logs?limit=50`);
-      setAccessLogs(response.data);
+      setAccessLogs(response.data || []);
     } catch (error) {
       console.error('Erro ao carregar logs de acesso:', error);
-      alert('Erro ao carregar logs de acesso');
+      setAccessLogs([]);
     } finally {
       setLogsLoading(false);
     }
@@ -272,9 +272,10 @@ function App() {
   const loadAccessStats = async () => {
     try {
       const response = await axios.get(`${API}/access-logs/stats`);
-      setLogStats(response.data);
+      setLogStats(response.data || {});
     } catch (error) {
       console.error('Erro ao carregar estatísticas de logs:', error);
+      setLogStats({});
     }
   };
 

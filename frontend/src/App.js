@@ -689,20 +689,6 @@ function App() {
                       <span className="text-xl mr-2">🔐</span>
                       Gerenciar Usuários
                     </button>
-
-                    {/* Controle de Chamadas - Apenas para Admin e Moderador */}
-                    {(currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') && (
-                      <button
-                        onClick={() => {
-                          setCurrentView('config-chamadas');
-                          loadSystemConfig();
-                        }}
-                        className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-lg hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
-                      >
-                        <span className="text-xl mr-2">⚙️</span>
-                        Configurar Chamadas
-                      </button>
-                    )}
                     
                     {/* Seção de Backup e Restore - Apenas para Admin */}
                     {currentUser?.tipo === 'admin' && (

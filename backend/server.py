@@ -406,6 +406,69 @@ async def transfer_student(student_id: str, transfer_data: StudentTransfer):
     updated_student = await db.students.find_one({"id": student_id})
     return Student(**updated_student)
 
+# Função para verificar se pode editar chamada - NOVO
+async def pode_editar_chamada(data_chamada: str, user_tipo: str) -> bool:
+    """
+    Verifica se o usuário pode editar uma chamada baseado na data e configurações
+    
+    Args:
+        data_chamada: Data da chamada no formato YYYY-MM-DD
+        user_tipo: Tipo do usuário ('professor', 'moderador', 'admin')
+    
+    Returns:
+        True se pode editar, False se não pode
+    """
+    try:
+        # Admin e moderador sempre podem editar
+        if user_tipo in ['admin', 'moderador']:
+            return True
+        
+        # Buscar configuração do sistema
+        config = await db.system_config.find_one({})
+        if not config:
+            # Se não existe config, criar uma padrão
+            config = {
+                "id": str(uuid.uuid4()),
+                "bloqueio_chamada_ativo": True,
+                "horario_bloqueio": "13:00",
+                "atualizado_em": datetime.utcnow().isoformat(),
+                "atualizado_por": "system"
+            }
+            await db.system_config.insert_one(config)
+        
+        # Se bloqueio está desativado, professor pode editar
+        if not config.get("bloqueio_chamada_ativo", True):
+            return True
+        
+        # Verificar horário de bloqueio
+        from datetime import datetime, date, time
+        
+        # Converter data da chamada para objeto date
+        data_chamada_obj = datetime.strptime(data_chamada, "%Y-%m-%d").date()
+        hoje = datetime.now().date()
+        
+        # Se a chamada não é de hoje, professor não pode editar
+        if data_chamada_obj != hoje:
+            return False
+        
+        # Se é hoje, verificar horário
+        horario_bloqueio = config.get("horario_bloqueio", "13:00")
+        hora_bloqueio, min_bloqueio = map(int, horario_bloqueio.split(":"))
+        
+        agora = datetime.now()
+        horario_limite = datetime.combine(hoje, time(hora_bloqueio, min_bloqueio))
+        
+        # Se passou do horário limite, professor não pode editar
+        if agora > horario_limite:
+            return False
+        
+        return True
+        
+    except Exception as e:
+        print(f"Erro ao verificar permissão de edição: {e}")
+        # Em caso de erro, admin/moderador podem, professor não
+        return user_tipo in ['admin', 'moderador']
+
 # Routes - Attendance
 @api_router.post("/attendance", response_model=Attendance)
 async def create_attendance(attendance: AttendanceCreate):

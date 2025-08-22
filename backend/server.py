@@ -1722,6 +1722,11 @@ async def init_revista_adultos():
 async def create_access_log(user_data: dict, action: str, ip_address: str = None, user_agent: str = None):
     """Criar log de acesso"""
     try:
+        print(f"=== CRIANDO LOG DE ACESSO ===")
+        print(f"User: {user_data.get('nome')} - {user_data.get('email')}")
+        print(f"Action: {action}")
+        print(f"IP: {ip_address}")
+        
         log_entry = {
             "id": str(uuid.uuid4()),
             "user_id": user_data.get("id"),
@@ -1735,11 +1740,14 @@ async def create_access_log(user_data: dict, action: str, ip_address: str = None
             "session_duration": None  # Será calculado no logout
         }
         
-        await db.access_logs.insert_one(log_entry)
+        result = await db.access_logs.insert_one(log_entry)
+        print(f"Log inserido com ID: {result.inserted_id}")
         return log_entry["id"]
         
     except Exception as e:
-        print(f"Erro ao criar log: {e}")
+        print(f"ERRO ao criar log: {e}")
+        import traceback
+        traceback.print_exc()
         return None
 
 async def update_logout_log(user_id: str, login_timestamp: datetime):

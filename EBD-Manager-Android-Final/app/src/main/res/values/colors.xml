@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Cores principais do EBD Manager -->
+    <color name="primary">#3B82F6</color>
+    <color name="primary_dark">#1E40AF</color>
+    <color name="accent">#10B981</color>
+    
+    <!-- Cores do tema -->
+    <color name="splash_background">#1E40AF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#6B7280</color>
+    <color name="light_gray">#F3F4F6</color>
+    
+    <!-- Status bar -->
+    <color name="status_bar">#1E3A8A</color>
+</resources>

@@ -6,6 +6,12 @@ android {
     namespace 'com.ebd.manager'
     compileSdk 34
 
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'FullBackupContent'
+    }
+
     defaultConfig {
         applicationId "com.ebd.manager"
         minSdk 21

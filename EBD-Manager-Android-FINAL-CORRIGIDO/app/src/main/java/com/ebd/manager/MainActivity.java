@@ -16,8 +16,8 @@ public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
     
-    // URL do sistema EBD Manager
-    private static final String BASE_URL = "https://sunday-bible.preview.emergentagent.com";
+    // URL do sistema EBD Manager - CORRIGIDA!
+    private static final String BASE_URL = "https://ebdad.com.br";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

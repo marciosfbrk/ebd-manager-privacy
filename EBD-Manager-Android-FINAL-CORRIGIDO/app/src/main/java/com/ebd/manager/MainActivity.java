@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setDatabaseEnabled(true);
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        // webSettings.setAppCacheEnabled(true); // Removido - deprecated
+        // webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         
         // Configurações de zoom e viewport
         webSettings.setBuiltInZoomControls(false);

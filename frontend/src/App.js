@@ -240,6 +240,17 @@ function App() {
     }, 0);
   };
 
+  // Proteção adicional contra perda de foco
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      if (searchInputRef.current && searchFilter && document.activeElement !== searchInputRef.current) {
+        searchInputRef.current.focus();
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [searchFilter]);
+
   const loadRevistas = async () => {
     try {
       const response = await axios.get(`${API}/revistas`);

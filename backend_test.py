@@ -1289,6 +1289,337 @@ def test_revistas_endpoints():
         except Exception as e:
             results.failure("Revista dates verification", str(e))
 
+def test_jovens_ebenezer_attendance_bug():
+    """Test specific bug fix for Jovens and Ebenezer (Obreiros) attendance calls"""
+    print("\n=== TESTING JOVENS AND EBENEZER ATTENDANCE BUG FIX ===")
+    print("Bug: First 4 students losing attendance when saving with visitantes/pós-chamada > 0")
+    print("Fix: Removed problematic logic that overwrote user selections (lines 1546-1550)")
+    
+    # First ensure we have church data with the specific turmas
+    try:
+        response = requests.post(f"{BASE_URL}/init-church-data")
+        if response.status_code == 200:
+            results.success("Initialize church data for bug test")
+        else:
+            print(f"Warning: Could not initialize church data: {response.status_code}")
+    except Exception as e:
+        print(f"Warning: Exception initializing church data: {e}")
+    
+    # Get all turmas to find Jovens and Ebenezer
+    turmas_dict = {}
+    try:
+        response = requests.get(f"{BASE_URL}/turmas")
+        if response.status_code == 200:
+            turmas = response.json()
+            for turma in turmas:
+                turmas_dict[turma['nome']] = turma['id']
+            print(f"Available turmas: {list(turmas_dict.keys())}")
+        else:
+            results.failure("GET /api/turmas for bug test", f"Status {response.status_code}: {response.text}")
+            return
+    except Exception as e:
+        results.failure("GET /api/turmas for bug test", str(e))
+        return
+    
+    # Test date (must be Sunday)
+    test_date = "2025-01-19"  # Sunday
+    
+    # TEST 1: Verify "Jovens" turma exists and get first students
+    jovens_turma_id = None
+    jovens_students = []
+    if "Jovens" in turmas_dict:
+        jovens_turma_id = turmas_dict["Jovens"]
+        results.success("Turma 'Jovens' exists")
+        
+        try:
+            response = requests.get(f"{BASE_URL}/students", params={"turma_id": jovens_turma_id})
+            if response.status_code == 200:
+                jovens_students = response.json()
+                if len(jovens_students) >= 4:
+                    results.success(f"Jovens turma has {len(jovens_students)} students (need at least 4)")
+                    
+                    # Check for expected first students (Abmael, Almir, Ana, Emanuel)
+                    student_names = [s['nome_completo'] for s in jovens_students[:4]]
+                    expected_names = ["Abmael", "Almir", "Ana", "Emanuel"]
+                    found_expected = [name for name in expected_names if any(name in student_name for student_name in student_names)]
+                    
+                    if len(found_expected) >= 2:  # At least 2 of the expected names
+                        results.success(f"Found expected students in Jovens: {found_expected}")
+                    else:
+                        print(f"Note: Expected students {expected_names}, found {student_names[:4]}")
+                        results.success("Jovens students available for testing")
+                else:
+                    results.failure("Jovens students", f"Need at least 4 students, found {len(jovens_students)}")
+            else:
+                results.failure("GET /api/students for Jovens", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("GET /api/students for Jovens", str(e))
+    else:
+        results.failure("Jovens turma", "Turma 'Jovens' not found")
+    
+    # TEST 2: Verify "Ebenezer (Obreiros)" turma exists and get first students
+    ebenezer_turma_id = None
+    ebenezer_students = []
+    ebenezer_names = ["Ebenezer (Obreiros)", "Ebenezer", "Obreiros"]
+    for name in ebenezer_names:
+        if name in turmas_dict:
+            ebenezer_turma_id = turmas_dict[name]
+            results.success(f"Turma '{name}' exists")
+            
+            try:
+                response = requests.get(f"{BASE_URL}/students", params={"turma_id": ebenezer_turma_id})
+                if response.status_code == 200:
+                    ebenezer_students = response.json()
+                    if len(ebenezer_students) >= 4:
+                        results.success(f"Ebenezer turma has {len(ebenezer_students)} students (need at least 4)")
+                    else:
+                        results.failure("Ebenezer students", f"Need at least 4 students, found {len(ebenezer_students)}")
+                else:
+                    results.failure("GET /api/students for Ebenezer", f"Status {response.status_code}: {response.text}")
+            except Exception as e:
+                results.failure("GET /api/students for Ebenezer", str(e))
+            break
+    
+    if not ebenezer_turma_id:
+        results.failure("Ebenezer turma", "Turma 'Ebenezer (Obreiros)' not found")
+    
+    # TEST 3: Test the original bug scenario with Jovens turma
+    if jovens_turma_id and len(jovens_students) >= 4:
+        print(f"\n--- Testing Jovens Bug Scenario ---")
+        
+        # Step 1: Mark first 4 students as "presente"
+        bulk_data = []
+        first_4_students = jovens_students[:4]
+        
+        for i, student in enumerate(first_4_students):
+            bulk_data.append({
+                "aluno_id": student['id'],
+                "status": "presente",  # Mark all first 4 as present
+                "oferta": 5.0,
+                "biblias_entregues": 0,
+                "revistas_entregues": 1
+            })
+        
+        # Add some other students with different statuses
+        for i, student in enumerate(jovens_students[4:8]):  # Next 4 students
+            status = "ausente" if i % 2 == 0 else "visitante"
+            bulk_data.append({
+                "aluno_id": student['id'],
+                "status": status,
+                "oferta": 2.0 if status == "visitante" else 0.0,
+                "biblias_entregues": 0,
+                "revistas_entregues": 0
+            })
+        
+        # Add visitantes and pós-chamada (this was triggering the bug)
+        if len(jovens_students) > 8:
+            # Add 2 visitantes
+            bulk_data.append({
+                "aluno_id": jovens_students[8]['id'],
+                "status": "visitante",
+                "oferta": 3.0,
+                "biblias_entregues": 0,
+                "revistas_entregues": 0
+            })
+            
+            if len(jovens_students) > 9:
+                # Add 1 pós-chamada
+                bulk_data.append({
+                    "aluno_id": jovens_students[9]['id'],
+                    "status": "pos_chamada",
+                    "oferta": 1.0,
+                    "biblias_entregues": 0,
+                    "revistas_entregues": 0
+                })
+        
+        # Step 2: Save bulk attendance (this should NOT overwrite first 4 students)
+        try:
+            response = requests.post(f"{BASE_URL}/attendance/bulk/{jovens_turma_id}", 
+                                   params={"data": test_date, "user_tipo": "admin", "user_id": "test-admin"},
+                                   json=bulk_data)
+            
+            if response.status_code == 200:
+                results.success("POST /api/attendance/bulk - Jovens attendance saved with visitantes/pós-chamada")
+                
+                # Step 3: Verify first 4 students maintained "presente" status
+                response = requests.get(f"{BASE_URL}/attendance", 
+                                      params={"turma_id": jovens_turma_id, "data": test_date})
+                
+                if response.status_code == 200:
+                    attendance_records = response.json()
+                    
+                    # Find attendance for first 4 students
+                    first_4_ids = [s['id'] for s in first_4_students]
+                    first_4_attendance = [r for r in attendance_records if r['aluno_id'] in first_4_ids]
+                    
+                    if len(first_4_attendance) == 4:
+                        # Check if all first 4 maintained "presente" status
+                        all_presente = all(r['status'] == 'presente' for r in first_4_attendance)
+                        
+                        if all_presente:
+                            results.success("BUG FIX VERIFIED - First 4 Jovens students maintained 'presente' status")
+                            
+                            # Additional verification: check specific students
+                            for i, record in enumerate(first_4_attendance):
+                                student_name = next(s['nome_completo'] for s in first_4_students if s['id'] == record['aluno_id'])
+                                results.success(f"  Student {i+1} ({student_name[:20]}...): status = {record['status']} ✓")
+                        else:
+                            failed_students = [r for r in first_4_attendance if r['status'] != 'presente']
+                            results.failure("BUG NOT FIXED - Jovens", f"{len(failed_students)} students lost 'presente' status: {[r['status'] for r in failed_students]}")
+                    else:
+                        results.failure("Jovens attendance verification", f"Expected 4 attendance records for first students, found {len(first_4_attendance)}")
+                    
+                    # Verify visitantes and pós-chamada were also saved correctly
+                    visitantes_count = len([r for r in attendance_records if r['status'] == 'visitante'])
+                    pos_chamada_count = len([r for r in attendance_records if r['status'] == 'pos_chamada'])
+                    
+                    if visitantes_count >= 1:
+                        results.success(f"Jovens - Visitantes saved correctly: {visitantes_count}")
+                    if pos_chamada_count >= 1:
+                        results.success(f"Jovens - Pós-chamada saved correctly: {pos_chamada_count}")
+                        
+                else:
+                    results.failure("GET /api/attendance for Jovens verification", f"Status {response.status_code}: {response.text}")
+            else:
+                results.failure("POST /api/attendance/bulk for Jovens", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("Jovens bug test", str(e))
+    
+    # TEST 4: Test the same scenario with Ebenezer (Obreiros) turma
+    if ebenezer_turma_id and len(ebenezer_students) >= 4:
+        print(f"\n--- Testing Ebenezer (Obreiros) Bug Scenario ---")
+        
+        # Use different test date to avoid conflicts
+        test_date_2 = "2025-01-26"  # Another Sunday
+        
+        # Step 1: Mark first 4 students as "presente"
+        bulk_data = []
+        first_4_students = ebenezer_students[:4]
+        
+        for i, student in enumerate(first_4_students):
+            bulk_data.append({
+                "aluno_id": student['id'],
+                "status": "presente",  # Mark all first 4 as present
+                "oferta": 10.0,
+                "biblias_entregues": 1,
+                "revistas_entregues": 1
+            })
+        
+        # Add visitantes and pós-chamada to trigger the original bug scenario
+        for i, student in enumerate(ebenezer_students[4:6]):  # Add 2 more students
+            status = "visitante" if i == 0 else "pos_chamada"
+            bulk_data.append({
+                "aluno_id": student['id'],
+                "status": status,
+                "oferta": 5.0 if status == "visitante" else 2.0,
+                "biblias_entregues": 0,
+                "revistas_entregues": 0
+            })
+        
+        # Step 2: Save bulk attendance
+        try:
+            response = requests.post(f"{BASE_URL}/attendance/bulk/{ebenezer_turma_id}", 
+                                   params={"data": test_date_2, "user_tipo": "admin", "user_id": "test-admin"},
+                                   json=bulk_data)
+            
+            if response.status_code == 200:
+                results.success("POST /api/attendance/bulk - Ebenezer attendance saved with visitantes/pós-chamada")
+                
+                # Step 3: Verify first 4 students maintained "presente" status
+                response = requests.get(f"{BASE_URL}/attendance", 
+                                      params={"turma_id": ebenezer_turma_id, "data": test_date_2})
+                
+                if response.status_code == 200:
+                    attendance_records = response.json()
+                    
+                    # Find attendance for first 4 students
+                    first_4_ids = [s['id'] for s in first_4_students]
+                    first_4_attendance = [r for r in attendance_records if r['aluno_id'] in first_4_ids]
+                    
+                    if len(first_4_attendance) == 4:
+                        # Check if all first 4 maintained "presente" status
+                        all_presente = all(r['status'] == 'presente' for r in first_4_attendance)
+                        
+                        if all_presente:
+                            results.success("BUG FIX VERIFIED - First 4 Ebenezer students maintained 'presente' status")
+                            
+                            # Additional verification: check specific students
+                            for i, record in enumerate(first_4_attendance):
+                                student_name = next(s['nome_completo'] for s in first_4_students if s['id'] == record['aluno_id'])
+                                results.success(f"  Student {i+1} ({student_name[:20]}...): status = {record['status']} ✓")
+                        else:
+                            failed_students = [r for r in first_4_attendance if r['status'] != 'presente']
+                            results.failure("BUG NOT FIXED - Ebenezer", f"{len(failed_students)} students lost 'presente' status: {[r['status'] for r in failed_students]}")
+                    else:
+                        results.failure("Ebenezer attendance verification", f"Expected 4 attendance records for first students, found {len(first_4_attendance)}")
+                        
+                else:
+                    results.failure("GET /api/attendance for Ebenezer verification", f"Status {response.status_code}: {response.text}")
+            else:
+                results.failure("POST /api/attendance/bulk for Ebenezer", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("Ebenezer bug test", str(e))
+    
+    # TEST 5: Test normal functionality still works (other turmas not affected)
+    print(f"\n--- Testing Normal Functionality ---")
+    
+    # Test with a different turma to ensure the fix didn't break normal operations
+    other_turmas = [name for name in turmas_dict.keys() if name not in ["Jovens", "Ebenezer (Obreiros)", "Ebenezer", "Obreiros"]]
+    
+    if other_turmas:
+        test_turma_name = other_turmas[0]
+        test_turma_id = turmas_dict[test_turma_name]
+        
+        try:
+            response = requests.get(f"{BASE_URL}/students", params={"turma_id": test_turma_id})
+            if response.status_code == 200:
+                test_students = response.json()
+                if len(test_students) >= 2:
+                    # Test normal attendance without visitantes/pós-chamada
+                    test_date_3 = "2025-02-02"  # Another Sunday
+                    
+                    normal_bulk_data = []
+                    for i, student in enumerate(test_students[:2]):
+                        normal_bulk_data.append({
+                            "aluno_id": student['id'],
+                            "status": "presente" if i == 0 else "ausente",
+                            "oferta": 7.0 if i == 0 else 0.0,
+                            "biblias_entregues": 0,
+                            "revistas_entregues": 0
+                        })
+                    
+                    response = requests.post(f"{BASE_URL}/attendance/bulk/{test_turma_id}", 
+                                           params={"data": test_date_3, "user_tipo": "admin", "user_id": "test-admin"},
+                                           json=normal_bulk_data)
+                    
+                    if response.status_code == 200:
+                        results.success(f"Normal functionality - {test_turma_name} attendance works correctly")
+                        
+                        # Verify the attendance was saved correctly
+                        response = requests.get(f"{BASE_URL}/attendance", 
+                                              params={"turma_id": test_turma_id, "data": test_date_3})
+                        
+                        if response.status_code == 200:
+                            records = response.json()
+                            if len(records) == 2:
+                                presente_count = len([r for r in records if r['status'] == 'presente'])
+                                ausente_count = len([r for r in records if r['status'] == 'ausente'])
+                                
+                                if presente_count == 1 and ausente_count == 1:
+                                    results.success("Normal functionality - Attendance statuses saved correctly")
+                                else:
+                                    results.failure("Normal functionality", f"Expected 1 presente, 1 ausente; got {presente_count} presente, {ausente_count} ausente")
+                            else:
+                                results.failure("Normal functionality", f"Expected 2 records, got {len(records)}")
+                    else:
+                        results.failure("Normal functionality test", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("Normal functionality test", str(e))
+    
+    print(f"\n--- Bug Test Summary ---")
+    print("✅ If all tests passed, the bug has been successfully fixed!")
+    print("❌ If any tests failed, the bug may still exist or there are other issues.")
+
 def test_church_info_endpoints():
     """Test church-info endpoints as requested in review"""
     print("\n=== TESTING CHURCH-INFO ENDPOINTS (REVIEW REQUEST) ===")

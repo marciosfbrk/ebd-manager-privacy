@@ -1125,6 +1125,10 @@ class SystemConfig(BaseModel):
 # Modelo para Informações da Igreja - NOVO
 class ChurchInfo(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    presidente_nome: str = "Pr. José Felipe da Silva"
+    presidente_cargo: str = "Presidente"
+    pastor_local_nome: str = "Pr. Henrique Ferreira Neto"
+    pastor_local_cargo: str = "Pastor Local"
     superintendente_nome: str = "Presb. Paulo Henrique da Silva Reis"
     superintendente_cargo: str = "Superintendente(EBD)"
     nome_igreja: str = "Ministério Belém"

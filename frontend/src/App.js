@@ -1183,7 +1183,7 @@ function App() {
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.matriculados}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.presentes}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center font-semibold text-purple-600">
-                        {row.matriculados > 0 ? ((row.presentes / row.matriculados) * 100).toFixed(1) : '0.0'}%
+                        {row.matriculados > 0 ? ((row.presentes / row.matriculados) * 100).toFixed(1).replace('.', ',') : '0,0'}%
                       </td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.ausentes}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.visitantes}</td>

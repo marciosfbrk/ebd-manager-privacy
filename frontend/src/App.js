@@ -1527,10 +1527,9 @@ function App() {
           let biblias = 0;
           let revistas = 0;
           
-          // Distribuir ofertas igualmente entre os presentes (corrigido problema de precisão)
-          if (att.presente && presentesCount > 0) {
-            // Usar Math.round para evitar problemas de ponto flutuante
-            oferta = Math.round((ofertaTotal / presentesCount) * 100) / 100;
+          // NÃO dividir ofertas automaticamente - valor total vai apenas para o primeiro presente
+          if (att.presente && index === firstPresentIndex) {
+            oferta = ofertaTotal; // Valor total apenas no primeiro presente
           }
           
           // Dar bíblias e revistas apenas para o primeiro aluno (para não duplicar)

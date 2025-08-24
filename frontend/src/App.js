@@ -1632,7 +1632,7 @@ function App() {
                         value={turmaDataGlobal.ofertas_total || ''}
                         onChange={(e) => updateTurmaData('ofertas_total', e.target.value)}
                         className="w-full px-3 py-3 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="0.00"
+                        placeholder="0,00"
                       />
                     </div>
                     <div>

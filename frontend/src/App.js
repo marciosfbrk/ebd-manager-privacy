@@ -1864,6 +1864,7 @@ function App() {
     const [showForm, setShowForm] = useState(false);
     const [editingStudent, setEditingStudent] = useState(null);
     const [showTransferForm, setShowTransferForm] = useState(false);
+    const [searchTerm, setSearchTerm] = useState(''); // NOVO - Estado para busca
     const [transferringStudent, setTransferringStudent] = useState(null);
     const [formData, setFormData] = useState({
       nome_completo: '',

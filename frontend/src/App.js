@@ -287,6 +287,41 @@ function App() {
     }
   };
 
+  // Funções para Informações da Igreja - NOVO
+  const loadChurchInfo = async () => {
+    try {
+      setChurchInfoLoading(true);
+      const response = await axios.get(`${API}/church-info`);
+      setChurchInfo(response.data || {});
+    } catch (error) {
+      console.error('Erro ao carregar informações da igreja:', error);
+      setChurchInfo({});
+    } finally {
+      setChurchInfoLoading(false);
+    }
+  };
+
+  const updateChurchInfo = async (data) => {
+    try {
+      setChurchInfoLoading(true);
+      await axios.put(`${API}/church-info?superintendente_nome=${encodeURIComponent(data.superintendente_nome)}&superintendente_cargo=${encodeURIComponent(data.superintendente_cargo)}&nome_igreja=${encodeURIComponent(data.nome_igreja)}&endereco=${encodeURIComponent(data.endereco)}&user_id=${currentUser?.user_id || currentUser?.id}`);
+      await loadChurchInfo(); // Recarregar informações
+      alert('Informações da igreja atualizadas com sucesso!');
+    } catch (error) {
+      console.error('Erro ao atualizar informações da igreja:', error);
+      alert('Erro ao atualizar informações da igreja');
+    } finally {
+      setChurchInfoLoading(false);
+    }
+  };
+
+  // Carregar informações da igreja quando logar - NOVO
+  useEffect(() => {
+    if (isLoggedIn) {
+      loadChurchInfo();
+    }
+  }, [isLoggedIn]);
+
   // Funções para Configurações do Sistema - NOVO
   const loadSystemConfig = async () => {
     try {

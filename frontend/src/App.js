@@ -119,14 +119,7 @@ function App() {
   // Função de login
   const handleLogin = async (email, senha) => {
     try {
-      console.log('=== DEBUG LOGIN ===');
-      console.log('API URL:', API);
-      console.log('Email:', email);
-      console.log('Senha length:', senha?.length);
-      
       const response = await axios.post(`${API}/login`, { email, senha });
-      console.log('Login response:', response);
-      
       const { user_id, nome, email: userEmail, tipo, turmas_permitidas, token: userToken } = response.data;
       
       const userData = { user_id, nome, email: userEmail, tipo, turmas_permitidas };
@@ -150,11 +143,7 @@ function App() {
       
       return { success: true };
     } catch (error) {
-      console.error('=== LOGIN ERROR ===');
-      console.error('Error full:', error);
-      console.error('Error response:', error.response);
-      console.error('Error message:', error.message);
-      
+      console.error('Erro no login:', error);
       return { 
         success: false, 
         message: error.response?.data?.detail || error.message || 'Erro ao fazer login'

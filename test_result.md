@@ -454,6 +454,21 @@ agent_communication:
     message: "URGENT CALL CONTROL ISSUE RESOLVED (2025-08-22): 🚨 CRITICAL SECURITY BUG FIXED! The specific issue reported in the review request has been successfully resolved: ✅ ROOT CAUSE IDENTIFIED: System configuration had bloqueio_chamada_ativo=False, which disabled the call blocking mechanism entirely. ✅ IMMEDIATE FIX APPLIED: Activated blocking by setting bloqueio_chamada_ativo=True via PUT /api/system-config endpoint. ✅ VERIFICATION COMPLETED: Professor kell@ebd.com / 123456 is now correctly BLOCKED (403 Forbidden) when attempting to make calls for past dates (tested with 2024-08-17, 2024-12-15, 2025-01-05). ✅ ERROR MESSAGE: 'Professores não podem editar chamadas após às 13:00. Apenas moderadores e administradores podem fazer alterações.' ✅ ADMIN ACCESS PRESERVED: Admin users can still make calls for past dates as expected for administrative purposes. ✅ COMPREHENSIVE VALIDATION: All user types (admin, moderador, professor) tested and working correctly with proper access control. ✅ FUNCTION pode_editar_chamada(): Verified working correctly - blocks professors from past dates, allows admin/moderador unrestricted access. The critical security vulnerability where professors could bypass date restrictions has been eliminated. System is now secure and ready for production use."
 
 backend:
+  - task: "Sistema de Informações da Igreja (Church-Info)"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implementados endpoints GET /api/church-info e PUT /api/church-info para gerenciar informações da igreja incluindo presidente, pastor local, superintendente, nome da igreja e endereço. Novos campos presidente_nome, presidente_cargo, pastor_local_nome e pastor_local_cargo foram adicionados conforme solicitado."
+      - working: true
+        agent: "testing"
+        comment: "TESTED (2025-08-24): 🎉 ENDPOINTS DE CHURCH-INFO FUNCIONANDO PERFEITAMENTE! Todos os testes da solicitação de revisão foram bem-sucedidos: ✅ GET /api/church-info - Retorna informações completas da igreja com todos os campos obrigatórios: presidente_nome='Pr. José Felipe da Silva', presidente_cargo='Presidente', pastor_local_nome='Pr. Henrique Ferreira Neto', pastor_local_cargo='Pastor Local', superintendente_nome='Presb. Paulo Henrique da Silva Reis', superintendente_cargo='Superintendente(EBD)', nome_igreja='Ministério Belém', endereco='Rua Managuá, 53 - Parque das Nações'. ✅ PUT /api/church-info - Atualiza todas as informações com novos valores e persiste corretamente. Testado com valores diferentes e verificado que as mudanças são salvas no banco de dados. ✅ FOCO NOS NOVOS CAMPOS: Os campos presidente e pastor local que foram recém-adicionados estão funcionando perfeitamente tanto na leitura quanto na atualização. ✅ VALIDAÇÃO COMPLETA: 31/31 testes passaram com zero falhas. Sistema de informações da igreja está 100% funcional e pronto para produção!"
+
   - task: "Sistema de Controle de Chamadas"
     implemented: true
     working: true

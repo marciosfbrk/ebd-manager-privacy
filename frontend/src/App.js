@@ -218,6 +218,14 @@ function App() {
     }
   };
 
+  // Busca simples em tempo real
+  const getFilteredStudents = () => {
+    if (!searchFilter) return students;
+    return students.filter(student => 
+      student.nome_completo.toLowerCase().includes(searchFilter.toLowerCase())
+    );
+  };
+
   const loadRevistas = async () => {
     try {
       const response = await axios.get(`${API}/revistas`);

@@ -1001,13 +1001,16 @@ function App() {
           </h1>
           
           <div className="text-xl text-blue-200 mb-2">
-            <p>Presidente: <span className="font-semibold text-white">Pr. José Felipe da Silva</span></p>
-            <p>Pastor Local: <span className="font-semibold text-white">Pr. Henrique Ferreira Neto</span></p>
+            {churchInfo.superintendente_nome ? (
+              <p>{churchInfo.superintendente_cargo || 'Superintendente(EBD)'}: <span className="font-semibold text-white">{churchInfo.superintendente_nome}</span></p>
+            ) : (
+              <p>Superintendente(EBD): <span className="font-semibold text-white">Presb. Paulo Henrique da Silva Reis</span></p>
+            )}
           </div>
           
           <div className="text-lg text-blue-300 mt-4">
-            <p className="font-semibold">Ministério Belém</p>
-            <p className="text-base mt-1">Rua Managuá, 53 - Parque das Nações</p>
+            <p className="font-semibold">{churchInfo.nome_igreja || 'Ministério Belém'}</p>
+            <p className="text-base mt-1">{churchInfo.endereco || 'Rua Managuá, 53 - Parque das Nações'}</p>
             <p className="text-base">Sumaré, SP, Brasil</p>
             <p className="text-base mt-2">Sistema de Gerenciamento da Escola Bíblica Dominical</p>
           </div>

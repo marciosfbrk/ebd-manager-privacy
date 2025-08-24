@@ -221,11 +221,11 @@ function App() {
     }
   };
 
-  // Função para filtrar alunos
+  // Função para filtrar alunos (VERSÃO SIMPLES)
   const getFilteredStudents = () => {
     return students.filter(student => {
-      // Filtro por nome
-      const matchesSearch = student.nome_completo.toLowerCase().includes(searchFilter.toLowerCase());
+      // Filtro por nome (usa searchTerm após clicar em buscar)
+      const matchesSearch = searchTerm === '' || student.nome_completo.toLowerCase().includes(searchTerm.toLowerCase());
       
       // Filtro por turma
       const matchesTurma = turmaFilter === '' || student.turma_id === turmaFilter;
@@ -239,55 +239,15 @@ function App() {
     });
   };
 
-  // Função para gerar sugestões de busca em tempo real
-  const generateSuggestions = (searchTerm) => {
-    if (!searchTerm || searchTerm.length < 1) {
-      setSearchSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-
-    const suggestions = students
-      .filter(student => 
-        student.nome_completo.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (turmaFilter === '' || student.turma_id === turmaFilter) &&
-        (statusFilter === 'todos' || 
-         (statusFilter === 'ativo' && student.ativo) ||
-         (statusFilter === 'inativo' && !student.ativo))
-      )
-      .slice(0, 10) // Limitar a 10 sugestões
-      .map(student => ({
-        ...student,
-        turma_nome: turmas.find(t => t.id === student.turma_id)?.nome || 'N/A'
-      }));
-
-    setSearchSuggestions(suggestions);
-    setShowSuggestions(suggestions.length > 0);
+  // Função simples para executar busca
+  const handleSearch = () => {
+    setSearchTerm(searchFilter); // Aplica o filtro quando clica em buscar
   };
 
-  // Debounce para a busca (evita lag)
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      generateSuggestions(searchFilter);
-    }, 200); // 200ms de delay
-
-    return () => clearTimeout(timer);
-  }, [searchFilter, students, turmaFilter, statusFilter, turmas]);
-
-  // Fechar sugestões quando clicar fora
-  React.useEffect(() => {
-    const handleClickOutside = () => {
-      setShowSuggestions(false);
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
-
-  // Função para selecionar sugestão
-  const selectSuggestion = (student) => {
-    setSearchFilter(student.nome_completo);
-    setShowSuggestions(false);
+  // Limpar busca
+  const handleClearSearch = () => {
+    setSearchFilter('');
+    setSearchTerm('');
   };
 
   const loadRevistas = async () => {

@@ -2160,6 +2160,7 @@ function App() {
                     Nome do Aluno
                   </label>
                   <input
+                    id="search-students-input"
                     type="text"
                     placeholder="Digite o nome (ex: Maria, João, Ana)..."
                     value={searchFilter}

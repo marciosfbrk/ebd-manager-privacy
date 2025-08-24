@@ -1121,6 +1121,16 @@ class SystemConfig(BaseModel):
     horario_bloqueio: str = "13:00"  # Horário de bloqueio
     atualizado_em: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
     atualizado_por: str = ""  # ID do usuário que fez a alteração
+
+# Modelo para Informações da Igreja - NOVO
+class ChurchInfo(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    superintendente_nome: str = "Presb. Paulo Henrique da Silva Reis"
+    superintendente_cargo: str = "Superintendente(EBD)"
+    nome_igreja: str = "Ministério Belém"
+    endereco: str = "Rua Managuá, 53 - Parque das Nações"
+    atualizado_em: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    atualizado_por: str = ""
     confirm_password: str
 
 # Endpoint para alteração de senha

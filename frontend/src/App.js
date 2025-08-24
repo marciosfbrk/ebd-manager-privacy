@@ -1554,6 +1554,31 @@ function App() {
             revistas_entregues: revistas
           };
         });
+        
+        // ADICIONAR registros de visitantes e pós-chamada como entradas separadas
+        // (igual ao sistema de bíblias/revistas - sem afetar alunos já selecionados)
+        
+        // Adicionar visitantes (criar IDs únicos para registros temporários)
+        for (let i = 0; i < visitantesTotal; i++) {
+          attendanceList.push({
+            aluno_id: `visitante_${Date.now()}_${i}`, // ID único para visitante
+            status: 'visitante',
+            oferta: 0,
+            biblias_entregues: 0,
+            revistas_entregues: 0
+          });
+        }
+        
+        // Adicionar pós-chamada (criar IDs únicos para registros temporários)
+        for (let i = 0; i < posChamadaTotal; i++) {
+          attendanceList.push({
+            aluno_id: `pos_chamada_${Date.now()}_${i}`, // ID único para pós-chamada
+            status: 'pos_chamada',
+            oferta: 0,
+            biblias_entregues: 0,
+            revistas_entregues: 0
+          });
+        }
 
         await axios.post(`${API}/attendance/bulk/${selectedTurma}?data=${selectedDate}&user_tipo=${currentUser.tipo}&user_id=${currentUser.user_id || currentUser.id}`, attendanceList);
         

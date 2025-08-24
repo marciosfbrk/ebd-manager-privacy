@@ -553,10 +553,18 @@ function App() {
               <div className="text-center">
                 <h1 className="text-4xl font-bold tracking-wider">App EBD</h1>
                 <div className="mt-2 text-sm text-blue-200 space-y-1">
-                  {churchInfo.superintendente_nome ? (
-                    <p>{churchInfo.superintendente_cargo || 'Superintendente(EBD)'}: <span className="font-semibold">{churchInfo.superintendente_nome}</span></p>
+                  {churchInfo.presidente_nome ? (
+                    <div>
+                      <p>{churchInfo.presidente_cargo || 'Presidente'}: <span className="font-semibold">{churchInfo.presidente_nome}</span></p>
+                      <p>{churchInfo.pastor_local_cargo || 'Pastor Local'}: <span className="font-semibold">{churchInfo.pastor_local_nome}</span></p>
+                      <p>{churchInfo.superintendente_cargo || 'Superintendente(EBD)'}: <span className="font-semibold">{churchInfo.superintendente_nome}</span></p>
+                    </div>
                   ) : (
-                    <p>Superintendente(EBD): <span className="font-semibold">Presb. Paulo Henrique da Silva Reis</span></p>
+                    <div>
+                      <p>Presidente: <span className="font-semibold">Pr. José Felipe da Silva</span></p>
+                      <p>Pastor Local: <span className="font-semibold">Pr. Henrique Ferreira Neto</span></p>
+                      <p>Superintendente(EBD): <span className="font-semibold">Presb. Paulo Henrique da Silva Reis</span></p>
+                    </div>
                   )}
                 </div>
               </div>

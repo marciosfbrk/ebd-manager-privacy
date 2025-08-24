@@ -2124,6 +2124,22 @@ function App() {
 
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Lista de Alunos</h2>
+            
+            {/* BUSCA SIMPLES */}
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="🔍 Digite o nome do aluno para buscar..."
+                value={searchFilter}
+                onChange={(e) => setSearchFilter(e.target.value)}
+                className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              {searchFilter && (
+                <div className="mt-2 text-sm text-gray-600">
+                  {getFilteredStudents().length} de {students.length} alunos encontrados
+                </div>
+              )}
+            </div>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-200">
                 <thead>

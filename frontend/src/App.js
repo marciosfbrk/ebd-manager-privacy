@@ -2132,12 +2132,39 @@ function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {students
-                    .filter(student => 
+                  {(() => {
+                    const filteredStudents = students.filter(student => 
                       student.nome_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
                       student.contato.toLowerCase().includes(searchTerm.toLowerCase())
-                    )
-                    .map((student) => (
+                    );
+                    
+                    if (filteredStudents.length === 0) {
+                      return (
+                        <tr>
+                          <td colSpan="5" className="border border-gray-300 px-4 py-8 text-center text-gray-500">
+                            {searchTerm ? (
+                              <div>
+                                <div className="text-4xl mb-2">🔍</div>
+                                <div>Nenhum aluno encontrado para "<strong>{searchTerm}</strong>"</div>
+                                <button 
+                                  onClick={() => setSearchTerm('')}
+                                  className="mt-2 text-blue-500 hover:text-blue-700 underline"
+                                >
+                                  Limpar busca
+                                </button>
+                              </div>
+                            ) : (
+                              <div>
+                                <div className="text-4xl mb-2">👥</div>
+                                <div>Nenhum aluno cadastrado</div>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    }
+                    
+                    return filteredStudents.map((student) => (
                     <tr key={student.id} className="hover:bg-gray-50">
                       <td className="border border-gray-300 px-4 py-2">{student.nome_completo}</td>
                       <td className="border border-gray-300 px-4 py-2">{student.data_nascimento}</td>

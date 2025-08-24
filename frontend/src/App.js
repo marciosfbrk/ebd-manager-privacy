@@ -49,9 +49,34 @@ function App() {
   const [turmas, setTurmas] = useState([]);
   const [students, setStudents] = useState([]);
   
-  // Busca simples de alunos
+  // Busca simples de alunos (VERSÃO NÃO CONTROLADA)
   const [searchFilter, setSearchFilter] = useState('');
   const searchInputRef = React.useRef(null);
+
+  // Função de busca com input não controlado (evita re-render)
+  const handleSearchChange = () => {
+    if (searchInputRef.current) {
+      const value = searchInputRef.current.value;
+      setSearchFilter(value);
+    }
+  };
+
+  // Listener de input em tempo real
+  React.useEffect(() => {
+    if (searchInputRef.current) {
+      const input = searchInputRef.current;
+      
+      const handleInput = () => {
+        setSearchFilter(input.value);
+      };
+      
+      input.addEventListener('input', handleInput);
+      
+      return () => {
+        input.removeEventListener('input', handleInput);
+      };
+    }
+  }, []);
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);
   const [selectedDate, setSelectedDate] = useState(() => getLastSunday());

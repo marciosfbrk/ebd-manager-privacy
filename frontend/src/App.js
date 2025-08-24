@@ -2184,18 +2184,63 @@ function App() {
             <div className="mb-6 p-4 bg-gray-50 rounded-lg">
               <h3 className="text-lg font-medium text-gray-700 mb-3">🔍 Filtros de Busca</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Filtro por Nome */}
-                <div>
+                {/* Filtro por Nome com Autocomplete */}
+                <div className="relative">
                   <label className="block text-sm font-medium text-gray-600 mb-2">
-                    Buscar por Nome
+                    🔍 Buscar por Nome (digite para ver sugestões)
                   </label>
                   <input
                     type="text"
-                    placeholder="Digite o nome do aluno..."
+                    placeholder="Digite 'ma', 'joão', 'ana'..."
                     value={searchFilter}
-                    onChange={(e) => setSearchFilter(e.target.value)}
+                    onChange={(e) => {
+                      setSearchFilter(e.target.value);
+                    }}
+                    onFocus={() => {
+                      if (searchSuggestions.length > 0) {
+                        setShowSuggestions(true);
+                      }
+                    }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
+                  
+                  {/* Dropdown de Sugestões */}
+                  {showSuggestions && searchSuggestions.length > 0 && (
+                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                      <div className="p-2 bg-gray-50 border-b border-gray-200 text-sm text-gray-600 font-medium">
+                        {searchSuggestions.length} sugestão(ões) encontrada(s)
+                      </div>
+                      {searchSuggestions.map((student, index) => (
+                        <div
+                          key={student.id}
+                          onClick={() => selectSuggestion(student)}
+                          className="p-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                        >
+                          <div className="flex justify-between items-center">
+                            <div>
+                              <div className="font-medium text-gray-800">
+                                {student.nome_completo}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                Turma: {student.turma_nome}
+                              </div>
+                            </div>
+                            <div className="text-xs text-blue-600 font-medium">
+                              Clique para selecionar
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      <div className="p-2 bg-gray-50 border-t border-gray-200">
+                        <button
+                          onClick={() => setShowSuggestions(false)}
+                          className="text-sm text-gray-600 hover:text-gray-800"
+                        >
+                          ✕ Fechar sugestões
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Filtro por Turma */}

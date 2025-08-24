@@ -240,6 +240,47 @@ function App() {
     });
   };
 
+  // Função para gerar sugestões de busca em tempo real
+  const generateSuggestions = (searchTerm) => {
+    if (!searchTerm || searchTerm.length < 1) {
+      setSearchSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    const suggestions = students
+      .filter(student => 
+        student.nome_completo.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (turmaFilter === '' || student.turma_id === turmaFilter) &&
+        (statusFilter === 'todos' || 
+         (statusFilter === 'ativo' && student.ativo) ||
+         (statusFilter === 'inativo' && !student.ativo))
+      )
+      .slice(0, 10) // Limitar a 10 sugestões
+      .map(student => ({
+        ...student,
+        turma_nome: turmas.find(t => t.id === student.turma_id)?.nome || 'N/A'
+      }));
+
+    setSearchSuggestions(suggestions);
+    setShowSuggestions(suggestions.length > 0);
+  };
+
+  // Debounce para a busca (evita lag)
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      generateSuggestions(searchFilter);
+    }, 200); // 200ms de delay
+
+    return () => clearTimeout(timer);
+  }, [searchFilter, students, turmaFilter, statusFilter, turmas]);
+
+  // Função para selecionar sugestão
+  const selectSuggestion = (student) => {
+    setSearchFilter(student.nome_completo);
+    setShowSuggestions(false);
+  };
+
   const loadRevistas = async () => {
     try {
       const response = await axios.get(`${API}/revistas`);

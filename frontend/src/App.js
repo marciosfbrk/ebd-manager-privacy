@@ -235,12 +235,24 @@ function App() {
     setSearchFilter('');
   };
 
-  // Filtro aplicado apenas quando clica no botão
+  // Função para normalizar texto (remove acentos e deixa minúsculo)
+  const normalizeText = (text) => {
+    return text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, ''); // Remove acentos
+  };
+
+  // Filtro aplicado apenas quando clica no botão (SEM CASE SENSITIVE + SEM ACENTOS)
   const getFilteredStudents = () => {
     if (!searchFilter) return students;
-    return students.filter(student => 
-      student.nome_completo.toLowerCase().includes(searchFilter.toLowerCase())
-    );
+    
+    const normalizedSearch = normalizeText(searchFilter);
+    
+    return students.filter(student => {
+      const normalizedName = normalizeText(student.nome_completo);
+      return normalizedName.includes(normalizedSearch);
+    });
   };
 
   const loadRevistas = async () => {

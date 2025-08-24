@@ -1844,8 +1844,8 @@ function App() {
                     <div className="text-center">
                       <div className="text-xl md:text-2xl font-bold text-purple-600">
                         {turmaAtendance.length > 0 
-                          ? ((turmaAtendance.filter(att => att.presente).length / turmaAtendance.length) * 100).toFixed(1)
-                          : 0}%
+                          ? ((turmaAtendance.filter(att => att.presente).length / turmaAtendance.length) * 100).toFixed(1).replace('.', ',')
+                          : '0,0'}%
                       </div>
                       <div className="text-xs md:text-sm text-purple-700">Frequência</div>
                     </div>

@@ -49,9 +49,9 @@ function App() {
   const [turmas, setTurmas] = useState([]);
   const [students, setStudents] = useState([]);
   
-  // Busca com botão (SEM TEMPO REAL)
-  const [searchInput, setSearchInput] = useState(''); // Input temporário
-  const [searchFilter, setSearchFilter] = useState(''); // Filtro aplicado
+  // Busca SEM React interferindo
+  const [searchFilter, setSearchFilter] = useState(''); // Só para mostrar resultado
+  const searchInputRef = React.useRef(null);
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);
   const [selectedDate, setSelectedDate] = useState(() => getLastSunday());

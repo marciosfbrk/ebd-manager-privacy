@@ -219,6 +219,25 @@ function App() {
     }
   };
 
+  // Função de busca simples com botão
+  const handleSearch = () => {
+    setSearchFilter(searchInput);
+  };
+
+  // Função para limpar busca
+  const handleClearSearch = () => {
+    setSearchInput('');
+    setSearchFilter('');
+  };
+
+  // Filtro aplicado apenas quando clica no botão
+  const getFilteredStudents = () => {
+    if (!searchFilter) return students;
+    return students.filter(student => 
+      student.nome_completo.toLowerCase().includes(searchFilter.toLowerCase())
+    );
+  };
+
   const loadRevistas = async () => {
     try {
       const response = await axios.get(`${API}/revistas`);

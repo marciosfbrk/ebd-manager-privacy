@@ -468,7 +468,7 @@ function App() {
       const attendanceData = attendanceList.map(att => ({
         aluno_id: att.aluno_id,
         status: att.status,
-        oferta: parseFloat(att.oferta) || 0,
+        oferta: parseFloat((att.oferta || '0').toString().replace(',', '.')) || 0,
         biblias_entregues: parseInt(att.biblias_entregues) || 0,
         revistas_entregues: parseInt(att.revistas_entregues) || 0
       }));

@@ -516,6 +516,7 @@ function App() {
                 <div className="mt-2 text-sm text-blue-200 space-y-1">
                   <p>Presidente: <span className="font-semibold">Pr. José Felipe da Silva</span></p>
                   <p>Pastor Local: <span className="font-semibold">Pr. Henrique Ferreira Neto</span></p>
+                  <p>Superintendente(EBD): <span className="font-semibold">Paulo Henrique da Silva Reis</span></p>
                 </div>
               </div>
             </div>

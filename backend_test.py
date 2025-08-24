@@ -2705,15 +2705,478 @@ def test_access_logs_system():
     
     print(f"\n=== ACCESS LOGS SYSTEM TESTING COMPLETED ===")
 
+def test_visitors_and_post_call_functionality():
+    """Test specific visitors and post-call functionality as described in review request"""
+    print("\n=== TESTING VISITORS AND POST-CALL FUNCTIONALITY ===")
+    print("PROBLEMA REPORTADO: Após corrigir o bug das chamadas, os campos 'visitante' e 'pós-chamada' ficavam zero quando salvos.")
+    print("NOVA IMPLEMENTAÇÃO: Visitantes e pós-chamada são criados como registros ADICIONAIS separados.")
+    
+    # First ensure we have church data with the specific turmas
+    try:
+        response = requests.post(f"{BASE_URL}/init-church-data")
+        if response.status_code == 200:
+            results.success("Initialize church data for visitors/post-call test")
+        else:
+            print(f"Warning: Could not initialize church data: {response.status_code}")
+    except Exception as e:
+        print(f"Warning: Exception initializing church data: {e}")
+    
+    # Get all turmas to find Jovens and Ebenezer (Obreiros)
+    turmas_dict = {}
+    try:
+        response = requests.get(f"{BASE_URL}/turmas")
+        if response.status_code == 200:
+            turmas = response.json()
+            for turma in turmas:
+                turmas_dict[turma['nome']] = turma['id']
+            print(f"Available turmas: {list(turmas_dict.keys())}")
+        else:
+            results.failure("GET /api/turmas for visitors test", f"Status {response.status_code}: {response.text}")
+            return
+    except Exception as e:
+        results.failure("GET /api/turmas for visitors test", str(e))
+        return
+    
+    # Test date (must be Sunday)
+    test_date = "2025-01-19"  # Sunday
+    
+    # TEST 1: Test saving with visitors only (visitantesTotal = 3)
+    print("\n--- TEST 1: Salvamento com Visitantes ---")
+    if "Jovens" in turmas_dict:
+        jovens_turma_id = turmas_dict["Jovens"]
+        
+        # Get first 4 students from Jovens (Abmael, Almir, Ana, Emanuel)
+        try:
+            response = requests.get(f"{BASE_URL}/students", params={"turma_id": jovens_turma_id})
+            if response.status_code == 200:
+                jovens_students = response.json()
+                if len(jovens_students) >= 4:
+                    print(f"Found {len(jovens_students)} students in Jovens turma")
+                    first_4_students = jovens_students[:4]
+                    print(f"Testing with first 4 students: {[s['nome_completo'] for s in first_4_students]}")
+                    
+                    # Create attendance data: 4 present students + 3 visitors
+                    attendance_data = []
+                    
+                    # Add 4 manually selected students as present
+                    for student in first_4_students:
+                        attendance_data.append({
+                            "aluno_id": student['id'],
+                            "status": "presente",
+                            "oferta": 5.0,
+                            "biblias_entregues": 0,
+                            "revistas_entregues": 1
+                        })
+                    
+                    # Add 3 visitor records (separate records with status "visitante")
+                    for i in range(3):
+                        attendance_data.append({
+                            "aluno_id": f"visitor_{i+1}_{jovens_turma_id}",  # Unique visitor ID
+                            "status": "visitante",
+                            "oferta": 2.0,
+                            "biblias_entregues": 0,
+                            "revistas_entregues": 0
+                        })
+                    
+                    # Save bulk attendance
+                    response = requests.post(f"{BASE_URL}/attendance/bulk/{jovens_turma_id}", 
+                                           params={"data": test_date, "user_tipo": "admin", "user_id": "test-admin"},
+                                           json=attendance_data)
+                    
+                    if response.status_code == 200:
+                        results.success("POST /api/attendance/bulk - Save attendance with 3 visitors")
+                        
+                        # Verify saved records
+                        response = requests.get(f"{BASE_URL}/attendance", 
+                                              params={"turma_id": jovens_turma_id, "data": test_date})
+                        
+                        if response.status_code == 200:
+                            saved_records = response.json()
+                            
+                            # Count records by status
+                            presente_count = len([r for r in saved_records if r["status"] == "presente"])
+                            visitante_count = len([r for r in saved_records if r["status"] == "visitante"])
+                            
+                            if presente_count == 4:
+                                results.success("Visitors Test 1 - 4 students marked as 'presente' correctly saved")
+                            else:
+                                results.failure("Visitors Test 1 - Present count", f"Expected 4 present, got {presente_count}")
+                            
+                            if visitante_count == 3:
+                                results.success("Visitors Test 1 - 3 visitor records with status 'visitante' created")
+                            else:
+                                results.failure("Visitors Test 1 - Visitor count", f"Expected 3 visitors, got {visitante_count}")
+                            
+                            # Verify total records
+                            if len(saved_records) == 7:
+                                results.success("Visitors Test 1 - Total 7 records saved (4 present + 3 visitors)")
+                            else:
+                                results.failure("Visitors Test 1 - Total records", f"Expected 7 total records, got {len(saved_records)}")
+                            
+                            # Verify manual selections not affected
+                            manual_student_ids = [s['id'] for s in first_4_students]
+                            manual_records = [r for r in saved_records if r["aluno_id"] in manual_student_ids]
+                            
+                            if len(manual_records) == 4 and all(r["status"] == "presente" for r in manual_records):
+                                results.success("Visitors Test 1 - Manual student selections not affected")
+                            else:
+                                results.failure("Visitors Test 1 - Manual selections", "Manual student selections were affected")
+                        else:
+                            results.failure("Visitors Test 1 - Verification", f"Could not verify saved records: {response.status_code}")
+                    else:
+                        results.failure("Visitors Test 1 - Save", f"Status {response.status_code}: {response.text}")
+                else:
+                    results.failure("Visitors Test 1 - Students", f"Need at least 4 students in Jovens, found {len(jovens_students)}")
+            else:
+                results.failure("Visitors Test 1 - Get students", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("Visitors Test 1", str(e))
+    else:
+        results.failure("Visitors Test 1", "Jovens turma not found")
+    
+    # TEST 2: Test saving with post-call only (posChamadaTotal = 2)
+    print("\n--- TEST 2: Salvamento com Pós-Chamada ---")
+    if "Jovens" in turmas_dict:
+        jovens_turma_id = turmas_dict["Jovens"]
+        test_date_2 = "2025-01-26"  # Another Sunday
+        
+        try:
+            response = requests.get(f"{BASE_URL}/students", params={"turma_id": jovens_turma_id})
+            if response.status_code == 200:
+                jovens_students = response.json()
+                if len(jovens_students) >= 4:
+                    first_4_students = jovens_students[:4]
+                    
+                    # Create attendance data: 4 present students + 2 post-call
+                    attendance_data = []
+                    
+                    # Add 4 manually selected students as present
+                    for student in first_4_students:
+                        attendance_data.append({
+                            "aluno_id": student['id'],
+                            "status": "presente",
+                            "oferta": 3.0,
+                            "biblias_entregues": 0,
+                            "revistas_entregues": 1
+                        })
+                    
+                    # Add 2 post-call records (separate records with status "pos_chamada")
+                    for i in range(2):
+                        attendance_data.append({
+                            "aluno_id": f"pos_chamada_{i+1}_{jovens_turma_id}",  # Unique post-call ID
+                            "status": "pos_chamada",
+                            "oferta": 1.0,
+                            "biblias_entregues": 0,
+                            "revistas_entregues": 0
+                        })
+                    
+                    # Save bulk attendance
+                    response = requests.post(f"{BASE_URL}/attendance/bulk/{jovens_turma_id}", 
+                                           params={"data": test_date_2, "user_tipo": "admin", "user_id": "test-admin"},
+                                           json=attendance_data)
+                    
+                    if response.status_code == 200:
+                        results.success("POST /api/attendance/bulk - Save attendance with 2 post-call")
+                        
+                        # Verify saved records
+                        response = requests.get(f"{BASE_URL}/attendance", 
+                                              params={"turma_id": jovens_turma_id, "data": test_date_2})
+                        
+                        if response.status_code == 200:
+                            saved_records = response.json()
+                            
+                            # Count records by status
+                            presente_count = len([r for r in saved_records if r["status"] == "presente"])
+                            pos_chamada_count = len([r for r in saved_records if r["status"] == "pos_chamada"])
+                            
+                            if presente_count == 4:
+                                results.success("Post-Call Test 2 - 4 students marked as 'presente' correctly saved")
+                            else:
+                                results.failure("Post-Call Test 2 - Present count", f"Expected 4 present, got {presente_count}")
+                            
+                            if pos_chamada_count == 2:
+                                results.success("Post-Call Test 2 - 2 post-call records with status 'pos_chamada' created")
+                            else:
+                                results.failure("Post-Call Test 2 - Post-call count", f"Expected 2 post-call, got {pos_chamada_count}")
+                            
+                            # Verify total records
+                            if len(saved_records) == 6:
+                                results.success("Post-Call Test 2 - Total 6 records saved (4 present + 2 post-call)")
+                            else:
+                                results.failure("Post-Call Test 2 - Total records", f"Expected 6 total records, got {len(saved_records)}")
+                            
+                            # Verify manual selections not affected
+                            manual_student_ids = [s['id'] for s in first_4_students]
+                            manual_records = [r for r in saved_records if r["aluno_id"] in manual_student_ids]
+                            
+                            if len(manual_records) == 4 and all(r["status"] == "presente" for r in manual_records):
+                                results.success("Post-Call Test 2 - Manual student selections not affected")
+                            else:
+                                results.failure("Post-Call Test 2 - Manual selections", "Manual student selections were affected")
+                        else:
+                            results.failure("Post-Call Test 2 - Verification", f"Could not verify saved records: {response.status_code}")
+                    else:
+                        results.failure("Post-Call Test 2 - Save", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("Post-Call Test 2", str(e))
+    
+    # TEST 3: Test combined scenario (students + visitors + post-call)
+    print("\n--- TEST 3: Cenário Combinado (RECOMENDADO) ---")
+    if "Jovens" in turmas_dict:
+        jovens_turma_id = turmas_dict["Jovens"]
+        test_date_3 = "2025-02-02"  # Another Sunday
+        
+        try:
+            response = requests.get(f"{BASE_URL}/students", params={"turma_id": jovens_turma_id})
+            if response.status_code == 200:
+                jovens_students = response.json()
+                if len(jovens_students) >= 4:
+                    first_4_students = jovens_students[:4]
+                    
+                    # CENÁRIO RECOMENDADO: 4 presentes + 2 visitantes + 1 pós-chamada = 7 registros totais
+                    attendance_data = []
+                    
+                    # Add 4 manually selected students as present (Abmael, Almir, Ana, Emanuel)
+                    for student in first_4_students:
+                        attendance_data.append({
+                            "aluno_id": student['id'],
+                            "status": "presente",
+                            "oferta": 4.0,
+                            "biblias_entregues": 1,
+                            "revistas_entregues": 1
+                        })
+                    
+                    # Add 2 visitor records
+                    for i in range(2):
+                        attendance_data.append({
+                            "aluno_id": f"visitor_combined_{i+1}_{jovens_turma_id}",
+                            "status": "visitante",
+                            "oferta": 2.0,
+                            "biblias_entregues": 0,
+                            "revistas_entregues": 0
+                        })
+                    
+                    # Add 1 post-call record
+                    attendance_data.append({
+                        "aluno_id": f"pos_chamada_combined_1_{jovens_turma_id}",
+                        "status": "pos_chamada",
+                        "oferta": 1.0,
+                        "biblias_entregues": 0,
+                        "revistas_entregues": 0
+                    })
+                    
+                    # Save bulk attendance
+                    response = requests.post(f"{BASE_URL}/attendance/bulk/{jovens_turma_id}", 
+                                           params={"data": test_date_3, "user_tipo": "admin", "user_id": "test-admin"},
+                                           json=attendance_data)
+                    
+                    if response.status_code == 200:
+                        results.success("POST /api/attendance/bulk - Save combined attendance (students + visitors + post-call)")
+                        
+                        # Verify saved records
+                        response = requests.get(f"{BASE_URL}/attendance", 
+                                              params={"turma_id": jovens_turma_id, "data": test_date_3})
+                        
+                        if response.status_code == 200:
+                            saved_records = response.json()
+                            
+                            # Count records by status
+                            presente_count = len([r for r in saved_records if r["status"] == "presente"])
+                            visitante_count = len([r for r in saved_records if r["status"] == "visitante"])
+                            pos_chamada_count = len([r for r in saved_records if r["status"] == "pos_chamada"])
+                            
+                            if presente_count == 4:
+                                results.success("Combined Test 3 - 4 students marked as 'presente'")
+                            else:
+                                results.failure("Combined Test 3 - Present count", f"Expected 4 present, got {presente_count}")
+                            
+                            if visitante_count == 2:
+                                results.success("Combined Test 3 - 2 visitor records created")
+                            else:
+                                results.failure("Combined Test 3 - Visitor count", f"Expected 2 visitors, got {visitante_count}")
+                            
+                            if pos_chamada_count == 1:
+                                results.success("Combined Test 3 - 1 post-call record created")
+                            else:
+                                results.failure("Combined Test 3 - Post-call count", f"Expected 1 post-call, got {pos_chamada_count}")
+                            
+                            # Verify total records (4 + 2 + 1 = 7)
+                            if len(saved_records) == 7:
+                                results.success("Combined Test 3 - Total 7 records saved (4 present + 2 visitors + 1 post-call)")
+                            else:
+                                results.failure("Combined Test 3 - Total records", f"Expected 7 total records, got {len(saved_records)}")
+                            
+                            # Verify ALL records are saved correctly
+                            manual_student_ids = [s['id'] for s in first_4_students]
+                            manual_records = [r for r in saved_records if r["aluno_id"] in manual_student_ids]
+                            visitor_records = [r for r in saved_records if r["status"] == "visitante"]
+                            pos_chamada_records = [r for r in saved_records if r["status"] == "pos_chamada"]
+                            
+                            if (len(manual_records) == 4 and 
+                                len(visitor_records) == 2 and 
+                                len(pos_chamada_records) == 1 and
+                                all(r["status"] == "presente" for r in manual_records)):
+                                results.success("Combined Test 3 - ALL record types saved correctly without affecting each other")
+                            else:
+                                results.failure("Combined Test 3 - Record integrity", "Some record types were not saved correctly")
+                        else:
+                            results.failure("Combined Test 3 - Verification", f"Could not verify saved records: {response.status_code}")
+                    else:
+                        results.failure("Combined Test 3 - Save", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("Combined Test 3", str(e))
+    
+    # TEST 4: Test dashboard counters reflect all types
+    print("\n--- TEST 4: Dashboard Counters Verification ---")
+    try:
+        response = requests.get(f"{BASE_URL}/reports/dashboard", params={"data": test_date_3})
+        if response.status_code == 200:
+            reports = response.json()
+            
+            # Find Jovens turma report
+            jovens_report = None
+            for report in reports:
+                if report["turma_id"] == jovens_turma_id:
+                    jovens_report = report
+                    break
+            
+            if jovens_report:
+                print(f"Dashboard report for Jovens:")
+                print(f"  - Presentes: {jovens_report['presentes']}")
+                print(f"  - Visitantes: {jovens_report['visitantes']}")
+                print(f"  - Pós-chamada: {jovens_report['pos_chamada']}")
+                print(f"  - Total ofertas: {jovens_report['total_ofertas']}")
+                
+                # Verify counters
+                if jovens_report['presentes'] == 4:
+                    results.success("Dashboard Test 4 - Presentes counter correct (4)")
+                else:
+                    results.failure("Dashboard Test 4 - Presentes", f"Expected 4, got {jovens_report['presentes']}")
+                
+                if jovens_report['visitantes'] == 2:
+                    results.success("Dashboard Test 4 - Visitantes counter correct (2)")
+                else:
+                    results.failure("Dashboard Test 4 - Visitantes", f"Expected 2, got {jovens_report['visitantes']}")
+                
+                if jovens_report['pos_chamada'] == 1:
+                    results.success("Dashboard Test 4 - Pós-chamada counter correct (1)")
+                else:
+                    results.failure("Dashboard Test 4 - Pós-chamada", f"Expected 1, got {jovens_report['pos_chamada']}")
+                
+                # Verify total offers (4*4.0 + 2*2.0 + 1*1.0 = 16 + 4 + 1 = 21.0)
+                expected_total = 21.0
+                if jovens_report['total_ofertas'] == expected_total:
+                    results.success(f"Dashboard Test 4 - Total ofertas correct ({expected_total})")
+                else:
+                    results.failure("Dashboard Test 4 - Total ofertas", f"Expected {expected_total}, got {jovens_report['total_ofertas']}")
+            else:
+                results.failure("Dashboard Test 4", "Jovens turma report not found in dashboard")
+        else:
+            results.failure("Dashboard Test 4", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("Dashboard Test 4", str(e))
+    
+    # TEST 5: Test with Ebenezer (Obreiros) turma
+    print("\n--- TEST 5: Ebenezer (Obreiros) Turma Test ---")
+    if "Ebenezer (Obreiros)" in turmas_dict:
+        ebenezer_turma_id = turmas_dict["Ebenezer (Obreiros)"]
+        test_date_5 = "2025-02-09"  # Another Sunday
+        
+        try:
+            response = requests.get(f"{BASE_URL}/students", params={"turma_id": ebenezer_turma_id})
+            if response.status_code == 200:
+                ebenezer_students = response.json()
+                if len(ebenezer_students) >= 4:
+                    first_4_students = ebenezer_students[:4]
+                    print(f"Testing Ebenezer with first 4 students: {[s['nome_completo'] for s in first_4_students]}")
+                    
+                    # Test scenario: 4 present + 1 visitor + 2 post-call
+                    attendance_data = []
+                    
+                    # Add 4 manually selected students as present
+                    for student in first_4_students:
+                        attendance_data.append({
+                            "aluno_id": student['id'],
+                            "status": "presente",
+                            "oferta": 6.0,
+                            "biblias_entregues": 0,
+                            "revistas_entregues": 1
+                        })
+                    
+                    # Add 1 visitor
+                    attendance_data.append({
+                        "aluno_id": f"visitor_ebenezer_1_{ebenezer_turma_id}",
+                        "status": "visitante",
+                        "oferta": 3.0,
+                        "biblias_entregues": 0,
+                        "revistas_entregues": 0
+                    })
+                    
+                    # Add 2 post-call
+                    for i in range(2):
+                        attendance_data.append({
+                            "aluno_id": f"pos_chamada_ebenezer_{i+1}_{ebenezer_turma_id}",
+                            "status": "pos_chamada",
+                            "oferta": 2.0,
+                            "biblias_entregues": 0,
+                            "revistas_entregues": 0
+                        })
+                    
+                    # Save bulk attendance
+                    response = requests.post(f"{BASE_URL}/attendance/bulk/{ebenezer_turma_id}", 
+                                           params={"data": test_date_5, "user_tipo": "admin", "user_id": "test-admin"},
+                                           json=attendance_data)
+                    
+                    if response.status_code == 200:
+                        results.success("POST /api/attendance/bulk - Ebenezer attendance with visitors and post-call")
+                        
+                        # Verify saved records
+                        response = requests.get(f"{BASE_URL}/attendance", 
+                                              params={"turma_id": ebenezer_turma_id, "data": test_date_5})
+                        
+                        if response.status_code == 200:
+                            saved_records = response.json()
+                            
+                            # Count records by status
+                            presente_count = len([r for r in saved_records if r["status"] == "presente"])
+                            visitante_count = len([r for r in saved_records if r["status"] == "visitante"])
+                            pos_chamada_count = len([r for r in saved_records if r["status"] == "pos_chamada"])
+                            
+                            if (presente_count == 4 and visitante_count == 1 and pos_chamada_count == 2):
+                                results.success("Ebenezer Test 5 - All record types correct (4 present + 1 visitor + 2 post-call)")
+                            else:
+                                results.failure("Ebenezer Test 5 - Record counts", f"Expected 4+1+2, got {presente_count}+{visitante_count}+{pos_chamada_count}")
+                            
+                            # Verify first 4 students maintain their manual selections
+                            manual_student_ids = [s['id'] for s in first_4_students]
+                            manual_records = [r for r in saved_records if r["aluno_id"] in manual_student_ids]
+                            
+                            if len(manual_records) == 4 and all(r["status"] == "presente" for r in manual_records):
+                                results.success("Ebenezer Test 5 - First 4 students maintain manual selections")
+                            else:
+                                results.failure("Ebenezer Test 5 - Manual selections", "First 4 students selections were affected")
+                        else:
+                            results.failure("Ebenezer Test 5 - Verification", f"Could not verify saved records: {response.status_code}")
+                    else:
+                        results.failure("Ebenezer Test 5 - Save", f"Status {response.status_code}: {response.text}")
+                else:
+                    results.failure("Ebenezer Test 5 - Students", f"Need at least 4 students in Ebenezer, found {len(ebenezer_students)}")
+            else:
+                results.failure("Ebenezer Test 5 - Get students", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("Ebenezer Test 5", str(e))
+    else:
+        results.failure("Ebenezer Test 5", "Ebenezer (Obreiros) turma not found")
+
 def main():
     """Run all tests in sequence"""
     print("=== EBD MANAGER BACKEND TEST SUITE ===\n")
-    print("🎯 PRIORITY TEST: JOVENS AND EBENEZER ATTENDANCE BUG FIX")
-    print("Focus: Testing specific bug where first 4 students lose attendance when saving with visitantes/pós-chamada > 0\n")
+    print("🎯 PRIORITY TEST: VISITORS AND POST-CALL FUNCTIONALITY")
+    print("Focus: Testing specific functionality for visitantes and pós-chamada as separate additional records\n")
     
-    # PRIORITY TEST: Test specific bug fix for Jovens and Ebenezer attendance
-    print("🔥 PRIORITY: Testing Jovens and Ebenezer Attendance Bug Fix...")
-    test_jovens_ebenezer_attendance_bug()
+    # PRIORITY TEST: Test specific visitors and post-call functionality
+    print("🔥 PRIORITY: Testing Visitors and Post-Call Functionality...")
+    test_visitors_and_post_call_functionality()
     
     # Initialize sample data for other tests
     print("\n0. Initializing sample data for additional tests...")

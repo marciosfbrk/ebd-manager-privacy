@@ -1963,6 +1963,10 @@ async def get_church_info():
             # Criar informação padrão se não existir
             church_info = {
                 "id": str(uuid.uuid4()),
+                "presidente_nome": "Pr. José Felipe da Silva",
+                "presidente_cargo": "Presidente",
+                "pastor_local_nome": "Pr. Henrique Ferreira Neto",
+                "pastor_local_cargo": "Pastor Local",
                 "superintendente_nome": "Presb. Paulo Henrique da Silva Reis",
                 "superintendente_cargo": "Superintendente(EBD)",
                 "nome_igreja": "Ministério Belém",

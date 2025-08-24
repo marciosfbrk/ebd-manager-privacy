@@ -220,6 +220,24 @@ function App() {
     }
   };
 
+  // Função para filtrar alunos
+  const getFilteredStudents = () => {
+    return students.filter(student => {
+      // Filtro por nome
+      const matchesSearch = student.nome_completo.toLowerCase().includes(searchFilter.toLowerCase());
+      
+      // Filtro por turma
+      const matchesTurma = turmaFilter === '' || student.turma_id === turmaFilter;
+      
+      // Filtro por status (ativo/inativo)
+      const matchesStatus = statusFilter === 'todos' || 
+                           (statusFilter === 'ativo' && student.ativo) ||
+                           (statusFilter === 'inativo' && !student.ativo);
+      
+      return matchesSearch && matchesTurma && matchesStatus;
+    });
+  };
+
   const loadRevistas = async () => {
     try {
       const response = await axios.get(`${API}/revistas`);

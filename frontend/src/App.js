@@ -1527,6 +1527,9 @@ function App() {
           let biblias = 0;
           let revistas = 0;
           
+          // Encontrar índice do primeiro presente
+          const firstPresentIndex = turmaAtendance.findIndex(a => a.presente);
+          
           // NÃO dividir ofertas automaticamente - valor total vai apenas para o primeiro presente
           if (att.presente && index === firstPresentIndex) {
             oferta = ofertaTotal; // Valor total apenas no primeiro presente

@@ -304,7 +304,20 @@ function App() {
   const updateChurchInfo = async (data) => {
     try {
       setChurchInfoLoading(true);
-      await axios.put(`${API}/church-info?superintendente_nome=${encodeURIComponent(data.superintendente_nome)}&superintendente_cargo=${encodeURIComponent(data.superintendente_cargo)}&nome_igreja=${encodeURIComponent(data.nome_igreja)}&endereco=${encodeURIComponent(data.endereco)}&user_id=${currentUser?.user_id || currentUser?.id}`);
+      
+      const params = new URLSearchParams({
+        presidente_nome: data.presidente_nome || 'Pr. José Felipe da Silva',
+        presidente_cargo: data.presidente_cargo || 'Presidente',
+        pastor_local_nome: data.pastor_local_nome || 'Pr. Henrique Ferreira Neto',
+        pastor_local_cargo: data.pastor_local_cargo || 'Pastor Local',
+        superintendente_nome: data.superintendente_nome || 'Presb. Paulo Henrique da Silva Reis',
+        superintendente_cargo: data.superintendente_cargo || 'Superintendente(EBD)',
+        nome_igreja: data.nome_igreja || 'Ministério Belém',
+        endereco: data.endereco || 'Rua Managuá, 53 - Parque das Nações',
+        user_id: currentUser?.user_id || currentUser?.id
+      });
+      
+      await axios.put(`${API}/church-info?${params.toString()}`);
       await loadChurchInfo(); // Recarregar informações
       alert('Informações da igreja atualizadas com sucesso!');
     } catch (error) {

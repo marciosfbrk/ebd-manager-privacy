@@ -13,7 +13,7 @@ from datetime import datetime
 import sys
 
 # Configurações
-API_BASE = "https://church-class-admin.preview.emergentagent.com/api"
+API_BASE = "https://ebd-dashboard-1.preview.emergentagent.com/api"
 
 class ImportadorChamadasMultiplas:
     def __init__(self):

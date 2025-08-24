@@ -4,7 +4,7 @@
 
 ### ✅ **URL CORRIGIDA:**
 - ✅ **https://ebdad.com.br** (sistema correto)
-- ❌ ~~https://church-class-admin.preview.emergentagent.com~~ (removido)
+- ❌ ~~https://ebd-dashboard-1.preview.emergentagent.com~~ (removido)
 
 ### ✅ **ERROS CORRIGIDOS:**
 - ✅ **Lint configurado** (sem erros de backup_rules)

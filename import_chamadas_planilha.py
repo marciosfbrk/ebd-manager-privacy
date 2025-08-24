@@ -15,7 +15,7 @@ import sys
 import os
 
 # Configurações
-API_BASE = "https://church-class-admin.preview.emergentagent.com/api"
+API_BASE = "https://ebd-dashboard-1.preview.emergentagent.com/api"
 
 class ImportadorChamadas:
     def __init__(self):

@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     
     // URL do sistema EBD Manager
-    private static final String BASE_URL = "https://church-class-admin.preview.emergentagent.com";
+    private static final String BASE_URL = "https://ebd-dashboard-1.preview.emergentagent.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

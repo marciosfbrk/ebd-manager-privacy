@@ -6,7 +6,7 @@ Script para registrar dados da turma Dorcas (irmãs)
 import json
 import requests
 
-BASE_URL = "https://church-class-admin.preview.emergentagent.com/api"
+BASE_URL = "https://ebd-dashboard-1.preview.emergentagent.com/api"
 TURMA_ID = "d6b9855e-bfc5-4539-be92-414f6a3e6df2"  # Dorcas (irmãs)
 
 # Dados fornecidos pelo usuário

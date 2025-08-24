@@ -808,7 +808,7 @@ function App() {
                 <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
                   <span className="text-gray-700 font-medium">Ofertas Hoje:</span>
                   <span className="text-xl font-bold text-yellow-600">
-                    R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2)}
+                    R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2).replace('.', ',')}
                   </span>
                 </div>
               </div>

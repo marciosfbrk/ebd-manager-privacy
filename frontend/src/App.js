@@ -1491,8 +1491,8 @@ function App() {
     const updateTurmaData = (field, value) => {
       // Se for campo de oferta, validar e manter como string exata
       if (field === 'ofertas_total') {
-        // Permitir apenas números, ponto decimal e até 2 casas decimais
-        const regex = /^\d*\.?\d{0,2}$/;
+        // Permitir vírgula ou ponto, e até 2 casas decimais
+        const regex = /^\d*[,.]?\d{0,2}$/;
         if (value === '' || regex.test(value)) {
           setTurmaDataGlobal(prev => ({
             ...prev,

@@ -275,6 +275,16 @@ function App() {
     return () => clearTimeout(timer);
   }, [searchFilter, students, turmaFilter, statusFilter, turmas]);
 
+  // Fechar sugestões quando clicar fora
+  React.useEffect(() => {
+    const handleClickOutside = () => {
+      setShowSuggestions(false);
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   // Função para selecionar sugestão
   const selectSuggestion = (student) => {
     setSearchFilter(student.nome_completo);

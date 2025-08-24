@@ -590,7 +590,7 @@ function App() {
               
               <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-yellow-600">
-                  R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2)}
+                  R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2).replace('.', ',')}
                 </div>
                 <div className="text-sm text-yellow-500 font-medium">Ofertas</div>
               </div>

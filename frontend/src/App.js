@@ -48,20 +48,6 @@ function App() {
   const [showApp, setShowApp] = useState(false);
   const [turmas, setTurmas] = useState([]);
   const [students, setStudents] = useState([]);
-  
-  // Busca simples de alunos (VERSÃO HÍBRIDA - FUNCIONA!)
-  const [searchFilter, setSearchFilter] = useState('');
-
-  // Função de busca que não perde cursor
-  const handleSearchChange = (e) => {
-    e.preventDefault();
-    const value = e.target.value;
-    
-    // Usar requestAnimationFrame para não perder cursor
-    requestAnimationFrame(() => {
-      setSearchFilter(value);
-    });
-  };
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);
   const [selectedDate, setSelectedDate] = useState(() => getLastSunday());
@@ -227,14 +213,6 @@ function App() {
     } catch (error) {
       console.error('Erro ao carregar alunos:', error);
     }
-  };
-
-  // Busca simples em tempo real
-  const getFilteredStudents = () => {
-    if (!searchFilter) return students;
-    return students.filter(student => 
-      student.nome_completo.toLowerCase().includes(searchFilter.toLowerCase())
-    );
   };
 
   const loadRevistas = async () => {
@@ -2135,24 +2113,6 @@ function App() {
 
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Lista de Alunos</h2>
-            
-            {/* BUSCA SIMPLES - VERSÃO HÍBRIDA */}
-            <div className="mb-4">
-              <input
-                type="text"
-                placeholder="🔍 Digite o nome do aluno para buscar..."
-                value={searchFilter}
-                onChange={handleSearchChange}
-                autoComplete="off"
-                spellCheck="false"
-                className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-              {searchFilter && (
-                <div className="mt-2 text-sm text-gray-600">
-                  {getFilteredStudents().length} de {students.length} alunos encontrados
-                </div>
-              )}
-            </div>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-200">
                 <thead>
@@ -2165,7 +2125,7 @@ function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {getFilteredStudents().map((student) => (
+                  {students.map((student) => (
                     <tr key={student.id} className="hover:bg-gray-50">
                       <td className="border border-gray-300 px-4 py-2">{student.nome_completo}</td>
                       <td className="border border-gray-300 px-4 py-2">{student.data_nascimento}</td>

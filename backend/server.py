@@ -1987,7 +1987,11 @@ async def get_church_info():
 
 @api_router.put("/church-info")
 async def update_church_info(
-    superintendente_nome: str, 
+    presidente_nome: str = "Pr. José Felipe da Silva",
+    presidente_cargo: str = "Presidente", 
+    pastor_local_nome: str = "Pr. Henrique Ferreira Neto",
+    pastor_local_cargo: str = "Pastor Local",
+    superintendente_nome: str = "Presb. Paulo Henrique da Silva Reis", 
     superintendente_cargo: str = "Superintendente(EBD)",
     nome_igreja: str = "Ministério Belém",
     endereco: str = "Rua Managuá, 53 - Parque das Nações",
@@ -2004,6 +2008,10 @@ async def update_church_info(
                 {"id": church_info["id"]},
                 {
                     "$set": {
+                        "presidente_nome": presidente_nome,
+                        "presidente_cargo": presidente_cargo,
+                        "pastor_local_nome": pastor_local_nome,
+                        "pastor_local_cargo": pastor_local_cargo,
                         "superintendente_nome": superintendente_nome,
                         "superintendente_cargo": superintendente_cargo,
                         "nome_igreja": nome_igreja,
@@ -2017,6 +2025,10 @@ async def update_church_info(
             # Criar nova informação
             new_church_info = {
                 "id": str(uuid.uuid4()),
+                "presidente_nome": presidente_nome,
+                "presidente_cargo": presidente_cargo,
+                "pastor_local_nome": pastor_local_nome,
+                "pastor_local_cargo": pastor_local_cargo,
                 "superintendente_nome": superintendente_nome,
                 "superintendente_cargo": superintendente_cargo,
                 "nome_igreja": nome_igreja,

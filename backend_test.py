@@ -411,7 +411,7 @@ def test_bulk_attendance(turma_id):
         
         # Test POST /api/attendance/bulk/{turma_id}
         response = requests.post(f"{BASE_URL}/attendance/bulk/{turma_id}", 
-                               params={"data": SUNDAY_DATE.isoformat()},
+                               params={"data": SUNDAY_DATE.isoformat(), "user_tipo": "admin", "user_id": "test-admin"},
                                json=bulk_data)
         if response.status_code == 200:
             result = response.json()
@@ -424,7 +424,7 @@ def test_bulk_attendance(turma_id):
         
         # Test Sunday validation for bulk
         response = requests.post(f"{BASE_URL}/attendance/bulk/{turma_id}", 
-                               params={"data": NON_SUNDAY_DATE.isoformat()},
+                               params={"data": NON_SUNDAY_DATE.isoformat(), "user_tipo": "admin", "user_id": "test-admin"},
                                json=bulk_data)
         if response.status_code == 400:
             results.success("POST /api/attendance/bulk/{turma_id} - Validation: reject non-Sunday")

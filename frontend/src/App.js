@@ -2136,6 +2136,46 @@ function App() {
 
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Lista de Alunos</h2>
+            
+            {/* BUSCA SIMPLES COM BOTÃO */}
+            <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  placeholder="Digite o nome do aluno..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearch();
+                    }
+                  }}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <button
+                  onClick={handleSearch}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  🔍 Buscar
+                </button>
+                <button
+                  onClick={handleClearSearch}
+                  className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                >
+                  🧹 Limpar
+                </button>
+              </div>
+              
+              {/* Resultado da busca */}
+              <div className="mt-2 text-sm text-gray-600">
+                {searchFilter && (
+                  <div className="mb-2 p-2 bg-blue-50 rounded border border-blue-200">
+                    🔍 Buscando por: <strong>"{searchFilter}"</strong>
+                  </div>
+                )}
+                <strong>{getFilteredStudents().length}</strong> de <strong>{students.length}</strong> alunos {searchFilter ? 'encontrados' : 'no total'}
+              </div>
+            </div>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-200">
                 <thead>

@@ -2193,7 +2193,7 @@ function App() {
                         </button>
                       </td>
                     </tr>
-                  ))}
+                  ))})()}
                 </tbody>
               </table>
             </div>

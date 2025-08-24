@@ -48,12 +48,6 @@ function App() {
   const [showApp, setShowApp] = useState(false);
   const [turmas, setTurmas] = useState([]);
   const [students, setStudents] = useState([]);
-  
-  // Estados para filtros de alunos
-  const [searchFilter, setSearchFilter] = useState('');
-  const [searchTerm, setSearchTerm] = useState(''); // Termo atual de busca
-  const [turmaFilter, setTurmaFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('todos');
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);
   const [selectedDate, setSelectedDate] = useState(() => getLastSunday());
@@ -219,35 +213,6 @@ function App() {
     } catch (error) {
       console.error('Erro ao carregar alunos:', error);
     }
-  };
-
-  // Função para filtrar alunos (VERSÃO SIMPLES)
-  const getFilteredStudents = () => {
-    return students.filter(student => {
-      // Filtro por nome (usa searchTerm após clicar em buscar)
-      const matchesSearch = searchTerm === '' || student.nome_completo.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      // Filtro por turma
-      const matchesTurma = turmaFilter === '' || student.turma_id === turmaFilter;
-      
-      // Filtro por status (ativo/inativo)
-      const matchesStatus = statusFilter === 'todos' || 
-                           (statusFilter === 'ativo' && student.ativo) ||
-                           (statusFilter === 'inativo' && !student.ativo);
-      
-      return matchesSearch && matchesTurma && matchesStatus;
-    });
-  };
-
-  // Função simples para executar busca
-  const handleSearch = () => {
-    setSearchTerm(searchFilter); // Aplica o filtro quando clica em buscar
-  };
-
-  // Limpar busca
-  const handleClearSearch = () => {
-    setSearchFilter('');
-    setSearchTerm('');
   };
 
   const loadRevistas = async () => {
@@ -2148,104 +2113,6 @@ function App() {
 
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Lista de Alunos</h2>
-            
-            {/* FILTROS DE BUSCA SIMPLES */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <h3 className="text-lg font-medium text-gray-700 mb-3">🔍 Buscar Alunos</h3>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                
-                {/* Campo de Busca por Nome */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-600 mb-2">
-                    Nome do Aluno
-                  </label>
-                  <input
-                    id="search-students-input"
-                    type="text"
-                    placeholder="Digite o nome (ex: Maria, João, Ana)..."
-                    value={searchFilter}
-                    onChange={(e) => setSearchFilter(e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        handleSearch();
-                      }
-                    }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                
-                {/* Botão Buscar */}
-                <div>
-                  <button
-                    onClick={handleSearch}
-                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    🔍 Buscar
-                  </button>
-                </div>
-                
-                {/* Botão Limpar */}
-                <div>
-                  <button
-                    onClick={() => {
-                      handleClearSearch();
-                      setTurmaFilter('');
-                      setStatusFilter('todos');
-                    }}
-                    className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                  >
-                    🧹 Limpar
-                  </button>
-                </div>
-              </div>
-              
-              {/* Segunda linha com filtros adicionais */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                
-                {/* Filtro por Turma */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 mb-2">
-                    Filtrar por Turma
-                  </label>
-                  <select
-                    value={turmaFilter}
-                    onChange={(e) => setTurmaFilter(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">Todas as turmas</option>
-                    {turmas.map(turma => (
-                      <option key={turma.id} value={turma.id}>{turma.nome}</option>
-                    ))}
-                  </select>
-                </div>
-                
-                {/* Filtro por Status */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 mb-2">
-                    Status do Aluno
-                  </label>
-                  <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="todos">Todos</option>
-                    <option value="ativo">Apenas Ativos</option>
-                    <option value="inativo">Apenas Inativos</option>
-                  </select>
-                </div>
-              </div>
-              
-              {/* Contador de resultados */}
-              <div className="mt-4 text-sm text-gray-600">
-                {searchTerm && (
-                  <div className="mb-2 p-2 bg-blue-50 rounded border border-blue-200">
-                    🔍 Buscando por: <strong>"{searchTerm}"</strong>
-                  </div>
-                )}
-                <strong>{getFilteredStudents().length}</strong> de <strong>{students.length}</strong> alunos encontrados
-              </div>
-            </div>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-200">
                 <thead>
@@ -2258,7 +2125,7 @@ function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {getFilteredStudents().map((student) => (
+                  {students.map((student) => (
                     <tr key={student.id} className="hover:bg-gray-50">
                       <td className="border border-gray-300 px-4 py-2">{student.nome_completo}</td>
                       <td className="border border-gray-300 px-4 py-2">{student.data_nascimento}</td>

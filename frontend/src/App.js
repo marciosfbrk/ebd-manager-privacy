@@ -3157,38 +3157,111 @@ function App() {
                   />
                 </div>
 
-                {/* Nome do Superintendente */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nome do Superintendente
-                  </label>
-                  <input
-                    type="text"
-                    value={localChurchInfo.superintendente_nome}
-                    onChange={(e) => setLocalChurchInfo({
-                      ...localChurchInfo,
-                      superintendente_nome: e.target.value
-                    })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex: Presb. Paulo Henrique da Silva Reis"
-                  />
-                </div>
+                {/* Seção Liderança */}
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">👥 Liderança da Igreja</h3>
+                  
+                  {/* Presidente */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Nome do Presidente
+                      </label>
+                      <input
+                        type="text"
+                        value={localChurchInfo.presidente_nome}
+                        onChange={(e) => setLocalChurchInfo({
+                          ...localChurchInfo,
+                          presidente_nome: e.target.value
+                        })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Pr. José Felipe da Silva"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Cargo do Presidente
+                      </label>
+                      <input
+                        type="text"
+                        value={localChurchInfo.presidente_cargo}
+                        onChange={(e) => setLocalChurchInfo({
+                          ...localChurchInfo,
+                          presidente_cargo: e.target.value
+                        })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Presidente"
+                      />
+                    </div>
+                  </div>
 
-                {/* Cargo do Superintendente */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Cargo do Superintendente
-                  </label>
-                  <input
-                    type="text"
-                    value={localChurchInfo.superintendente_cargo}
-                    onChange={(e) => setLocalChurchInfo({
-                      ...localChurchInfo,
-                      superintendente_cargo: e.target.value
-                    })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex: Superintendente(EBD)"
-                  />
+                  {/* Pastor Local */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Nome do Pastor Local
+                      </label>
+                      <input
+                        type="text"
+                        value={localChurchInfo.pastor_local_nome}
+                        onChange={(e) => setLocalChurchInfo({
+                          ...localChurchInfo,
+                          pastor_local_nome: e.target.value
+                        })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Pr. Henrique Ferreira Neto"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Cargo do Pastor Local
+                      </label>
+                      <input
+                        type="text"
+                        value={localChurchInfo.pastor_local_cargo}
+                        onChange={(e) => setLocalChurchInfo({
+                          ...localChurchInfo,
+                          pastor_local_cargo: e.target.value
+                        })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Pastor Local"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Superintendente */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Nome do Superintendente
+                      </label>
+                      <input
+                        type="text"
+                        value={localChurchInfo.superintendente_nome}
+                        onChange={(e) => setLocalChurchInfo({
+                          ...localChurchInfo,
+                          superintendente_nome: e.target.value
+                        })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Presb. Paulo Henrique da Silva Reis"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Cargo do Superintendente
+                      </label>
+                      <input
+                        type="text"
+                        value={localChurchInfo.superintendente_cargo}
+                        onChange={(e) => setLocalChurchInfo({
+                          ...localChurchInfo,
+                          superintendente_cargo: e.target.value
+                        })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Superintendente(EBD)"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Informações Importantes */}
@@ -3197,7 +3270,7 @@ function App() {
                   <div className="space-y-2 text-sm text-blue-700">
                     <p><strong>• Nome da Igreja:</strong> Aparece na tela inicial e cabeçalho do sistema</p>
                     <p><strong>• Endereço:</strong> Exibido na tela inicial do sistema</p>
-                    <p><strong>• Superintendente:</strong> Nome e cargo aparecem no cabeçalho do dashboard</p>
+                    <p><strong>• Liderança:</strong> Presidente, Pastor Local e Superintendente aparecem na tela inicial e cabeçalho</p>
                     <p><strong>• Alterações:</strong> São aplicadas imediatamente em todo o sistema</p>
                   </div>
                 </div>

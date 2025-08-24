@@ -2377,21 +2377,17 @@ def test_access_logs_system():
 def main():
     """Run all tests in sequence"""
     print("=== EBD MANAGER BACKEND TEST SUITE ===\n")
-    print("TESTING NEW CALL CONTROL SYSTEM (SISTEMA DE CONTROLE DE CHAMADAS)")
-    print("Focus: system-config endpoints and pode_editar_chamada function\n")
+    print("TESTING CHURCH-INFO ENDPOINTS (REVIEW REQUEST)")
+    print("Focus: GET /api/church-info and PUT /api/church-info with presidente and pastor local fields\n")
     
     # Initialize sample data first
     print("0. Initializing sample data...")
     if not test_init_sample_data():
         print("❌ Failed to initialize sample data. Some tests may fail.")
     
-    # Test 1: LOGIN WITH SPECIFIC CREDENTIALS
-    print("\n1. Testing login with specific credentials...")
-    test_login_with_credentials()
-    
-    # Test 2: CALL CONTROL SYSTEM (MAIN FOCUS)
-    print("\n2. Testing Call Control System (MAIN FOCUS - REVIEW REQUEST)...")
-    test_call_control_system()
+    # Test 1: CHURCH-INFO ENDPOINTS (MAIN FOCUS - REVIEW REQUEST)
+    print("\n1. Testing Church-Info Endpoints (MAIN FOCUS - REVIEW REQUEST)...")
+    test_church_info_endpoints()
     
     # Show final results
     results.summary()

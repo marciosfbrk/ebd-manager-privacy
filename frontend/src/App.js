@@ -2136,6 +2136,76 @@ function App() {
 
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Lista de Alunos</h2>
+            
+            {/* FILTROS DE BUSCA */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-lg font-medium text-gray-700 mb-3">🔍 Filtros de Busca</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Filtro por Nome */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                    Buscar por Nome
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Digite o nome do aluno..."
+                    value={searchFilter}
+                    onChange={(e) => setSearchFilter(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+                
+                {/* Filtro por Turma */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                    Filtrar por Turma
+                  </label>
+                  <select
+                    value={turmaFilter}
+                    onChange={(e) => setTurmaFilter(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">Todas as turmas</option>
+                    {turmas.map(turma => (
+                      <option key={turma.id} value={turma.id}>{turma.nome}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                {/* Filtro por Status */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                    Status do Aluno
+                  </label>
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="todos">Todos</option>
+                    <option value="ativo">Apenas Ativos</option>
+                    <option value="inativo">Apenas Inativos</option>
+                  </select>
+                </div>
+              </div>
+              
+              {/* Botão para limpar filtros */}
+              <div className="mt-4 flex justify-between items-center">
+                <div className="text-sm text-gray-600">
+                  {getFilteredStudents().length} de {students.length} alunos encontrados
+                </div>
+                <button
+                  onClick={() => {
+                    setSearchFilter('');
+                    setTurmaFilter('');
+                    setStatusFilter('todos');
+                  }}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                >
+                  Limpar Filtros
+                </button>
+              </div>
+            </div>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-200">
                 <thead>

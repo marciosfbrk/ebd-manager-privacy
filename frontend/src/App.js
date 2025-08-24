@@ -47,7 +47,9 @@ function App() {
   const [currentView, setCurrentView] = useState('home');
   const [showApp, setShowApp] = useState(false);
   const [turmas, setTurmas] = useState([]);
-  // Estados para filtros de alunos
+  const [students, setStudents] = useState([]);
+  
+  // Busca simples de alunos
   const [searchFilter, setSearchFilter] = useState('');
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);

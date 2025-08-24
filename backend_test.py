@@ -2708,17 +2708,31 @@ def test_access_logs_system():
 def main():
     """Run all tests in sequence"""
     print("=== EBD MANAGER BACKEND TEST SUITE ===\n")
-    print("TESTING CHURCH-INFO ENDPOINTS (REVIEW REQUEST)")
-    print("Focus: GET /api/church-info and PUT /api/church-info with presidente and pastor local fields\n")
+    print("🎯 PRIORITY TEST: JOVENS AND EBENEZER ATTENDANCE BUG FIX")
+    print("Focus: Testing specific bug where first 4 students lose attendance when saving with visitantes/pós-chamada > 0\n")
     
-    # Initialize sample data first
-    print("0. Initializing sample data...")
+    # PRIORITY TEST: Test specific bug fix for Jovens and Ebenezer attendance
+    print("🔥 PRIORITY: Testing Jovens and Ebenezer Attendance Bug Fix...")
+    test_jovens_ebenezer_attendance_bug()
+    
+    # Initialize sample data for other tests
+    print("\n0. Initializing sample data for additional tests...")
     if not test_init_sample_data():
         print("❌ Failed to initialize sample data. Some tests may fail.")
     
-    # Test 1: CHURCH-INFO ENDPOINTS (MAIN FOCUS - REVIEW REQUEST)
-    print("\n1. Testing Church-Info Endpoints (MAIN FOCUS - REVIEW REQUEST)...")
-    test_church_info_endpoints()
+    # Test basic CRUD operations
+    print("\n1. Testing CRUD Operations...")
+    turma_id = test_turmas_crud()
+    student_id = test_students_crud(turma_id)
+    
+    # Test attendance system
+    print("\n2. Testing Attendance System...")
+    test_attendance_system(turma_id, student_id)
+    test_bulk_attendance(turma_id)
+    
+    # Test reports
+    print("\n3. Testing Reports Dashboard...")
+    test_reports_dashboard()
     
     # Show final results
     results.summary()

@@ -1206,7 +1206,7 @@ function App() {
                         {(() => {
                           const totalMatriculados = attendanceData.reduce((sum, row) => sum + row.matriculados, 0);
                           const totalPresentes = attendanceData.reduce((sum, row) => sum + row.presentes, 0);
-                          return totalMatriculados > 0 ? ((totalPresentes / totalMatriculados) * 100).toFixed(1) : '0.0';
+                          return totalMatriculados > 0 ? ((totalPresentes / totalMatriculados) * 100).toFixed(1).replace('.', ',') : '0,0';
                         })()}%
                       </td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">

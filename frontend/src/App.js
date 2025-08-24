@@ -252,30 +252,6 @@ function App() {
     );
   };
 
-  // Função para garantir que o input não perde foco
-  const handleSearchInput = (e) => {
-    const value = e.target.value;
-    setSearchFilter(value);
-    
-    // Garantir que o foco não se perde
-    setTimeout(() => {
-      if (searchInputRef.current && document.activeElement !== searchInputRef.current) {
-        searchInputRef.current.focus();
-      }
-    }, 0);
-  };
-
-  // Proteção adicional contra perda de foco
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      if (searchInputRef.current && searchFilter && document.activeElement !== searchInputRef.current) {
-        searchInputRef.current.focus();
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [searchFilter]);
-
   const loadRevistas = async () => {
     try {
       const response = await axios.get(`${API}/revistas`);

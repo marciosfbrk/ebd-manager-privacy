@@ -3038,6 +3038,158 @@ function App() {
     );
   };
 
+  // Componente Configuração da Igreja - NOVO
+  const ConfigIgreja = () => {
+    const [localChurchInfo, setLocalChurchInfo] = useState({
+      superintendente_nome: '',
+      superintendente_cargo: '',
+      nome_igreja: '',
+      endereco: ''
+    });
+
+    useEffect(() => {
+      if (churchInfo) {
+        setLocalChurchInfo({
+          superintendente_nome: churchInfo.superintendente_nome || '',
+          superintendente_cargo: churchInfo.superintendente_cargo || '',
+          nome_igreja: churchInfo.nome_igreja || '',
+          endereco: churchInfo.endereco || ''
+        });
+      }
+    }, [churchInfo]);
+
+    const handleSave = async (e) => {
+      e.preventDefault();
+      await updateChurchInfo(localChurchInfo);
+    };
+
+    return (
+      <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
+        <div className="max-w-4xl mx-auto">
+          <button
+            onClick={() => setCurrentView('dashboard')}
+            className="mb-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            ← Voltar ao Dashboard
+          </button>
+
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">🏛️ Gerenciar Igreja</h1>
+              <p className="text-gray-600">Configure as informações da igreja que aparecem no sistema</p>
+            </div>
+
+            {churchInfoLoading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+                <p className="mt-2 text-gray-600">Carregando informações...</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSave} className="space-y-6">
+                {/* Nome da Igreja */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nome da Igreja
+                  </label>
+                  <input
+                    type="text"
+                    value={localChurchInfo.nome_igreja}
+                    onChange={(e) => setLocalChurchInfo({
+                      ...localChurchInfo,
+                      nome_igreja: e.target.value
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ex: Ministério Belém"
+                  />
+                </div>
+
+                {/* Endereço */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Endereço
+                  </label>
+                  <input
+                    type="text"
+                    value={localChurchInfo.endereco}
+                    onChange={(e) => setLocalChurchInfo({
+                      ...localChurchInfo,
+                      endereco: e.target.value
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ex: Rua Managuá, 53 - Parque das Nações"
+                  />
+                </div>
+
+                {/* Nome do Superintendente */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nome do Superintendente
+                  </label>
+                  <input
+                    type="text"
+                    value={localChurchInfo.superintendente_nome}
+                    onChange={(e) => setLocalChurchInfo({
+                      ...localChurchInfo,
+                      superintendente_nome: e.target.value
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ex: Presb. Paulo Henrique da Silva Reis"
+                  />
+                </div>
+
+                {/* Cargo do Superintendente */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cargo do Superintendente
+                  </label>
+                  <input
+                    type="text"
+                    value={localChurchInfo.superintendente_cargo}
+                    onChange={(e) => setLocalChurchInfo({
+                      ...localChurchInfo,
+                      superintendente_cargo: e.target.value
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ex: Superintendente(EBD)"
+                  />
+                </div>
+
+                {/* Informações Importantes */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-blue-800 mb-3">ℹ️ Informações</h3>
+                  <div className="space-y-2 text-sm text-blue-700">
+                    <p><strong>• Nome da Igreja:</strong> Aparece na tela inicial e cabeçalho do sistema</p>
+                    <p><strong>• Endereço:</strong> Exibido na tela inicial do sistema</p>
+                    <p><strong>• Superintendente:</strong> Nome e cargo aparecem no cabeçalho do dashboard</p>
+                    <p><strong>• Alterações:</strong> São aplicadas imediatamente em todo o sistema</p>
+                  </div>
+                </div>
+
+                {/* Botões de Ação */}
+                <div className="flex justify-end space-x-3 pt-4 border-t">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentView('dashboard')}
+                    className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={churchInfoLoading}
+                    className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
+                  >
+                    {churchInfoLoading ? 'Salvando...' : 'Salvar Informações'}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Componente Rankings
   const Rankings = () => {
     const [isLoadingRankings, setIsLoadingRankings] = useState(false);

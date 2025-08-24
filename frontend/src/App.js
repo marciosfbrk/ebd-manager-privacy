@@ -609,7 +609,7 @@ function App() {
                           .filter(row => row.matriculados > 0)
                           .sort((a, b) => (b.presentes / b.matriculados) - (a.presentes / a.matriculados))[0];
                         return melhorFrequencia ? 
-                          `${melhorFrequencia.turma_nome} (${((melhorFrequencia.presentes / melhorFrequencia.matriculados) * 100).toFixed(1)}%)` : 
+                          `${melhorFrequencia.turma_nome} (${((melhorFrequencia.presentes / melhorFrequencia.matriculados) * 100).toFixed(1).replace('.', ',')}%)` : 
                           'Nenhuma turma';
                       })()}
                     </div>

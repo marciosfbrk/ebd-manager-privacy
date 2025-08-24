@@ -2142,10 +2142,13 @@ function App() {
             {/* BUSCA SIMPLES */}
             <div className="mb-4">
               <input
+                ref={searchInputRef}
                 type="text"
                 placeholder="🔍 Digite o nome do aluno para buscar..."
                 value={searchFilter}
-                onChange={(e) => setSearchFilter(e.target.value)}
+                onChange={handleSearchInput}
+                autoComplete="off"
+                spellCheck="false"
                 className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
               {searchFilter && (

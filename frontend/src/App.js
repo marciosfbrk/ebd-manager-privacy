@@ -227,6 +227,19 @@ function App() {
     );
   };
 
+  // Função para garantir que o input não perde foco
+  const handleSearchInput = (e) => {
+    const value = e.target.value;
+    setSearchFilter(value);
+    
+    // Garantir que o foco não se perde
+    setTimeout(() => {
+      if (searchInputRef.current && document.activeElement !== searchInputRef.current) {
+        searchInputRef.current.focus();
+      }
+    }, 0);
+  };
+
   const loadRevistas = async () => {
     try {
       const response = await axios.get(`${API}/revistas`);

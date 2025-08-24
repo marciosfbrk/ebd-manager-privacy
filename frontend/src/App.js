@@ -219,14 +219,19 @@ function App() {
     }
   };
 
-  // Função de busca simples com botão
+  // Função de busca PURA - sem React mexer no input
   const handleSearch = () => {
-    setSearchFilter(searchInput);
+    if (searchInputRef.current) {
+      const value = searchInputRef.current.value;
+      setSearchFilter(value);
+    }
   };
 
   // Função para limpar busca
   const handleClearSearch = () => {
-    setSearchInput('');
+    if (searchInputRef.current) {
+      searchInputRef.current.value = '';
+    }
     setSearchFilter('');
   };
 

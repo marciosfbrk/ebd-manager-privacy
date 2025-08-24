@@ -73,10 +73,6 @@ function App() {
   const [systemConfig, setSystemConfig] = useState({});
   const [configLoading, setConfigLoading] = useState(false);
   
-  // Estados para informações da igreja - NOVO
-  const [churchInfo, setChurchInfo] = useState({});
-  const [churchInfoLoading, setChurchInfoLoading] = useState(false);
-  
   // Estados de revistas
   const [revistas, setRevistas] = useState([]);
   const [revistaAtual, setRevistaAtual] = useState(null);
@@ -146,7 +142,7 @@ function App() {
       console.error('Erro no login:', error);
       return { 
         success: false, 
-        message: error.response?.data?.detail || error.message || 'Erro ao fazer login'
+        message: error.response?.data?.detail || 'Erro ao fazer login'
       };
     }
   };
@@ -286,54 +282,6 @@ function App() {
       setLogStats({});
     }
   };
-
-  // Funções para Informações da Igreja - NOVO
-  const loadChurchInfo = async () => {
-    try {
-      setChurchInfoLoading(true);
-      const response = await axios.get(`${API}/church-info`);
-      setChurchInfo(response.data || {});
-    } catch (error) {
-      console.error('Erro ao carregar informações da igreja:', error);
-      setChurchInfo({});
-    } finally {
-      setChurchInfoLoading(false);
-    }
-  };
-
-  const updateChurchInfo = async (data) => {
-    try {
-      setChurchInfoLoading(true);
-      
-      const params = new URLSearchParams({
-        presidente_nome: data.presidente_nome || 'Pr. José Felipe da Silva',
-        presidente_cargo: data.presidente_cargo || 'Presidente',
-        pastor_local_nome: data.pastor_local_nome || 'Pr. Henrique Ferreira Neto',
-        pastor_local_cargo: data.pastor_local_cargo || 'Pastor Local',
-        superintendente_nome: data.superintendente_nome || 'Presb. Paulo Henrique da Silva Reis',
-        superintendente_cargo: data.superintendente_cargo || 'Superintendente(EBD)',
-        nome_igreja: data.nome_igreja || 'Ministério Belém',
-        endereco: data.endereco || 'Rua Managuá, 53 - Parque das Nações',
-        user_id: currentUser?.user_id || currentUser?.id
-      });
-      
-      await axios.put(`${API}/church-info?${params.toString()}`);
-      await loadChurchInfo(); // Recarregar informações
-      alert('Informações da igreja atualizadas com sucesso!');
-    } catch (error) {
-      console.error('Erro ao atualizar informações da igreja:', error);
-      alert('Erro ao atualizar informações da igreja');
-    } finally {
-      setChurchInfoLoading(false);
-    }
-  };
-
-  // Carregar informações da igreja quando logar - NOVO
-  useEffect(() => {
-    if (isLoggedIn) {
-      loadChurchInfo();
-    }
-  }, [isLoggedIn]);
 
   // Funções para Configurações do Sistema - NOVO
   const loadSystemConfig = async () => {
@@ -566,19 +514,8 @@ function App() {
               <div className="text-center">
                 <h1 className="text-4xl font-bold tracking-wider">App EBD</h1>
                 <div className="mt-2 text-sm text-blue-200 space-y-1">
-                  {churchInfo.presidente_nome ? (
-                    <div>
-                      <p>{churchInfo.presidente_cargo || 'Presidente'}: <span className="font-semibold">{churchInfo.presidente_nome}</span></p>
-                      <p>{churchInfo.pastor_local_cargo || 'Pastor Local'}: <span className="font-semibold">{churchInfo.pastor_local_nome}</span></p>
-                      <p>{churchInfo.superintendente_cargo || 'Superintendente(EBD)'}: <span className="font-semibold">{churchInfo.superintendente_nome}</span></p>
-                    </div>
-                  ) : (
-                    <div>
-                      <p>Presidente: <span className="font-semibold">Pr. José Felipe da Silva</span></p>
-                      <p>Pastor Local: <span className="font-semibold">Pr. Henrique Ferreira Neto</span></p>
-                      <p>Superintendente(EBD): <span className="font-semibold">Presb. Paulo Henrique da Silva Reis</span></p>
-                    </div>
-                  )}
+                  <p>Presidente: <span className="font-semibold">Pr. José Felipe da Silva</span></p>
+                  <p>Pastor Local: <span className="font-semibold">Pr. Henrique Ferreira Neto</span></p>
                 </div>
               </div>
             </div>
@@ -752,34 +689,6 @@ function App() {
                       <span className="text-xl mr-2">🔐</span>
                       Gerenciar Usuários
                     </button>
-
-                    {/* Controle de Chamadas - Apenas para Admin e Moderador */}
-                    {(currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') && (
-                      <button
-                        onClick={() => {
-                          setCurrentView('config-chamadas');
-                          loadSystemConfig();
-                        }}
-                        className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-lg hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
-                      >
-                        <span className="text-xl mr-2">⚙️</span>
-                        Configurar Chamadas
-                      </button>
-                    )}
-
-                    {/* Gerenciar Igreja - Apenas para Admin */}
-                    {currentUser?.tipo === 'admin' && (
-                      <button
-                        onClick={() => {
-                          setCurrentView('config-igreja');
-                          loadChurchInfo();
-                        }}
-                        className="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
-                      >
-                        <span className="text-xl mr-2">🏛️</span>
-                        Gerenciar Igreja
-                      </button>
-                    )}
                     
                     {/* Seção de Backup e Restore - Apenas para Admin */}
                     {currentUser?.tipo === 'admin' && (
@@ -1050,24 +959,13 @@ function App() {
           </h1>
           
           <div className="text-xl text-blue-200 mb-2">
-            {churchInfo.presidente_nome ? (
-              <div className="space-y-1">
-                <p>{churchInfo.presidente_cargo || 'Presidente'}: <span className="font-semibold text-white">{churchInfo.presidente_nome}</span></p>
-                <p>{churchInfo.pastor_local_cargo || 'Pastor Local'}: <span className="font-semibold text-white">{churchInfo.pastor_local_nome}</span></p>
-                <p>{churchInfo.superintendente_cargo || 'Superintendente(EBD)'}: <span className="font-semibold text-white">{churchInfo.superintendente_nome}</span></p>
-              </div>
-            ) : (
-              <div className="space-y-1">
-                <p>Presidente: <span className="font-semibold text-white">Pr. José Felipe da Silva</span></p>
-                <p>Pastor Local: <span className="font-semibold text-white">Pr. Henrique Ferreira Neto</span></p>
-                <p>Superintendente(EBD): <span className="font-semibold text-white">Presb. Paulo Henrique da Silva Reis</span></p>
-              </div>
-            )}
+            <p>Presidente: <span className="font-semibold text-white">Pr. José Felipe da Silva</span></p>
+            <p>Pastor Local: <span className="font-semibold text-white">Pr. Henrique Ferreira Neto</span></p>
           </div>
           
           <div className="text-lg text-blue-300 mt-4">
-            <p className="font-semibold">{churchInfo.nome_igreja || 'Ministério Belém'}</p>
-            <p className="text-base mt-1">{churchInfo.endereco || 'Rua Managuá, 53 - Parque das Nações'}</p>
+            <p className="font-semibold">Ministério Belém</p>
+            <p className="text-base mt-1">Rua Managuá, 53 - Parque das Nações</p>
             <p className="text-base">Sumaré, SP, Brasil</p>
             <p className="text-base mt-2">Sistema de Gerenciamento da Escola Bíblica Dominical</p>
           </div>
@@ -1966,7 +1864,6 @@ function App() {
     const [showForm, setShowForm] = useState(false);
     const [editingStudent, setEditingStudent] = useState(null);
     const [showTransferForm, setShowTransferForm] = useState(false);
-    const [searchTerm, setSearchTerm] = useState(''); // NOVO - Estado para busca
     const [transferringStudent, setTransferringStudent] = useState(null);
     const [formData, setFormData] = useState({
       nome_completo: '',
@@ -2064,7 +1961,7 @@ function App() {
             >
               ← Voltar ao Dashboard
             </button>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center">
               <h1 className="text-3xl font-bold text-gray-800">Gerenciar Alunos</h1>
               <button
                 onClick={() => setShowForm(true)}
@@ -2072,35 +1969,6 @@ function App() {
               >
                 Novo Aluno
               </button>
-            </div>
-
-            {/* Campo de Busca - NOVO */}
-            <div className="mb-6">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="🔍 Buscar aluno por nome..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-gray-400 text-xl">🔍</span>
-                </div>
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm('')}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-                  >
-                    ❌
-                  </button>
-                )}
-              </div>
-              {searchTerm && (
-                <p className="mt-2 text-sm text-gray-600">
-                  Mostrando resultados para: "<strong>{searchTerm}</strong>"
-                </p>
-              )}
             </div>
           </div>
 
@@ -2234,39 +2102,7 @@ function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {(() => {
-                    const filteredStudents = students.filter(student => 
-                      student.nome_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      student.contato.toLowerCase().includes(searchTerm.toLowerCase())
-                    );
-                    
-                    if (filteredStudents.length === 0) {
-                      return (
-                        <tr>
-                          <td colSpan="5" className="border border-gray-300 px-4 py-8 text-center text-gray-500">
-                            {searchTerm ? (
-                              <div>
-                                <div className="text-4xl mb-2">🔍</div>
-                                <div>Nenhum aluno encontrado para "<strong>{searchTerm}</strong>"</div>
-                                <button 
-                                  onClick={() => setSearchTerm('')}
-                                  className="mt-2 text-blue-500 hover:text-blue-700 underline"
-                                >
-                                  Limpar busca
-                                </button>
-                              </div>
-                            ) : (
-                              <div>
-                                <div className="text-4xl mb-2">👥</div>
-                                <div>Nenhum aluno cadastrado</div>
-                              </div>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    }
-                    
-                    return filteredStudents.map((student) => (
+                  {students.map((student) => (
                     <tr key={student.id} className="hover:bg-gray-50">
                       <td className="border border-gray-300 px-4 py-2">{student.nome_completo}</td>
                       <td className="border border-gray-300 px-4 py-2">{student.data_nascimento}</td>
@@ -2295,7 +2131,7 @@ function App() {
                         </button>
                       </td>
                     </tr>
-                  ))})()}
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -3060,239 +2896,6 @@ function App() {
                   </button>
                 </div>
               </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // Componente Configuração da Igreja - NOVO
-  const ConfigIgreja = () => {
-    const [localChurchInfo, setLocalChurchInfo] = useState({
-      presidente_nome: '',
-      presidente_cargo: '',
-      pastor_local_nome: '',
-      pastor_local_cargo: '',
-      superintendente_nome: '',
-      superintendente_cargo: '',
-      nome_igreja: '',
-      endereco: ''
-    });
-
-    useEffect(() => {
-      if (churchInfo) {
-        setLocalChurchInfo({
-          presidente_nome: churchInfo.presidente_nome || '',
-          presidente_cargo: churchInfo.presidente_cargo || '',
-          pastor_local_nome: churchInfo.pastor_local_nome || '',
-          pastor_local_cargo: churchInfo.pastor_local_cargo || '',
-          superintendente_nome: churchInfo.superintendente_nome || '',
-          superintendente_cargo: churchInfo.superintendente_cargo || '',
-          nome_igreja: churchInfo.nome_igreja || '',
-          endereco: churchInfo.endereco || ''
-        });
-      }
-    }, [churchInfo]);
-
-    const handleSave = async (e) => {
-      e.preventDefault();
-      await updateChurchInfo(localChurchInfo);
-    };
-
-    return (
-      <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
-        <div className="max-w-4xl mx-auto">
-          <button
-            onClick={() => setCurrentView('dashboard')}
-            className="mb-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
-          >
-            ← Voltar ao Dashboard
-          </button>
-
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="mb-6">
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">🏛️ Gerenciar Igreja</h1>
-              <p className="text-gray-600">Configure as informações da igreja que aparecem no sistema</p>
-            </div>
-
-            {churchInfoLoading ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
-                <p className="mt-2 text-gray-600">Carregando informações...</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSave} className="space-y-6">
-                {/* Nome da Igreja */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nome da Igreja
-                  </label>
-                  <input
-                    type="text"
-                    value={localChurchInfo.nome_igreja}
-                    onChange={(e) => setLocalChurchInfo({
-                      ...localChurchInfo,
-                      nome_igreja: e.target.value
-                    })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex: Ministério Belém"
-                  />
-                </div>
-
-                {/* Endereço */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Endereço
-                  </label>
-                  <input
-                    type="text"
-                    value={localChurchInfo.endereco}
-                    onChange={(e) => setLocalChurchInfo({
-                      ...localChurchInfo,
-                      endereco: e.target.value
-                    })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex: Rua Managuá, 53 - Parque das Nações"
-                  />
-                </div>
-
-                {/* Seção Liderança */}
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">👥 Liderança da Igreja</h3>
-                  
-                  {/* Presidente */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Nome do Presidente
-                      </label>
-                      <input
-                        type="text"
-                        value={localChurchInfo.presidente_nome}
-                        onChange={(e) => setLocalChurchInfo({
-                          ...localChurchInfo,
-                          presidente_nome: e.target.value
-                        })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ex: Pr. José Felipe da Silva"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cargo do Presidente
-                      </label>
-                      <input
-                        type="text"
-                        value={localChurchInfo.presidente_cargo}
-                        onChange={(e) => setLocalChurchInfo({
-                          ...localChurchInfo,
-                          presidente_cargo: e.target.value
-                        })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ex: Presidente"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Pastor Local */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Nome do Pastor Local
-                      </label>
-                      <input
-                        type="text"
-                        value={localChurchInfo.pastor_local_nome}
-                        onChange={(e) => setLocalChurchInfo({
-                          ...localChurchInfo,
-                          pastor_local_nome: e.target.value
-                        })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ex: Pr. Henrique Ferreira Neto"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cargo do Pastor Local
-                      </label>
-                      <input
-                        type="text"
-                        value={localChurchInfo.pastor_local_cargo}
-                        onChange={(e) => setLocalChurchInfo({
-                          ...localChurchInfo,
-                          pastor_local_cargo: e.target.value
-                        })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ex: Pastor Local"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Superintendente */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Nome do Superintendente
-                      </label>
-                      <input
-                        type="text"
-                        value={localChurchInfo.superintendente_nome}
-                        onChange={(e) => setLocalChurchInfo({
-                          ...localChurchInfo,
-                          superintendente_nome: e.target.value
-                        })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ex: Presb. Paulo Henrique da Silva Reis"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cargo do Superintendente
-                      </label>
-                      <input
-                        type="text"
-                        value={localChurchInfo.superintendente_cargo}
-                        onChange={(e) => setLocalChurchInfo({
-                          ...localChurchInfo,
-                          superintendente_cargo: e.target.value
-                        })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ex: Superintendente(EBD)"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Informações Importantes */}
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h3 className="text-lg font-semibold text-blue-800 mb-3">ℹ️ Informações</h3>
-                  <div className="space-y-2 text-sm text-blue-700">
-                    <p><strong>• Nome da Igreja:</strong> Aparece na tela inicial e cabeçalho do sistema</p>
-                    <p><strong>• Endereço:</strong> Exibido na tela inicial do sistema</p>
-                    <p><strong>• Liderança:</strong> Presidente, Pastor Local e Superintendente aparecem na tela inicial e cabeçalho</p>
-                    <p><strong>• Alterações:</strong> São aplicadas imediatamente em todo o sistema</p>
-                  </div>
-                </div>
-
-                {/* Botões de Ação */}
-                <div className="flex justify-end space-x-3 pt-4 border-t">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentView('dashboard')}
-                    className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={churchInfoLoading}
-                    className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
-                  >
-                    {churchInfoLoading ? 'Salvando...' : 'Salvar Informações'}
-                  </button>
-                </div>
-              </form>
             )}
           </div>
         </div>
@@ -4243,10 +3846,6 @@ function App() {
         return isLoggedIn ? <Revistas /> : <HomeCover />;
       case 'admin-revistas':
         return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <AdminRevistas /> : <Dashboard />;
-      case 'config-chamadas':
-        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <ConfigChamadas /> : <Dashboard />;
-      case 'config-igreja':
-        return isLoggedIn && currentUser?.tipo === 'admin' ? <ConfigIgreja /> : <Dashboard />;
       default:
         return <HomeCover />;
     }

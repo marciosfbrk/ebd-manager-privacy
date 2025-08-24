@@ -2149,68 +2149,57 @@ function App() {
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Lista de Alunos</h2>
             
-            {/* FILTROS DE BUSCA */}
+            {/* FILTROS DE BUSCA SIMPLES */}
             <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <h3 className="text-lg font-medium text-gray-700 mb-3">🔍 Filtros de Busca</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Filtro por Nome com Autocomplete */}
-                <div className="relative">
+              <h3 className="text-lg font-medium text-gray-700 mb-3">🔍 Buscar Alunos</h3>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                
+                {/* Campo de Busca por Nome */}
+                <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-600 mb-2">
-                    🔍 Buscar por Nome (digite para ver sugestões)
+                    Nome do Aluno
                   </label>
                   <input
                     type="text"
-                    placeholder="Digite 'ma', 'joão', 'ana'..."
+                    placeholder="Digite o nome (ex: Maria, João, Ana)..."
                     value={searchFilter}
-                    onChange={(e) => {
-                      setSearchFilter(e.target.value);
-                    }}
-                    onFocus={() => {
-                      if (searchSuggestions.length > 0) {
-                        setShowSuggestions(true);
+                    onChange={(e) => setSearchFilter(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSearch();
                       }
                     }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
-                  
-                  {/* Dropdown de Sugestões */}
-                  {showSuggestions && searchSuggestions.length > 0 && (
-                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                      <div className="p-2 bg-gray-50 border-b border-gray-200 text-sm text-gray-600 font-medium">
-                        {searchSuggestions.length} sugestão(ões) encontrada(s)
-                      </div>
-                      {searchSuggestions.map((student, index) => (
-                        <div
-                          key={student.id}
-                          onClick={() => selectSuggestion(student)}
-                          className="p-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
-                        >
-                          <div className="flex justify-between items-center">
-                            <div>
-                              <div className="font-medium text-gray-800">
-                                {student.nome_completo}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                Turma: {student.turma_nome}
-                              </div>
-                            </div>
-                            <div className="text-xs text-blue-600 font-medium">
-                              Clique para selecionar
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                      <div className="p-2 bg-gray-50 border-t border-gray-200">
-                        <button
-                          onClick={() => setShowSuggestions(false)}
-                          className="text-sm text-gray-600 hover:text-gray-800"
-                        >
-                          ✕ Fechar sugestões
-                        </button>
-                      </div>
-                    </div>
-                  )}
                 </div>
+                
+                {/* Botão Buscar */}
+                <div>
+                  <button
+                    onClick={handleSearch}
+                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    🔍 Buscar
+                  </button>
+                </div>
+                
+                {/* Botão Limpar */}
+                <div>
+                  <button
+                    onClick={() => {
+                      handleClearSearch();
+                      setTurmaFilter('');
+                      setStatusFilter('todos');
+                    }}
+                    className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  >
+                    🧹 Limpar
+                  </button>
+                </div>
+              </div>
+              
+              {/* Segunda linha com filtros adicionais */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 
                 {/* Filtro por Turma */}
                 <div>
@@ -2246,23 +2235,14 @@ function App() {
                 </div>
               </div>
               
-              {/* Botão para limpar filtros */}
-              <div className="mt-4 flex justify-between items-center">
-                <div className="text-sm text-gray-600">
-                  {getFilteredStudents().length} de {students.length} alunos encontrados
-                </div>
-                <button
-                  onClick={() => {
-                    setSearchFilter('');
-                    setTurmaFilter('');
-                    setStatusFilter('todos');
-                    setShowSuggestions(false);
-                    setSearchSuggestions([]);
-                  }}
-                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                >
-                  🧹 Limpar Filtros
-                </button>
+              {/* Contador de resultados */}
+              <div className="mt-4 text-sm text-gray-600">
+                {searchTerm && (
+                  <div className="mb-2 p-2 bg-blue-50 rounded border border-blue-200">
+                    🔍 Buscando por: <strong>"{searchTerm}"</strong>
+                  </div>
+                )}
+                <strong>{getFilteredStudents().length}</strong> de <strong>{students.length}</strong> alunos encontrados
               </div>
             </div>
             <div className="overflow-x-auto">

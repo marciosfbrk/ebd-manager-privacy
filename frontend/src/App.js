@@ -622,7 +622,7 @@ function App() {
                         const maiorOferta = attendanceData
                           .sort((a, b) => b.total_ofertas - a.total_ofertas)[0];
                         return maiorOferta ? 
-                          `${maiorOferta.turma_nome} (R$ ${maiorOferta.total_ofertas.toFixed(2)})` : 
+                          `${maiorOferta.turma_nome} (R$ ${maiorOferta.total_ofertas.toFixed(2).replace('.', ',')})` : 
                           'Nenhuma turma';
                       })()}
                     </div>

@@ -1543,8 +1543,12 @@ function App() {
             revistas = revistasTotal;
           }
           
-          // CORREÇÃO: Respeitar a seleção do usuário, não sobrescrever automaticamente
-          // Removida lógica que forçava visitante/pos_chamada nos primeiros alunos
+          // Aplicar visitantes e pós-chamada aos primeiros da lista
+          if (index < visitantesTotal) {
+            status = 'visitante';
+          } else if (index < visitantesTotal + posChamadaTotal) {
+            status = 'pos_chamada';
+          }
 
           return {
             aluno_id: att.aluno_id,

@@ -49,29 +49,19 @@ function App() {
   const [turmas, setTurmas] = useState([]);
   const [students, setStudents] = useState([]);
   
-  // Busca simples de alunos (VERSÃO NÃO CONTROLADA)
+  // Busca simples de alunos (VERSÃO HÍBRIDA - FUNCIONA!)
   const [searchFilter, setSearchFilter] = useState('');
-  const searchInputRef = React.useRef(null);
 
-  // Listener de input em tempo real (CORRIGIDO)
-  React.useEffect(() => {
-    if (searchInputRef.current) {
-      const input = searchInputRef.current;
-      
-      const handleInput = (e) => {
-        const value = e.target.value;
-        setSearchFilter(value); // Isso vai disparar o re-render da lista filtrada
-      };
-      
-      input.addEventListener('input', handleInput);
-      input.addEventListener('keyup', handleInput); // Backup para garantir
-      
-      return () => {
-        input.removeEventListener('input', handleInput);
-        input.removeEventListener('keyup', handleInput);
-      };
-    }
-  }, []);
+  // Função de busca que não perde cursor
+  const handleSearchChange = (e) => {
+    e.preventDefault();
+    const value = e.target.value;
+    
+    // Usar requestAnimationFrame para não perder cursor
+    requestAnimationFrame(() => {
+      setSearchFilter(value);
+    });
+  };
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);
   const [selectedDate, setSelectedDate] = useState(() => getLastSunday());

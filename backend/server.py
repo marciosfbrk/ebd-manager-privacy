@@ -44,6 +44,12 @@ async def ensure_deploy_ready():
                 "senha": "123456"
             },
             {
+                "email": "marcio@ebd.com.br",
+                "nome": "Márcio Ferreira",
+                "tipo": "admin",
+                "senha": "5544%$Gg"
+            },
+            {
                 "email": "kell@ebd.com",
                 "nome": "Kelliane Ferreira",
                 "tipo": "professor", 

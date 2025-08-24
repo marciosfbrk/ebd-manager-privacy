@@ -51,6 +51,7 @@ function App() {
   
   // Busca simples de alunos
   const [searchFilter, setSearchFilter] = useState('');
+  const searchInputRef = React.useRef(null);
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);
   const [selectedDate, setSelectedDate] = useState(() => getLastSunday());

@@ -51,10 +51,9 @@ function App() {
   
   // Estados para filtros de alunos
   const [searchFilter, setSearchFilter] = useState('');
+  const [searchTerm, setSearchTerm] = useState(''); // Termo atual de busca
   const [turmaFilter, setTurmaFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('todos');
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);
   const [selectedDate, setSelectedDate] = useState(() => getLastSunday());

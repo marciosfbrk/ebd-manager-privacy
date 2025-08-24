@@ -582,7 +582,7 @@ function App() {
                   {(() => {
                     const totalMatriculados = attendanceData.reduce((sum, row) => sum + row.matriculados, 0);
                     const totalPresentes = attendanceData.reduce((sum, row) => sum + row.presentes, 0);
-                    return totalMatriculados > 0 ? ((totalPresentes / totalMatriculados) * 100).toFixed(1) : '0.0';
+                    return totalMatriculados > 0 ? ((totalPresentes / totalMatriculados) * 100).toFixed(1).replace('.', ',') : '0,0';
                   })()}%
                 </div>
                 <div className="text-sm text-purple-500 font-medium">Frequência</div>

@@ -73,6 +73,10 @@ function App() {
   const [systemConfig, setSystemConfig] = useState({});
   const [configLoading, setConfigLoading] = useState(false);
   
+  // Estados para informações da igreja - NOVO
+  const [churchInfo, setChurchInfo] = useState({});
+  const [churchInfoLoading, setChurchInfoLoading] = useState(false);
+  
   // Estados de revistas
   const [revistas, setRevistas] = useState([]);
   const [revistaAtual, setRevistaAtual] = useState(null);

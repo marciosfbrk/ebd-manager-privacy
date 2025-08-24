@@ -1037,10 +1037,18 @@ function App() {
           </h1>
           
           <div className="text-xl text-blue-200 mb-2">
-            {churchInfo.superintendente_nome ? (
-              <p>{churchInfo.superintendente_cargo || 'Superintendente(EBD)'}: <span className="font-semibold text-white">{churchInfo.superintendente_nome}</span></p>
+            {churchInfo.presidente_nome ? (
+              <div className="space-y-1">
+                <p>{churchInfo.presidente_cargo || 'Presidente'}: <span className="font-semibold text-white">{churchInfo.presidente_nome}</span></p>
+                <p>{churchInfo.pastor_local_cargo || 'Pastor Local'}: <span className="font-semibold text-white">{churchInfo.pastor_local_nome}</span></p>
+                <p>{churchInfo.superintendente_cargo || 'Superintendente(EBD)'}: <span className="font-semibold text-white">{churchInfo.superintendente_nome}</span></p>
+              </div>
             ) : (
-              <p>Superintendente(EBD): <span className="font-semibold text-white">Presb. Paulo Henrique da Silva Reis</span></p>
+              <div className="space-y-1">
+                <p>Presidente: <span className="font-semibold text-white">Pr. José Felipe da Silva</span></p>
+                <p>Pastor Local: <span className="font-semibold text-white">Pr. Henrique Ferreira Neto</span></p>
+                <p>Superintendente(EBD): <span className="font-semibold text-white">Presb. Paulo Henrique da Silva Reis</span></p>
+              </div>
             )}
           </div>
           

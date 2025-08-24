@@ -1289,6 +1289,175 @@ def test_revistas_endpoints():
         except Exception as e:
             results.failure("Revista dates verification", str(e))
 
+def test_church_info_endpoints():
+    """Test church-info endpoints as requested in review"""
+    print("\n=== TESTING CHURCH-INFO ENDPOINTS (REVIEW REQUEST) ===")
+    print("Testing GET /api/church-info and PUT /api/church-info endpoints")
+    
+    # TEST 1: GET /api/church-info - should return complete information with expected values
+    try:
+        response = requests.get(f"{BASE_URL}/church-info")
+        if response.status_code == 200:
+            church_info = response.json()
+            results.success("GET /api/church-info - Returns church information")
+            
+            # Verify expected structure and values
+            expected_values = {
+                "presidente_nome": "Pr. José Felipe da Silva",
+                "presidente_cargo": "Presidente",
+                "pastor_local_nome": "Pr. Henrique Ferreira Neto", 
+                "pastor_local_cargo": "Pastor Local",
+                "superintendente_nome": "Presb. Paulo Henrique da Silva Reis",
+                "superintendente_cargo": "Superintendente(EBD)",
+                "nome_igreja": "Ministério Belém",
+                "endereco": "Rua Managuá, 53 - Parque das Nações"
+            }
+            
+            # Check each expected field and value
+            all_correct = True
+            for field, expected_value in expected_values.items():
+                if field in church_info:
+                    if church_info[field] == expected_value:
+                        results.success(f"GET /api/church-info - {field}: '{expected_value}' ✓")
+                    else:
+                        results.failure(f"GET /api/church-info - {field}", f"Expected '{expected_value}', got '{church_info[field]}'")
+                        all_correct = False
+                else:
+                    results.failure(f"GET /api/church-info - Missing field", f"Field '{field}' not found in response")
+                    all_correct = False
+            
+            # Verify additional fields exist
+            additional_fields = ['id', 'atualizado_em', 'atualizado_por']
+            for field in additional_fields:
+                if field in church_info:
+                    results.success(f"GET /api/church-info - Contains {field} field")
+                else:
+                    results.failure(f"GET /api/church-info - Missing {field}", f"Field '{field}' not found")
+            
+            if all_correct:
+                results.success("GET /api/church-info - All expected values are correct")
+                
+        else:
+            results.failure("GET /api/church-info", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/church-info", str(e))
+    
+    # TEST 2: PUT /api/church-info - should update all information with new values
+    try:
+        # Test with new values to verify update functionality
+        new_values = {
+            "presidente_nome": "Pr. João Silva Santos",
+            "presidente_cargo": "Presidente Atualizado",
+            "pastor_local_nome": "Pr. Carlos Eduardo Lima", 
+            "pastor_local_cargo": "Pastor Local Atualizado",
+            "superintendente_nome": "Presb. Maria Santos Silva",
+            "superintendente_cargo": "Superintendente(EBD) Atualizado",
+            "nome_igreja": "Ministério Belém Atualizado",
+            "endereco": "Rua Nova, 123 - Bairro Novo",
+            "user_id": "test-user-123"
+        }
+        
+        # Make PUT request with new values
+        response = requests.put(f"{BASE_URL}/church-info", params=new_values)
+        if response.status_code == 200:
+            result = response.json()
+            if "message" in result and "sucesso" in result["message"]:
+                results.success("PUT /api/church-info - Successfully updated church information")
+                
+                # Verify the update persisted by getting the data again
+                response = requests.get(f"{BASE_URL}/church-info")
+                if response.status_code == 200:
+                    updated_info = response.json()
+                    
+                    # Check if all values were updated correctly (excluding user_id)
+                    update_success = True
+                    for field, expected_value in new_values.items():
+                        if field == "user_id":  # Skip user_id as it's not returned in GET
+                            continue
+                        if field in updated_info:
+                            if updated_info[field] == expected_value:
+                                results.success(f"PUT /api/church-info - {field} updated to: '{expected_value}' ✓")
+                            else:
+                                results.failure(f"PUT /api/church-info - {field} update", f"Expected '{expected_value}', got '{updated_info[field]}'")
+                                update_success = False
+                        else:
+                            results.failure(f"PUT /api/church-info - Missing updated field", f"Field '{field}' not found after update")
+                            update_success = False
+                    
+                    if update_success:
+                        results.success("PUT /api/church-info - All values updated and persisted correctly")
+                    
+                    # Verify atualizado_em was updated
+                    if 'atualizado_em' in updated_info:
+                        results.success("PUT /api/church-info - atualizado_em field updated")
+                    else:
+                        results.failure("PUT /api/church-info - atualizado_em", "atualizado_em field not updated")
+                        
+                else:
+                    results.failure("PUT /api/church-info - Verification", f"Could not verify update: {response.status_code}")
+            else:
+                results.failure("PUT /api/church-info", f"Unexpected response: {result}")
+        else:
+            results.failure("PUT /api/church-info", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("PUT /api/church-info", str(e))
+    
+    # TEST 3: Restore original values to maintain system integrity
+    try:
+        original_values = {
+            "presidente_nome": "Pr. José Felipe da Silva",
+            "presidente_cargo": "Presidente",
+            "pastor_local_nome": "Pr. Henrique Ferreira Neto",
+            "pastor_local_cargo": "Pastor Local", 
+            "superintendente_nome": "Presb. Paulo Henrique da Silva Reis",
+            "superintendente_cargo": "Superintendente(EBD)",
+            "nome_igreja": "Ministério Belém",
+            "endereco": "Rua Managuá, 53 - Parque das Nações",
+            "user_id": "system-restore"
+        }
+        
+        response = requests.put(f"{BASE_URL}/church-info", params=original_values)
+        if response.status_code == 200:
+            results.success("PUT /api/church-info - Restored original values for system integrity")
+        else:
+            results.failure("PUT /api/church-info - Restore", f"Could not restore original values: {response.status_code}")
+    except Exception as e:
+        results.failure("PUT /api/church-info - Restore", str(e))
+    
+    # TEST 4: Test focus on new presidente and pastor local fields specifically
+    try:
+        response = requests.get(f"{BASE_URL}/church-info")
+        if response.status_code == 200:
+            church_info = response.json()
+            
+            # Focus specifically on the new fields mentioned in review request
+            new_fields_focus = {
+                "presidente_nome": "Pr. José Felipe da Silva",
+                "presidente_cargo": "Presidente",
+                "pastor_local_nome": "Pr. Henrique Ferreira Neto",
+                "pastor_local_cargo": "Pastor Local"
+            }
+            
+            print("\n--- FOCUS ON NEW PRESIDENTE AND PASTOR LOCAL FIELDS ---")
+            all_new_fields_correct = True
+            for field, expected_value in new_fields_focus.items():
+                if field in church_info and church_info[field] == expected_value:
+                    results.success(f"NEW FIELD VERIFICATION - {field}: '{expected_value}' ✓")
+                    print(f"  ✅ {field}: {church_info[field]}")
+                else:
+                    results.failure(f"NEW FIELD VERIFICATION - {field}", f"Expected '{expected_value}', got '{church_info.get(field, 'MISSING')}'")
+                    all_new_fields_correct = False
+            
+            if all_new_fields_correct:
+                results.success("🎉 NEW PRESIDENTE AND PASTOR LOCAL FIELDS - All working perfectly!")
+            else:
+                results.failure("NEW FIELDS VERIFICATION", "Some new fields are not working correctly")
+                
+        else:
+            results.failure("NEW FIELDS VERIFICATION", f"Could not verify new fields: {response.status_code}")
+    except Exception as e:
+        results.failure("NEW FIELDS VERIFICATION", str(e))
+
 def test_call_control_system():
     """Test the new call control system (sistema de controle de chamadas)"""
     print("\n=== TESTING CALL CONTROL SYSTEM (REVIEW REQUEST) ===")

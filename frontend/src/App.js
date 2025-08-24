@@ -3981,6 +3981,10 @@ function App() {
         return isLoggedIn ? <Revistas /> : <HomeCover />;
       case 'admin-revistas':
         return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <AdminRevistas /> : <Dashboard />;
+      case 'config-chamadas':
+        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <ConfigChamadas /> : <Dashboard />;
+      case 'config-igreja':
+        return isLoggedIn && currentUser?.tipo === 'admin' ? <ConfigIgreja /> : <Dashboard />;
       default:
         return <HomeCover />;
     }

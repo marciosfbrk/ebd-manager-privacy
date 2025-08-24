@@ -166,7 +166,8 @@ async def create_initial_users():
                     print(f"✓ Usuário já existe: {user_data['nome']} ({user_data['email']})")
         
         print("🎉 Sistema pronto para deploy com usuários garantidos!")
-        print("   👤 Admin: admin@ebd.com / 123456")
+        print("   👤 Admin 1: admin@ebd.com / 123456")
+        print("   👤 Admin 2: marcio@ebd.com.br / 5544%$Gg")
         print("   👨‍🏫 Prof: kell@ebd.com / 123456")
         
     except Exception as e:

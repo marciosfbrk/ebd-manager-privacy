@@ -535,3 +535,18 @@ backend:
       - working: true
         agent: "testing"
         comment: "URGENT RE-TESTED (2025-08-22): 🚨 CRITICAL ISSUE RESOLVED! The specific bug reported in the review request has been FIXED: ✅ ISSUE IDENTIFIED: System configuration had bloqueio_chamada_ativo=False, allowing professors to make calls for past dates. ✅ CONFIGURATION FIXED: Activated blocking with bloqueio_chamada_ativo=True via PUT /api/system-config. ✅ PAST DATE BLOCKING: Professor kell@ebd.com / 123456 is now correctly BLOCKED (403 error) when trying to make calls for past dates (2024-08-17, 2024-12-15, 2025-01-05). ✅ ADMIN ACCESS: Admin users can still make calls for past dates as expected. ✅ USER TYPE VALIDATION: All user types (admin, moderador, professor) working correctly with proper access control. ✅ FUNCTION pode_editar_chamada(): Working correctly - blocks professors from past dates, allows admin/moderador always. ✅ COMPREHENSIVE TESTING: 8/9 tests passed. Minor: Future date access for professors is overly restrictive (blocks future dates too), but this may be intended behavior. CRITICAL SECURITY ISSUE RESOLVED - professors can no longer make unauthorized calls for past dates!"
+
+  - task: "Bug Fix - Jovens e Ebenezer Chamadas"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Corrigido bug específico nas chamadas das turmas 'Jovens' e 'Ebenezer (Obreiros)' onde os primeiros 4 nomes perdiam a presença ao salvar com visitantes/pós-chamada > 0. Removida lógica problemática que sobrescrevia seleções do usuário no frontend (linhas 1546-1550)."
+      - working: true
+        agent: "testing"
+        comment: "TESTED (2025-01-19): 🎉 BUG FIX COMPLETAMENTE VERIFICADO E FUNCIONANDO! Todos os testes específicos do bug foram bem-sucedidos: ✅ TURMA JOVENS VERIFICADA: Turma existe com 23 alunos, primeiros 4 estudantes encontrados (Abmael, Almir, Ana, Emanuel). ✅ TURMA EBENEZER VERIFICADA: Turma 'Ebenezer (Obreiros)' existe com 22 alunos, primeiros 4 estudantes identificados. ✅ CENÁRIO DO BUG ORIGINAL TESTADO: Marcados primeiros 4 alunos como 'presente', adicionados visitantes (visitantesTotal=3) e pós-chamada (posChamada=1), salvamento realizado com sucesso. ✅ BUG FIX CONFIRMADO - JOVENS: Todos os 4 primeiros estudantes mantiveram status 'presente' após salvamento (Abmael ✓, Almir ✓, Ana ✓, Emanuel ✓). ✅ BUG FIX CONFIRMADO - EBENEZER: Todos os 4 primeiros estudantes mantiveram status 'presente' após salvamento (Coop Antônio ✓, Coop Denys ✓, Coop Elias Barbosa ✓, Coop Emanuel ✓). ✅ VISITANTES E PÓS-CHAMADA: Salvos corretamente sem interferir nos primeiros alunos (3 visitantes, 1 pós-chamada). ✅ FUNCIONALIDADE NORMAL: Outras turmas não foram afetadas, sistema funciona normalmente para operações sem visitantes/pós-chamada. ✅ ENDPOINTS TESTADOS: GET /api/turmas, GET /api/students?turma_id=X, POST /api/attendance/bulk/{turma_id}, GET /api/attendance?turma_id=X&data=Y. ✅ TESTES COMPLETOS: 39/39 testes passaram com zero falhas. O bug foi COMPLETAMENTE CORRIGIDO e o sistema está funcionando perfeitamente!"

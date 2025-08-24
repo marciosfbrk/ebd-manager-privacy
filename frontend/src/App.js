@@ -1514,7 +1514,8 @@ function App() {
         const presentesCount = turmaAtendance.filter(att => att.presente).length;
         
         // Converter valores para números, tratando strings vazias como 0
-        const ofertaTotal = parseFloat(turmaDataGlobal.ofertas_total) || 0;
+        // Converter vírgula para ponto antes do parseFloat
+        const ofertaTotal = parseFloat((turmaDataGlobal.ofertas_total || '0').replace(',', '.')) || 0;
         const bibliasTotal = parseInt(turmaDataGlobal.biblias_total) || 0;
         const revistasTotal = parseInt(turmaDataGlobal.revistas_total) || 0;
         const visitantesTotal = parseInt(turmaDataGlobal.visitantes_total) || 0;

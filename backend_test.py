@@ -17,12 +17,16 @@ def get_backend_url():
         with open('/app/frontend/.env', 'r') as f:
             for line in f:
                 if line.startswith('REACT_APP_BACKEND_URL='):
-                    return line.split('=')[1].strip()
+                    backend_url = line.split('=')[1].strip()
+                    # If it's a relative path, make it absolute
+                    if backend_url.startswith('/'):
+                        return f"http://localhost:8001{backend_url}"
+                    return backend_url
     except:
         pass
-    return "http://localhost:8001"
+    return "http://localhost:8001/api"
 
-BASE_URL = get_backend_url() + "/api"
+BASE_URL = get_backend_url()
 print(f"Testing backend at: {BASE_URL}")
 
 class TestResults:

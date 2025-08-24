@@ -337,7 +337,7 @@ function App() {
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
         
-        alert(`✅ Backup gerado com sucesso!\n\nArquivo: ${filename}\nTamanho: ${response.data.size_mb?.toFixed(2)} MB\n\nResumo:\n👥 Usuários: ${response.data.summary.users}\n🏫 Turmas: ${response.data.summary.turmas}\n📚 Alunos: ${response.data.summary.students}\n📊 Chamadas: ${response.data.summary.attendance}\n📖 Revistas: ${response.data.summary.revistas}`);
+        alert(`✅ Backup gerado com sucesso!\n\nArquivo: ${filename}\nTamanho: ${response.data.size_mb?.toFixed(2).replace('.', ',')} MB\n\nResumo:\n👥 Usuários: ${response.data.summary.users}\n🏫 Turmas: ${response.data.summary.turmas}\n📚 Alunos: ${response.data.summary.students}\n📊 Chamadas: ${response.data.summary.attendance}\n📖 Revistas: ${response.data.summary.revistas}`);
         
       } else {
         alert('❌ Erro ao gerar backup: ' + response.data.message);

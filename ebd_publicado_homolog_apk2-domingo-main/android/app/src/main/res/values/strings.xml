@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EBD Manager</string>
+    <string name="app_description">Sistema de gerenciamento da Escola Bíblica Dominical</string>
+    <string name="loading">Carregando...</string>
+    <string name="error_no_internet">Sem conexão com a internet</string>
+    <string name="error_loading">Erro ao carregar o sistema</string>
+    <string name="retry">Tentar novamente</string>
+    <string name="exit">Sair</string>
+</resources>

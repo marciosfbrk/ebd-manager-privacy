@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- Permitir backup de dados essenciais -->
+        <include domain="database" path="webview"/>
+        <include domain="sharedpref" path="WebViewChromiumPrefs.xml"/>
+    </cloud-backup>
+    
+    <device-transfer>
+        <!-- Permitir transferência de dados entre dispositivos -->
+        <include domain="database" path="webview"/>
+        <include domain="sharedpref" path="WebViewChromiumPrefs.xml"/>
+    </device-transfer>
+</data-extraction-rules>

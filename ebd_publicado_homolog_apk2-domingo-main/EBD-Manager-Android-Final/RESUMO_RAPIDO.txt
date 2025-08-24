@@ -1,0 +1,24 @@
+📱 EBD MANAGER - APK PRONTO PARA COMPILAR!
+
+🎯 PASSOS SUPER RÁPIDOS:
+
+1. Abrir Android Studio
+2. File → Open → Selecionar esta pasta
+3. Aguardar sync do Gradle (2-5 min)
+4. Build → Generate Signed Bundle/APK → APK
+5. Criar keystore (primeira vez)
+6. Aguardar compilar (1-3 min) 
+7. APK em: app/build/outputs/apk/release/
+
+🚀 RESULTADO: 
+- APK funcionando
+- Sistema EBD completo
+- Pronto para Play Store!
+
+📱 TESTAR:
+- Instalar APK no celular
+- Abrir app "EBD Manager"  
+- Fazer login normal
+- Tudo funcionando igual ao site!
+
+✨ MUITO FÁCIL! Qualquer dúvida, ver PASSO_A_PASSO.md

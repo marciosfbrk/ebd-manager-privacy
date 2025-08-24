@@ -1,0 +1,425 @@
+/* Estilos base mantidos do template */
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Estilos específicos para o EBD Manager */
+.ebd-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.ebd-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ebd-card {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.ebd-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.ebd-table th,
+.ebd-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.ebd-table th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #374151;
+}
+
+.ebd-table tr:hover {
+  background-color: #f9fafb;
+}
+
+.ebd-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.ebd-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.ebd-button:active {
+  transform: translateY(0);
+}
+
+.ebd-button-secondary {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  color: #8b5cf6;
+}
+
+.ebd-button-danger {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  color: #dc2626;
+}
+
+.ebd-form-group {
+  margin-bottom: 1rem;
+}
+
+.ebd-form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.ebd-form-input,
+.ebd-form-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.ebd-form-input:focus,
+.ebd-form-select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.ebd-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.ebd-stat-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ebd-stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 0.5rem;
+}
+
+.ebd-stat-label {
+  color: #6b7280;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ebd-navigation {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.ebd-nav-button {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #667eea;
+  background: white;
+  color: #667eea;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.ebd-nav-button:hover {
+  background: #667eea;
+  color: white;
+}
+
+.ebd-nav-button.active {
+  background: #667eea;
+  color: white;
+}
+
+.ebd-alert {
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.ebd-alert-warning {
+  background-color: #fef3c7;
+  border: 1px solid #f59e0b;
+  color: #92400e;
+}
+
+.ebd-alert-success {
+  background-color: #d1fae5;
+  border: 1px solid #10b981;
+  color: #065f46;
+}
+
+.ebd-alert-error {
+  background-color: #fee2e2;
+  border: 1px solid #ef4444;
+  color: #991b1b;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .ebd-container {
+    padding: 10px;
+  }
+  
+  .ebd-header {
+    padding: 1rem;
+  }
+  
+  .ebd-table {
+    font-size: 0.875rem;
+  }
+  
+  .ebd-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ebd-navigation {
+    flex-direction: column;
+  }
+  
+  .ebd-nav-button {
+    width: 100%;
+  }
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ebd-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Melhorias na tabela de dashboard */
+.dashboard-table {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-table th {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.dashboard-table td {
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.dashboard-table tr:last-child td {
+  border-bottom: none;
+}
+
+.dashboard-table .total-row {
+  background: linear-gradient(135deg, #f7fafc 0%, #e2e8f0 100%);
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.dashboard-table .total-row td {
+  border-top: 2px solid #667eea;
+}
+
+/* Estilos para formulários */
+.form-container {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Estilos para chamada */
+.attendance-table {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.attendance-table th {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.attendance-table td {
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.attendance-table input,
+.attendance-table select {
+  margin: 0;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.attendance-table input:focus,
+.attendance-table select:focus {
+  outline: none;
+  border-color: #48bb78;
+  box-shadow: 0 0 0 2px rgba(72, 187, 120, 0.1);
+}
+
+/* Status indicators */
+.status-presente {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-ausente {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.status-visitante {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-pos_chamada {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Utility classes */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.font-bold { font-weight: bold; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 0.75rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 0.75rem; }
+.mt-4 { margin-top: 1rem; }
+.p-1 { padding: 0.25rem; }
+.p-2 { padding: 0.5rem; }
+.p-3 { padding: 0.75rem; }
+.p-4 { padding: 1rem; }

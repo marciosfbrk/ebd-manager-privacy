@@ -1,0 +1,2933 @@
+{
+  "turmas": [
+    {
+      "_id": "688e9dc6f189e46d7c198f7c",
+      "id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "nome": "Professores e Oficiais",
+      "descricao": "Professores e Oficiais da Igreja",
+      "ativa": true,
+      "criada_em": "2025-08-02T23:22:46.939089"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f9d",
+      "id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "nome": "Genesis",
+      "descricao": "Turma Genesis",
+      "ativa": true,
+      "criada_em": "2025-08-02T23:22:46.988504"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fab",
+      "id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "nome": "Primarios",
+      "descricao": "Turma dos Primários",
+      "ativa": true,
+      "criada_em": "2025-08-02T23:22:47.000035"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fbc",
+      "id": "59ad58fc-89ea-4f54-989f-18a7cddc55c8",
+      "nome": "Juniores",
+      "descricao": "Turma dos Juniores",
+      "ativa": true,
+      "criada_em": "2025-08-02T23:22:47.018893"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fc9",
+      "id": "5a865ebe-e143-455e-ac5d-67ca5b60493e",
+      "nome": "Pré-Adolescentes",
+      "descricao": "Turma dos Pré-Adolescentes",
+      "ativa": true,
+      "criada_em": "2025-08-02T23:22:47.028239"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fd5",
+      "id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "nome": "Adolescentes",
+      "descricao": "Turma dos Adolescentes",
+      "ativa": true,
+      "criada_em": "2025-08-02T23:22:47.036258"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fea",
+      "id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "nome": "Jovens",
+      "descricao": "Turma dos Jovens",
+      "ativa": true,
+      "criada_em": "2025-08-02T23:22:47.050661"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199002",
+      "id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "nome": "Dorcas (irmãs)",
+      "descricao": "Turma das Irmãs Dorcas",
+      "ativa": true,
+      "criada_em": "2025-08-02T23:22:47.067860"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199041",
+      "id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "nome": "Ebenezer (Obreiros)",
+      "descricao": "Turma dos Obreiros Ebenezer",
+      "ativa": true,
+      "criada_em": "2025-08-02T23:22:47.121678"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199058",
+      "id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "nome": "Soldados de Cristo",
+      "descricao": "Turma dos Soldados de Cristo",
+      "ativa": true,
+      "criada_em": "2025-08-02T23:22:47.139354"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199078",
+      "id": "29eaba43-5199-414c-a1ce-e37e0ec498a3",
+      "nome": "Discipulados",
+      "descricao": "Turma de Discipulados",
+      "ativa": true,
+      "criada_em": "2025-08-02T23:22:47.165257"
+    }
+  ],
+  "students": [
+    {
+      "_id": "688e9dc6f189e46d7c198f7d",
+      "id": "3727f225-a5b9-4381-9407-e0535c170b9e",
+      "nome_completo": "Pr. Henrique",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.952748"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f7e",
+      "id": "5a62d372-9aaa-4294-bc00-a3a856faf9fa",
+      "nome_completo": "Pb Paulo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.965817"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f7f",
+      "id": "d6140121-dd36-4713-a3ff-dc6d31684665",
+      "nome_completo": "Pb Elias",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.966713"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f80",
+      "id": "920527c7-69e6-4dde-98a9-878b1f0f72f5",
+      "nome_completo": "Coop Carlos",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.967499"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f81",
+      "id": "52dde03e-aba2-4a65-b8d3-61a6504430d6",
+      "nome_completo": "Coop Elias Filho",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.968287"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f82",
+      "id": "770137f7-a104-42ac-a3ff-3f19903858e3",
+      "nome_completo": "Coop Jailton",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.969246"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f83",
+      "id": "2ac5ff4c-f124-40bc-aadf-b96faa868aaa",
+      "nome_completo": "Coop Santiago",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.970021"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f84",
+      "id": "7e6862b3-50dc-4471-8532-538373e6fdd6",
+      "nome_completo": "Irmã Dorcas",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.970786"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f85",
+      "id": "2ca52480-53e8-438d-95df-addd16b8e290",
+      "nome_completo": "Irmã Ester Carvalho",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.971520"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f86",
+      "id": "fe26e523-b8e4-44a4-a1b8-c38f0f0b8ef3",
+      "nome_completo": "Irmã Marry",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.972268"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f87",
+      "id": "15df4593-5cf2-4a7a-bef8-0b3d0bc369e3",
+      "nome_completo": "Irmã Renata",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.972988"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f88",
+      "id": "a74998a8-9289-4999-a026-b75edb218090",
+      "nome_completo": "Irmã Rosa",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.973804"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f89",
+      "id": "e873edf1-d93c-4b98-a897-a98e06a55d28",
+      "nome_completo": "Irmão Rubens",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.974596"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f8a",
+      "id": "0285d26b-8e66-4827-9c9f-24060fe857ea",
+      "nome_completo": "Izabelle",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.975294"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f8b",
+      "id": "30a5c66b-e8b1-410d-ba31-52dd882a86c0",
+      "nome_completo": "Juliana Silva",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.975936"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f8c",
+      "id": "8e3f8883-1b38-49e7-b735-eab09df87464",
+      "nome_completo": "Kesia Ferreira",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.976704"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f8d",
+      "id": "907cf2c4-aecf-4432-8ce8-034fb2a69ff0",
+      "nome_completo": "Márcio Ferreira",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.977373"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f8e",
+      "id": "3683be36-0867-43ca-b6dd-8f6401f048a7",
+      "nome_completo": "Pb Sebastião",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.978031"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f8f",
+      "id": "506432d8-6374-452e-89a6-c259b31773f7",
+      "nome_completo": "Tia Ana Paula",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.978679"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f90",
+      "id": "ccbca8ef-2644-495e-98a5-2f078ba94b70",
+      "nome_completo": "Tia Deise",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.979386"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f91",
+      "id": "850d7364-4a9e-49fa-9d06-92d371e9e61a",
+      "nome_completo": "Tia Eliane",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.980111"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f92",
+      "id": "ab5e00a1-186f-484d-b62f-d7e56f550d6c",
+      "nome_completo": "Tia Evelyn",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.980849"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f93",
+      "id": "0aed77cb-0aef-4e6b-adfd-4215f971c73e",
+      "nome_completo": "Tia Flávia André",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.981549"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f94",
+      "id": "ff4b89c2-850c-4295-ac66-9d3a9e63595d",
+      "nome_completo": "Tia Kelly",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.982221"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f95",
+      "id": "d2cf8ea6-2e4c-43cc-9e35-c8060f215f77",
+      "nome_completo": "Tia Lu",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.982903"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f96",
+      "id": "d26659d1-2cbf-424c-8e1b-054a3942d286",
+      "nome_completo": "Tia Natália",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.983596"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f97",
+      "id": "e22df527-08dd-41ae-a713-8be02e13455b",
+      "nome_completo": "Tia Riane",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.984311"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f98",
+      "id": "a7590848-4a88-4382-9a5f-8ed61b9fa9af",
+      "nome_completo": "Tio Italo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.984978"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f99",
+      "id": "85876929-2703-47f3-9f38-bed84214fbf2",
+      "nome_completo": "Pb Carlinhos",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.985670"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f9a",
+      "id": "863ecddf-9f26-4873-815f-e2ac6c2277fd",
+      "nome_completo": "Sidney Custodio",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.986351"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f9b",
+      "id": "2c01b201-a80e-4b03-b1c1-c849909540ce",
+      "nome_completo": "Juliane Reis",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.987056"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f9c",
+      "id": "9c1cecb0-9782-495a-87b4-c4caba48c47c",
+      "nome_completo": "Vitória Ferreira",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "15659076-7a55-4d68-bf63-e71b5b77c50c",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.987786"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f9e",
+      "id": "6acc2401-be24-4c34-a26e-0402ada8b443",
+      "nome_completo": "Agatha Mirella Souza Martins",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.989230"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198f9f",
+      "id": "6568885f-7398-4c9d-af74-c6e0fa91d788",
+      "nome_completo": "Arthur Galvão Costa da Silva",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.989983"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198fa0",
+      "id": "f4a0372a-efc9-4097-be41-2946dfb88e34",
+      "nome_completo": "Benjamim Henrique de Carvalho André",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.990741"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198fa1",
+      "id": "8ba8c0b4-e02a-4aea-becb-241afe6592ef",
+      "nome_completo": "Helena Marques Dantas",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.991469"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198fa2",
+      "id": "f951242d-ad8a-4540-a458-bbf862681986",
+      "nome_completo": "Lara Heloíse Santos de Jesus",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.992254"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198fa3",
+      "id": "95466828-3077-4efd-8ab6-710cff7c0a44",
+      "nome_completo": "Luiza Oliveira Reis",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.993767"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198fa4",
+      "id": "f67fe26d-2171-4122-8f0a-c1c51037e21c",
+      "nome_completo": "Manuela de Azevedo Santos",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.994574"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198fa5",
+      "id": "512ac69e-7e8e-4cb2-b659-a50ae6311dab",
+      "nome_completo": "Otton Gomes Santos Albuquerque",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.995319"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198fa6",
+      "id": "e5d6a2df-4f6c-475c-807a-b0adc4654e92",
+      "nome_completo": "Ayla Sophia Souza Martins",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.996160"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198fa7",
+      "id": "94a99787-6f7c-479f-83bf-187131108cdc",
+      "nome_completo": "Isadora de Oliveira Santos Alves",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.996904"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198fa8",
+      "id": "2b4c2fe7-1525-4e05-b537-301e8a1ad3eb",
+      "nome_completo": "Leandro Pedro de Lima",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.997694"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198fa9",
+      "id": "ae76e993-fc95-4a34-9631-233db2da1acf",
+      "nome_completo": "Mariana Rodrigues Augusto",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.998593"
+    },
+    {
+      "_id": "688e9dc6f189e46d7c198faa",
+      "id": "35df9699-e166-4626-93e6-f7e605d7dd8a",
+      "nome_completo": "Miguel Silva dos Santos",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "8652b979-6d61-402d-89b6-7f3c49c3b540",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:46.999327"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fac",
+      "id": "e96b59da-6a01-49d9-9b61-b7b4ba3d980c",
+      "nome_completo": "Ana Beatriz Oliveira dos Santos",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.005115"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fad",
+      "id": "75df1a88-f457-4d61-9873-c1fa96665b5d",
+      "nome_completo": "Débora Nicole Galvão Costa da Silva",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.006133"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fae",
+      "id": "49005092-5f80-456b-bbbb-76ed083188a2",
+      "nome_completo": "Heloisa Santana de Moura",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.007010"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198faf",
+      "id": "241f306e-2557-40e7-9f4c-61a29c56b560",
+      "nome_completo": "Melissa de Azevedo Santos",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.007854"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fb0",
+      "id": "a2c0d211-f8ef-42e8-931e-42142d697763",
+      "nome_completo": "Heloisa Fernandes Carvalho",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.008737"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fb1",
+      "id": "73f85422-7342-47fa-a52e-e0d7ae51a359",
+      "nome_completo": "Davi Henrique de Carvalho André",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.009803"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fb2",
+      "id": "c50b5982-00b1-40fb-998f-7f31c018d970",
+      "nome_completo": "Kaleb Henrique Gabriel Tavares",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.010754"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fb3",
+      "id": "af6e12e6-0824-44e9-ba5e-35c55a1d2d5b",
+      "nome_completo": "Andre Felipe de Souza Viana",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.011652"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fb4",
+      "id": "e6f69874-4775-4b22-bcad-69f2289bb68b",
+      "nome_completo": "Maria Ísis",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.012530"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fb5",
+      "id": "f25bcef4-5e30-4d24-ab3e-b44a6b62187e",
+      "nome_completo": "Raissa Reis Conti",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.013458"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fb6",
+      "id": "7f6a7522-e9e6-41b7-80cf-cbbbb3dd6a6b",
+      "nome_completo": "Lorenzo Gomes Pedro Tavares",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.014299"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fb7",
+      "id": "d316457b-cc7f-4ffc-b519-fac48dd4af34",
+      "nome_completo": "Isaac de Oliveira Santos Alves",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.015136"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fb8",
+      "id": "e9fbc64f-4d9b-4bad-aafb-01b6a43ff100",
+      "nome_completo": "Lívia Santos Silva",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.015955"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fb9",
+      "id": "12c18a1e-b420-4ecb-b897-60df0f1dc87b",
+      "nome_completo": "Laura Caroline Rodrigues",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.016746"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fba",
+      "id": "fbd17621-69dc-48ea-a956-a8fed4f76f06",
+      "nome_completo": "Vítor Pedro de Lima",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.017493"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fbb",
+      "id": "9fe21176-459f-423c-8f5b-e24263a84f2f",
+      "nome_completo": "Heitor Brito",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "713873b4-a0ab-48a0-a652-fff67c0a4616",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.018193"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fbd",
+      "id": "bff699b4-f273-4beb-9ef5-cb22058f30b0",
+      "nome_completo": "Beatriz Pedro de Lima",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "59ad58fc-89ea-4f54-989f-18a7cddc55c8",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.019654"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fbe",
+      "id": "683269f1-84e3-471c-b7d3-bb60c57ba686",
+      "nome_completo": "Davi Afonso Lana",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "59ad58fc-89ea-4f54-989f-18a7cddc55c8",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.020409"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fbf",
+      "id": "9a316d84-ce72-47ed-927f-f35dd9684e68",
+      "nome_completo": "Enzo Leonardo Bitencourt Souza",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "59ad58fc-89ea-4f54-989f-18a7cddc55c8",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.021092"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fc0",
+      "id": "a3a71351-2ee9-49f2-a163-79d89c42b8f8",
+      "nome_completo": "Felype Augusto Oliveira de Jesus",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "59ad58fc-89ea-4f54-989f-18a7cddc55c8",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.021795"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fc1",
+      "id": "3f62872a-6698-423c-98bd-5d49fe91dcec",
+      "nome_completo": "Gustavo Lorenzo Ferreira",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "59ad58fc-89ea-4f54-989f-18a7cddc55c8",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.022491"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fc2",
+      "id": "32bf89df-7166-4d4f-81c7-68e9687d58fe",
+      "nome_completo": "Mariana Lima de Sousa",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "59ad58fc-89ea-4f54-989f-18a7cddc55c8",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.023257"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fc3",
+      "id": "89c354df-579d-4359-ae8a-b77043a35f6c",
+      "nome_completo": "Isabelle Sophia Da Costa De Almeida",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "59ad58fc-89ea-4f54-989f-18a7cddc55c8",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.024007"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fc4",
+      "id": "223a17a5-f13c-476e-9f12-3e2987ffc968",
+      "nome_completo": "Luíza (Suellen Tayrone)",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "59ad58fc-89ea-4f54-989f-18a7cddc55c8",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.024869"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fc5",
+      "id": "4cc495dc-37cc-40ed-b6ad-d66eca59431c",
+      "nome_completo": "Hadassah Victoria Gabriel Tavares",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "59ad58fc-89ea-4f54-989f-18a7cddc55c8",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.025656"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fc6",
+      "id": "51e747d3-ccbc-400a-ae1b-47ee8774d8ab",
+      "nome_completo": "Davi Caldeira Rodrigues",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "59ad58fc-89ea-4f54-989f-18a7cddc55c8",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.026341"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fc7",
+      "id": "9016259b-73b8-49da-bdce-02dfda334b91",
+      "nome_completo": "Ana Luiza Santana de Moura",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "59ad58fc-89ea-4f54-989f-18a7cddc55c8",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.026977"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fc8",
+      "id": "9c94395b-828a-44ad-a030-be5773b0ec8b",
+      "nome_completo": "Kemuel Brito",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "59ad58fc-89ea-4f54-989f-18a7cddc55c8",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.027618"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fca",
+      "id": "502bc6f8-2e58-4ef4-99d6-de0a850314c1",
+      "nome_completo": "Enzo Gabriel Guimarães Fernandes",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "5a865ebe-e143-455e-ac5d-67ca5b60493e",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.028888"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fcb",
+      "id": "b0a5474f-cf1b-4121-b528-c99f77b27290",
+      "nome_completo": "Lorena Gomes Pedro Tavares",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "5a865ebe-e143-455e-ac5d-67ca5b60493e",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.029544"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fcc",
+      "id": "59d3f556-5a3b-4c4a-8065-e9ebcd96a8d5",
+      "nome_completo": "Maria Luiza Sousa Brito",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "5a865ebe-e143-455e-ac5d-67ca5b60493e",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.030179"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fcd",
+      "id": "9d7bd075-3591-4e32-a5de-506a5461318f",
+      "nome_completo": "Guilherme Santos Almeida",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "5a865ebe-e143-455e-ac5d-67ca5b60493e",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.030873"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fce",
+      "id": "4545be49-8724-4cf4-9b67-db3ee954beb3",
+      "nome_completo": "Rebeca (filha do Rodrigo)",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "5a865ebe-e143-455e-ac5d-67ca5b60493e",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.031605"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fcf",
+      "id": "e84359d5-b37e-4151-a550-da5f1d8676f7",
+      "nome_completo": "Eduardo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "5a865ebe-e143-455e-ac5d-67ca5b60493e",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.032325"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fd0",
+      "id": "c267eb79-e166-4eec-80e5-d63fd8d99031",
+      "nome_completo": "Anthony Isaac Santos de Jesus",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "5a865ebe-e143-455e-ac5d-67ca5b60493e",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.033023"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fd1",
+      "id": "5a58de3e-c147-4964-bdbe-f8f8a59916a6",
+      "nome_completo": "Ellen Beatrice Caldeira Rodrigues",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "5a865ebe-e143-455e-ac5d-67ca5b60493e",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.033687"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fd2",
+      "id": "60e88b9b-5b0e-431f-8dcc-aae1a25e9bd4",
+      "nome_completo": "Manoela Oliveira Reis",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "5a865ebe-e143-455e-ac5d-67ca5b60493e",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.034344"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fd3",
+      "id": "a45684ca-809c-44dd-b3e0-a974f82dff4d",
+      "nome_completo": "Miguel Paulo dos Santos",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "5a865ebe-e143-455e-ac5d-67ca5b60493e",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.034944"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fd4",
+      "id": "6bd45a40-b0ea-4aa2-9409-0aa8caea25a7",
+      "nome_completo": "Gabriel Santos Almeida",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "5a865ebe-e143-455e-ac5d-67ca5b60493e",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.035584"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fd6",
+      "id": "fe768879-beb5-4010-8ccd-0e541c8b930e",
+      "nome_completo": "Any",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.036957"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fd7",
+      "id": "05690936-4664-4177-bbfd-97e3ddad3ef6",
+      "nome_completo": "Daniel",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.037647"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fd8",
+      "id": "0409a9e8-0c5a-4b14-8883-225ba930bee8",
+      "nome_completo": "Jhenifer",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.038319"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fd9",
+      "id": "50d75dd6-a997-4c6d-951f-37a450276382",
+      "nome_completo": "Jhonwesley",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.039025"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fda",
+      "id": "9a52b872-de04-46a5-bf54-26acb265b44f",
+      "nome_completo": "Josué",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.039698"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fdb",
+      "id": "f6687215-5918-413d-97b4-8b6c318f48ec",
+      "nome_completo": "Karol",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.040342"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fdc",
+      "id": "aa182ab8-fddf-42b7-addb-50f84b51e105",
+      "nome_completo": "Kauã",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.041012"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fdd",
+      "id": "3c6484e3-3360-4712-aead-693b2b2f7961",
+      "nome_completo": "Naely",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.041701"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fde",
+      "id": "14dabf34-8df6-447e-b973-57bd39685593",
+      "nome_completo": "Isa",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.042401"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fdf",
+      "id": "547de17b-ae3a-4e54-ac09-fdacddff272a",
+      "nome_completo": "Paulo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.043097"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fe0",
+      "id": "a586ed61-f607-49a5-a584-dda8cffc5818",
+      "nome_completo": "Sofhia",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.043768"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fe1",
+      "id": "55425472-c2fd-4891-8b21-9febc453b4b1",
+      "nome_completo": "Victor Hugo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.044463"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fe2",
+      "id": "d3c584aa-35ce-4e37-bf0f-e73a1a2312fe",
+      "nome_completo": "Vitor Gabriel",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.045146"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fe3",
+      "id": "b50cf875-658e-4238-b0b1-af275a60fe65",
+      "nome_completo": "Vitória Ferreira",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.045795"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fe4",
+      "id": "608a3807-376a-44cb-a786-7aa0642c2a3b",
+      "nome_completo": "Walacy",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.046519"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fe5",
+      "id": "6b4324b3-37fc-40e2-b3ed-c65057ce5a96",
+      "nome_completo": "Yasmin",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.047289"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fe6",
+      "id": "8da9099a-63be-4988-be74-7419af4660bf",
+      "nome_completo": "Ana Flávia",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.048011"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fe7",
+      "id": "0cd27c0d-40be-4379-828b-f056d9c04119",
+      "nome_completo": "Gabriela",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.048703"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fe8",
+      "id": "2ee22a8d-fc9b-4214-b499-763018a39a93",
+      "nome_completo": "Arthur",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.049359"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fe9",
+      "id": "ebbbfa0d-0f78-448d-a423-38048828de9a",
+      "nome_completo": "Jamilly Costa",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "d25711f6-ec2b-4746-a6c1-dcbceebb54b4",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.050013"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198feb",
+      "id": "e5f5820f-04ca-4942-863a-191a0a33207f",
+      "nome_completo": "Abmael",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.051340"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fec",
+      "id": "3e9c8b6d-aad6-4f3d-91ac-9616a5c4c281",
+      "nome_completo": "Almir",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.052007"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fed",
+      "id": "61b42baf-e47b-42aa-8276-03967b1e8c07",
+      "nome_completo": "Ana",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.052655"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fee",
+      "id": "3753ec26-1ddb-4d13-8303-bde1afa06545",
+      "nome_completo": "Emanuel",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.053340"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fef",
+      "id": "d17c567b-f56d-44b5-9c48-b95509bd3baa",
+      "nome_completo": "Gustavo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.054002"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ff0",
+      "id": "69033cfc-9d3b-432a-b222-565124d13d52",
+      "nome_completo": "Ingrid",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.054751"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ff1",
+      "id": "67a7732c-c70b-4c79-b138-fba211316ece",
+      "nome_completo": "Janecelia",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.055423"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ff2",
+      "id": "aebd22ca-64bd-4a88-aa6b-d0cde61a737f",
+      "nome_completo": "Jhenniffer",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.056085"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ff3",
+      "id": "3a62a2a4-c8c1-4234-822b-b69522e21fc2",
+      "nome_completo": "Júlio",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.056727"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ff4",
+      "id": "230e64e3-7122-487b-b2b9-9d4f1e7835fd",
+      "nome_completo": "Kessia",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.057384"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ff5",
+      "id": "f621b3ff-93be-4300-86f0-323147714539",
+      "nome_completo": "Misma",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.058087"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ff6",
+      "id": "296c6a6c-ceb7-490d-a5f5-3b0c0004068f",
+      "nome_completo": "Natalia Silva",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.058743"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ff7",
+      "id": "43dd90ae-e1fd-43f8-93b0-062780b43ead",
+      "nome_completo": "Solange",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.059408"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ff8",
+      "id": "8b8da8c4-bea1-41da-98e7-85279f2b53fd",
+      "nome_completo": "Vitória Soares",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.060222"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ff9",
+      "id": "2231240f-7f1a-4e7c-b17c-c1739f746494",
+      "nome_completo": "Yan",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.061066"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ffa",
+      "id": "5cba1968-d1d6-4700-a6b1-2fc8533d1e1f",
+      "nome_completo": "Abner",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.061957"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ffb",
+      "id": "735bcd2a-3d0e-475a-890f-f15d903f93d4",
+      "nome_completo": "Dannilo Duany",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.062848"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ffc",
+      "id": "8c62d313-9c67-4308-a9c8-3bee121a3f89",
+      "nome_completo": "Lucas Brito",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.063648"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ffd",
+      "id": "f09d9379-0207-48ba-82cd-db39371d5ede",
+      "nome_completo": "Ana Carolina",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.064361"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198ffe",
+      "id": "fea39a94-02ea-47f5-b3e2-40e44e09b55c",
+      "nome_completo": "Danilo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.065090"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c198fff",
+      "id": "f5798f41-f538-46a6-b315-7ce784ad1b8e",
+      "nome_completo": "Matheus Assis",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.065810"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199000",
+      "id": "b643fc82-c63b-49d1-a3e5-a7070a32e008",
+      "nome_completo": "Ademir Junior",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.066485"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199001",
+      "id": "a84fe89c-4a9d-4fbe-903f-3da1f3920f21",
+      "nome_completo": "Pedro",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "92d58ae5-fd99-4893-8ce6-1652b637b398",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.067168"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199003",
+      "id": "c4f08e72-d7b4-4cfb-93de-d3c701a63eb0",
+      "nome_completo": "Ana Aleixo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.068536"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199004",
+      "id": "9e2fcf30-d514-43d8-8297-f06c1a4f621e",
+      "nome_completo": "Angelica",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.069202"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199005",
+      "id": "16c117e6-94cd-4fcc-8321-ab97bff5d1c7",
+      "nome_completo": "Bruna",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.069906"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199006",
+      "id": "a26034d2-b9f3-4e4f-a0ed-459355eab4a4",
+      "nome_completo": "Carla",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.070614"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199007",
+      "id": "a3e72837-2183-4787-9b2f-db66604d4437",
+      "nome_completo": "Carla Santana",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.071342"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199008",
+      "id": "8f1410e8-1cfd-40c0-8a04-1c3161fc5acf",
+      "nome_completo": "Claudia",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.072075"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199009",
+      "id": "655885ef-93e9-445c-b5ee-52bedd1097ae",
+      "nome_completo": "Cristiane Gomes",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.072725"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19900a",
+      "id": "e878e739-461b-4091-bd36-83592d4fec7f",
+      "nome_completo": "Daiane Balleiro",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.073650"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19900b",
+      "id": "a8bd46ab-2fa5-42e2-a059-3de0bc707194",
+      "nome_completo": "Denise Rodrigues",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.074436"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19900c",
+      "id": "3e853940-92f3-447d-975c-360acf3fe4f1",
+      "nome_completo": "Dirce dos Santos",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.075149"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19900d",
+      "id": "e64da329-09f7-4676-877a-6c0f72772249",
+      "nome_completo": "Eliane Cardoso",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.082345"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19900e",
+      "id": "fa8ff406-ff91-40ee-94ec-8a24545b48bd",
+      "nome_completo": "Eliene Viana",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.083198"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19900f",
+      "id": "c6be3ed5-f1bb-4040-bb6c-7abde77d40d9",
+      "nome_completo": "Érica",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.083891"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199010",
+      "id": "d7b83f55-c2d8-4a47-b81f-0c21d34c0cb4",
+      "nome_completo": "Ester Ferreira",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.084697"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199011",
+      "id": "b0b5a434-f755-4952-9f74-8acf7b28af73",
+      "nome_completo": "Eula",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.085360"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199012",
+      "id": "bc0f1dda-c0cb-4ebc-9e95-ce7a112a5d33",
+      "nome_completo": "Evanilda",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.086073"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199013",
+      "id": "c8ff9f1b-7e7d-4061-83d0-2c2f2856112d",
+      "nome_completo": "Geni",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.086722"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199014",
+      "id": "386c166a-67e7-43b1-9f13-892c262364fc",
+      "nome_completo": "Geovan Silva",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.087387"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199015",
+      "id": "c2724173-1d3d-49e5-b5ec-b7860c9e47c6",
+      "nome_completo": "Geovanna Tavares",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.088016"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199016",
+      "id": "d0bf622a-f32d-466f-87fc-53f09900e50b",
+      "nome_completo": "Gildete Dias dos Santos",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.088692"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199017",
+      "id": "59b437ff-5305-4e5e-b92d-91013b915e9c",
+      "nome_completo": "Graciete",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.089407"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199018",
+      "id": "cd9df667-eac3-4f57-9b5e-e9d4da07a7d0",
+      "nome_completo": "Graucia Campos",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.090110"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199019",
+      "id": "21911e89-5800-4290-a533-779eea746cf0",
+      "nome_completo": "Iraci",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.090788"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19901a",
+      "id": "c7359b0a-cf84-4341-83a0-818b014d5925",
+      "nome_completo": "Jô",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.091480"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19901b",
+      "id": "b78a1268-9375-46df-9116-00b902046d9f",
+      "nome_completo": "Jovina",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.092182"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19901c",
+      "id": "50877478-d652-419c-af53-4b8dcdf82b81",
+      "nome_completo": "Jucileide",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.092911"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19901d",
+      "id": "35f5fdcd-5046-4eae-a9ac-d1ca73eb7812",
+      "nome_completo": "Kennye",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.093709"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19901e",
+      "id": "5da82c53-8751-46dd-876a-392349de1409",
+      "nome_completo": "Lenilde",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.094484"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19901f",
+      "id": "88463efe-6009-454d-8449-62bd89a40e21",
+      "nome_completo": "Lilian",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.095218"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199020",
+      "id": "90c1984a-6b64-4c2d-b727-89986491c4d0",
+      "nome_completo": "Lourdes Oliveira",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.095951"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199021",
+      "id": "cbddc34a-f397-44c5-871f-e91219fc6d7a",
+      "nome_completo": "Maria",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.096680"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199022",
+      "id": "76b1eb80-2720-4733-99e0-4ee1237d6c01",
+      "nome_completo": "Maria de Loudes Ayala",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.097443"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199023",
+      "id": "1a031e7b-d351-4efc-8527-5f480a85c4e4",
+      "nome_completo": "Maria Helna Lourenço",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.098178"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199024",
+      "id": "3876f2e3-ea51-4ea1-b51b-4e96e5f82939",
+      "nome_completo": "Marli de Paula",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.098915"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199025",
+      "id": "c7b327bb-95cc-475c-9135-870c8da284e9",
+      "nome_completo": "Maya",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.099661"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199026",
+      "id": "6fd77eee-92ac-4f21-a8a7-015eeca15701",
+      "nome_completo": "Nalva",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.100367"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199027",
+      "id": "79ad8412-c99f-4059-bd6c-469172059b24",
+      "nome_completo": "Neuza Guimarães",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.101235"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199028",
+      "id": "2af78aa8-7189-40c3-9c9d-4f32157195ff",
+      "nome_completo": "Nilza Arcanjo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.102077"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199029",
+      "id": "653af014-b96f-4018-9d62-3b7101948d42",
+      "nome_completo": "Raimunda da Conceição",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.102871"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19902a",
+      "id": "2e452de8-465c-4a90-a750-c00efdb44a76",
+      "nome_completo": "Rosenilda",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.103655"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19902b",
+      "id": "2fed1d98-4774-4542-8f20-06551e120e66",
+      "nome_completo": "Rute Morete",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.104529"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19902c",
+      "id": "11047199-77ac-4265-9690-c7c689fba3f3",
+      "nome_completo": "Sandra Assis",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.105272"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19902d",
+      "id": "774ae89c-8aec-4a6f-b95f-0bdce22e14bb",
+      "nome_completo": "Sara Ribeiro",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.106039"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19902e",
+      "id": "1d16d274-7219-4d10-ade7-53e16f2a67a5",
+      "nome_completo": "Sarah Reis",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.106733"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19902f",
+      "id": "7576858f-5646-4413-bbf1-b20ccfb2b69a",
+      "nome_completo": "Simone Tavares",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.107562"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199030",
+      "id": "3210087a-8421-4de5-9c6b-686d6d4b398d",
+      "nome_completo": "Sandra Magalhães",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.108301"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199031",
+      "id": "9e82a840-3201-41b7-8126-d56ed4b936ce",
+      "nome_completo": "Tania",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.109115"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199032",
+      "id": "f7ba020d-7fb2-4cc7-8cc9-e7ec4a4a8225",
+      "nome_completo": "Valdirene",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.109892"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199033",
+      "id": "0810f671-b5d7-478d-b241-896f4ba9ae43",
+      "nome_completo": "Vera Lucia Aparecida",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.110656"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199034",
+      "id": "d31c6925-f599-4d3f-af28-7233b7ea83f2",
+      "nome_completo": "Vera Ricardo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.111346"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199035",
+      "id": "0cf33dca-7881-449e-9e35-0eebd9835d7d",
+      "nome_completo": "Laudiceia",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.112049"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199036",
+      "id": "f1757ee4-3df4-4c51-8a1b-aa523345aa37",
+      "nome_completo": "Rosana",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.112778"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199037",
+      "id": "473b23b4-c3d7-4d66-9ff2-94ce89ffbb11",
+      "nome_completo": "Augusta",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.113480"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199038",
+      "id": "6965c446-95e9-4ad0-b160-452fedf0e7b1",
+      "nome_completo": "Deise Farias",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.114180"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199039",
+      "id": "778b44a4-faac-49c7-98f2-e65555476fae",
+      "nome_completo": "Mirian Menezes",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.115016"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19903a",
+      "id": "eb806fba-5c1e-4ee7-84bc-6e753c86932c",
+      "nome_completo": "Regiane",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.115840"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19903b",
+      "id": "b4a09e0f-eb8f-4f3e-b8f0-5da2bc3d6fa0",
+      "nome_completo": "Danieli",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.116710"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19903c",
+      "id": "1e2f3fc3-bfd1-4073-9fbb-838aad7db020",
+      "nome_completo": "Gleyse",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.117517"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19903d",
+      "id": "7b3df155-61f1-4998-82e4-10382bc0359a",
+      "nome_completo": "Lucilene",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.118357"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19903e",
+      "id": "c22719d5-136e-46d8-976d-00d16799f7f5",
+      "nome_completo": "Tia Kesia",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.119146"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19903f",
+      "id": "ca885588-23ff-4308-8acf-f734d8b97c73",
+      "nome_completo": "Leicida",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.119978"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199040",
+      "id": "c4450715-294f-4226-a891-d32d17f4c3b0",
+      "nome_completo": "Márcia Regina",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.120835"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199042",
+      "id": "43811b96-6344-49ff-9227-8af51481a087",
+      "nome_completo": "Coop Antônio",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.122484"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199043",
+      "id": "b0dc6607-ad7e-4696-9542-3672205c84e7",
+      "nome_completo": "Coop Denys",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.123313"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199044",
+      "id": "6cc30066-d618-4779-bc94-f693a36e1707",
+      "nome_completo": "Coop Elias Barbosa",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.124154"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199045",
+      "id": "39e8b8d9-d478-4c06-94c1-f60dbc0560ad",
+      "nome_completo": "Coop Emanuel",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.125104"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199046",
+      "id": "eb19f86b-1b84-44c6-8e68-63e004673c7c",
+      "nome_completo": "Coop Evandro",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.125882"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199047",
+      "id": "ac4c43c0-2108-4d5b-a10d-6657115d511a",
+      "nome_completo": "Coop Francisco",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.126612"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199048",
+      "id": "df3160c2-bb1e-42ee-b585-3a18c517a83e",
+      "nome_completo": "Coop João Gregório",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.127329"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199049",
+      "id": "3144d0d5-a9a5-4361-b225-e3f545f970ff",
+      "nome_completo": "Coop Roberto Dantas",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.128044"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19904a",
+      "id": "fa794732-dfba-4278-8598-6e3ccd9fb36b",
+      "nome_completo": "Coop Valdeci",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.128743"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19904b",
+      "id": "2b374208-35e1-49ac-baf5-915e1ad76bad",
+      "nome_completo": "Diac Emílio",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.129426"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19904c",
+      "id": "564c4f4a-582b-4da2-a5b5-45ce0d44964d",
+      "nome_completo": "Diac Luiz Borges",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.130131"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19904d",
+      "id": "45681cc6-76d0-4084-b767-e9051b189284",
+      "nome_completo": "Diac Marcos",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.130843"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19904e",
+      "id": "d5ba6493-1555-499c-ad8b-bcc762abb384",
+      "nome_completo": "Pb Almir",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.131509"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19904f",
+      "id": "9e97fd45-e7ec-4579-8015-6c85135aef8f",
+      "nome_completo": "Pb Bernardo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.132199"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199050",
+      "id": "655273b0-ad82-4beb-bd10-865ec20dc9e0",
+      "nome_completo": "Pb Cosmo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.132860"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199051",
+      "id": "f2886898-6206-4e48-b20c-c7f9fdadb23c",
+      "nome_completo": "Pb Geovane",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.133568"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199052",
+      "id": "8ca83dd3-ce58-4367-b88b-9b2724407bba",
+      "nome_completo": "Pb Ismael",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.134341"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199053",
+      "id": "93da379f-0437-442a-bf47-9875994b8713",
+      "nome_completo": "Pb Thiago Tavares",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.135187"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199054",
+      "id": "3a3ff97b-c0ad-4ed2-860a-1ed680480f1f",
+      "nome_completo": "Coop Walmir",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.136051"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199055",
+      "id": "9991ec45-ad26-4d3b-8b97-9851b63ec337",
+      "nome_completo": "Coop Alessandro",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.136879"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199056",
+      "id": "7d02bb47-3513-4abf-82dd-546a6cb6a5d1",
+      "nome_completo": "Pb Isaac",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.137783"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199057",
+      "id": "4d7b7f1f-97d7-4f8f-afc1-d8915fb19677",
+      "nome_completo": "Coop Edson",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.138622"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199059",
+      "id": "b6c7794d-4137-4da5-bf42-3c4a32be62fb",
+      "nome_completo": "Alexandre Tavares",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.140097"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19905a",
+      "id": "777cdbe6-668d-4c06-8241-ed536f501d42",
+      "nome_completo": "Amilton",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.140781"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19905b",
+      "id": "78e556c1-52cc-4dd8-81ad-56880ca3a47d",
+      "nome_completo": "André Afonso Lana",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.141457"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19905c",
+      "id": "f3a04131-3a56-44fc-8e4d-6e46f0a391a9",
+      "nome_completo": "Daniel Corsine",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.142122"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19905d",
+      "id": "32d8dcaf-4f22-446a-bf8e-669cab4bffd4",
+      "nome_completo": "Elias Barbosa",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.142885"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19905e",
+      "id": "8110fbdf-6dc6-4802-89b7-73de91fc1deb",
+      "nome_completo": "Elizeu Barbosa",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.143575"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19905f",
+      "id": "fb4a6597-4ba5-4348-8c4e-a802a016f0ee",
+      "nome_completo": "Gerônimo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.144409"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199060",
+      "id": "f3d275c8-b83a-418e-baf3-937e3f07529b",
+      "nome_completo": "Isaias Abreu",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.145092"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199061",
+      "id": "35200d82-332c-4433-8ce4-acad0933f92a",
+      "nome_completo": "Jair Benedito",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.145953"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199062",
+      "id": "1ac5b60d-ea69-4461-bdd5-c6eaff11253b",
+      "nome_completo": "Jesiel José",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.146823"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199063",
+      "id": "c60eeb2c-8e43-4798-a885-034db4f560ca",
+      "nome_completo": "Jessé Araújo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.147687"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199064",
+      "id": "a4a74ba2-966c-4a0b-a894-d6f48605b451",
+      "nome_completo": "Joedilson",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.148499"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199065",
+      "id": "3f61ff86-4388-4a60-b8d1-b9f4589c50e4",
+      "nome_completo": "Joel Cruz",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.149353"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199066",
+      "id": "6b84ed20-0f74-4631-8f2f-5c55ae34ffe8",
+      "nome_completo": "José Arcanjo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.150207"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199067",
+      "id": "c07097a5-0502-4d02-a0e6-3cb86e6da923",
+      "nome_completo": "José Domingos",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.151110"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199068",
+      "id": "1a1956e8-b700-4bc4-bf75-db7ca7c25028",
+      "nome_completo": "Luiz Felipe",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.151891"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199069",
+      "id": "26b53767-b226-4b17-bee7-f1986aa6a56a",
+      "nome_completo": "Manoel Lopes",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.152732"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19906a",
+      "id": "44f8c36d-bbc7-49d0-8c77-140450a6425e",
+      "nome_completo": "Messias Rodrigues",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.153511"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19906b",
+      "id": "75d3820a-fb0d-4c29-a069-ac712dea55e3",
+      "nome_completo": "Nylon",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.154333"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19906c",
+      "id": "3683ec0d-6399-48d1-9854-42b11e8e62ed",
+      "nome_completo": "Ronaldo Rabelo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.155139"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19906d",
+      "id": "9309547e-f3b7-4c63-a34a-f967ea28f632",
+      "nome_completo": "Tiago Henrique",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.156030"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19906e",
+      "id": "cb80e0d3-6648-4757-902b-c887f198f23b",
+      "nome_completo": "Fernando Paulo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.156857"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c19906f",
+      "id": "29fb953d-b05f-4849-a545-1b06e4632822",
+      "nome_completo": "Gideão",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.157714"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199070",
+      "id": "7330a19b-d423-411b-84bd-27d2e06f5e78",
+      "nome_completo": "Djalma",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.158580"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199071",
+      "id": "9b12e71f-da6a-48c1-8897-764ed5f43436",
+      "nome_completo": "José Maria",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.159435"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199072",
+      "id": "6fd35145-6e3c-4fc9-bdeb-d062da79ee7b",
+      "nome_completo": "Willian Medeiros Alves",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.160236"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199073",
+      "id": "0765fba1-0a17-4f01-9849-e86930ade3db",
+      "nome_completo": "Diego Augusto",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.161100"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199074",
+      "id": "ba3b228b-5fd8-4775-80a5-6fba1930c67d",
+      "nome_completo": "Reginaldo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.161901"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199075",
+      "id": "74d4918c-4cfa-4b0d-a074-ec567bb4c16a",
+      "nome_completo": "Daniel José",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.162751"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199076",
+      "id": "9d82a80a-c2ce-46a9-a20c-b17ad7b62481",
+      "nome_completo": "Daniel Mousinho de Araújo",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.163560"
+    },
+    {
+      "_id": "688e9dc7f189e46d7c199077",
+      "id": "ddd3bec3-70e7-4392-b08e-472d1dc55b52",
+      "nome_completo": "Gabriel Lana",
+      "data_nascimento": "2000-01-01",
+      "contato": "",
+      "turma_id": "0ffd3a09-47ee-4940-8e49-4a2e6db425a1",
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:47.164450"
+    }
+  ],
+  "users": [
+    {
+      "_id": "688e9daff189e46d7c198f79",
+      "id": "ffa23249-c838-42c4-98d4-1492995f1cb9",
+      "nome": "Márcio Ferreira",
+      "email": "admin@ebd.com",
+      "senha_hash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "tipo": "admin",
+      "turmas_permitidas": [],
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:23.041037"
+    },
+    {
+      "_id": "688e9db3f189e46d7c198f7a",
+      "id": "76e8d3c4-3226-495e-989d-a8de6f7f48e3",
+      "nome": "Kesia Ferreira",
+      "email": "kell@ebd.com",
+      "senha_hash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "tipo": "professor",
+      "turmas_permitidas": [
+        "5a865ebe-e143-455e-ac5d-67ca5b60493e"
+      ],
+      "ativo": true,
+      "criado_em": "2025-08-02T23:22:27.101316",
+      "senha": "123456",
+      "updated_at": "2025-08-02 23:25:39"
+    }
+  ],
+  "attendance": [],
+  "revistas": [
+    {
+      "_id": "688e9fb7f189e46d7c19907e",
+      "id": "380c17df-7977-4862-82eb-180e6206a5ce",
+      "tema": "A Liberdade em Cristo — Vivendo o verdadeiro Evangelho conforme a Carta de Paulo aos Gálatas",
+      "licoes": [
+        {
+          "titulo": "Gálatas: a carta da liberdade cristã",
+          "data": "2025-07-06"
+        },
+        {
+          "titulo": "O falso evangelho",
+          "data": "2025-07-13"
+        },
+        {
+          "titulo": "Paulo e sua chamada",
+          "data": "2025-07-20"
+        },
+        {
+          "titulo": "O encontro em Jerusalém e os falsos irmãos",
+          "data": "2025-07-27"
+        },
+        {
+          "titulo": "Advertência contra o legalismo",
+          "data": "2025-08-03"
+        },
+        {
+          "titulo": "Justificados pela fé em Jesus Cristo",
+          "data": "2025-08-10"
+        },
+        {
+          "titulo": "A promessa que não pode ser revogada",
+          "data": "2025-08-17"
+        },
+        {
+          "titulo": "Filhos e herdeiros",
+          "data": "2025-08-24"
+        },
+        {
+          "titulo": "Filhos de Deus e descendência de Abraão",
+          "data": "2025-08-31"
+        },
+        {
+          "titulo": "A liberdade que Cristo nos deu",
+          "data": "2025-09-07"
+        },
+        {
+          "titulo": "A carne e o Espírito: a luta que existe em nós",
+          "data": "2025-09-14"
+        },
+        {
+          "titulo": "O que você semear, ceifará",
+          "data": "2025-09-21"
+        },
+        {
+          "titulo": "As marcas de Cristo",
+          "data": "2025-09-28"
+        }
+      ],
+      "turma_ids": [
+        "92d58ae5-fd99-4893-8ce6-1652b637b398"
+      ],
+      "ativa": true,
+      "criada_em": "2025-08-02T23:31:03.535043"
+    },
+    {
+      "_id": "688e9fb7f189e46d7c19907f",
+      "id": "51c3b9e8-c48f-4ff4-a278-22a508908f00",
+      "tema": "Grandes Cartas para Nós",
+      "licoes": [
+        {
+          "titulo": "A importância da comunicação",
+          "data": "2025-07-06"
+        },
+        {
+          "titulo": "Hebreus, uma Carta sobre Jesus",
+          "data": "2025-07-13"
+        },
+        {
+          "titulo": "A poderosa mensagem da Carta aos Hebreus",
+          "data": "2025-07-20"
+        },
+        {
+          "titulo": "A questão da fé na Carta aos Hebreus",
+          "data": "2025-07-27"
+        },
+        {
+          "titulo": "Vamos conhecer a Carta de Tiago",
+          "data": "2025-08-03"
+        },
+        {
+          "titulo": "Aprendendo com a Carta de Tiago",
+          "data": "2025-08-10"
+        },
+        {
+          "titulo": "Vamos conhecer a 1ª Carta de Pedro",
+          "data": "2025-08-17"
+        },
+        {
+          "titulo": "Vamos aprender com a 2ª Carta de Pedro",
+          "data": "2025-08-24"
+        },
+        {
+          "titulo": "Vamos conhecer a 1ª Carta de João",
+          "data": "2025-08-31"
+        },
+        {
+          "titulo": "Vamos conhecer a 2ª Carta de João",
+          "data": "2025-09-07"
+        },
+        {
+          "titulo": "Vamos conhecer a 3ª Carta de João",
+          "data": "2025-09-14"
+        },
+        {
+          "titulo": "Vamos conhecer a Carta de Judas",
+          "data": "2025-09-21"
+        },
+        {
+          "titulo": "Vamos praticar a palavra!",
+          "data": "2025-09-28"
+        }
+      ],
+      "turma_ids": [
+        "d25711f6-ec2b-4746-a6c1-dcbceebb54b4"
+      ],
+      "ativa": true,
+      "criada_em": "2025-08-02T23:31:03.635017"
+    },
+    {
+      "_id": "688e9fb7f189e46d7c199080",
+      "id": "257b3e4f-555b-44fe-bd03-ddf2aa4b4dfc",
+      "tema": "Verdades que Jesus ensinou",
+      "licoes": [
+        {
+          "titulo": "A lição sobre o Reino de Deus",
+          "data": "2025-07-06"
+        },
+        {
+          "titulo": "A lição sobre a oração",
+          "data": "2025-07-13"
+        },
+        {
+          "titulo": "A lição das duas casas",
+          "data": "2025-07-20"
+        },
+        {
+          "titulo": "A lição da tempestade",
+          "data": "2025-07-27"
+        },
+        {
+          "titulo": "A lição da árvore e os seus frutos",
+          "data": "2025-08-03"
+        },
+        {
+          "titulo": "A lição do semeador",
+          "data": "2025-08-10"
+        },
+        {
+          "titulo": "A lição do perdão",
+          "data": "2025-08-17"
+        },
+        {
+          "titulo": "A lição da ovelha perdida",
+          "data": "2025-08-24"
+        },
+        {
+          "titulo": "A lição do filho arrependido",
+          "data": "2025-08-31"
+        },
+        {
+          "titulo": "A lição do jovem rico",
+          "data": "2025-09-07"
+        },
+        {
+          "titulo": "A lição dos servos maus",
+          "data": "2025-09-14"
+        },
+        {
+          "titulo": "A lição dos talentos",
+          "data": "2025-09-21"
+        },
+        {
+          "titulo": "A lição do amor na cruz",
+          "data": "2025-09-28"
+        }
+      ],
+      "turma_ids": [
+        "59ad58fc-89ea-4f54-989f-18a7cddc55c8"
+      ],
+      "ativa": true,
+      "criada_em": "2025-08-02T23:31:03.765967"
+    },
+    {
+      "_id": "688e9fc5f189e46d7c199081",
+      "id": "9ba5b61c-23f4-4083-87e6-6775ce0c2772",
+      "tema": "Recebendo o Batismo no Espírito Santo",
+      "licoes": [
+        {
+          "titulo": "A Promessa do Derramamento do Espírito Santo",
+          "data": "2025-07-06"
+        },
+        {
+          "titulo": "O Poder do Alto no Dia de Pentecoste",
+          "data": "2025-07-13"
+        },
+        {
+          "titulo": "O Poder do Espírito na vida de Pedro e João",
+          "data": "2025-07-20"
+        },
+        {
+          "titulo": "O Espírito Santo na vida de Paulo",
+          "data": "2025-07-27"
+        },
+        {
+          "titulo": "O Mover do Espírito na Casa de Cornélio",
+          "data": "2025-08-03"
+        },
+        {
+          "titulo": "O Evangelho em Éfeso e o Revestimento de Poder",
+          "data": "2025-08-10"
+        },
+        {
+          "titulo": "As Línguas Estranhas como Evidência do Batismo",
+          "data": "2025-08-17"
+        },
+        {
+          "titulo": "O Dom de Interpretar as Línguas",
+          "data": "2025-08-24"
+        },
+        {
+          "titulo": "O Exercício dos Dons Espirituais",
+          "data": "2025-08-31"
+        },
+        {
+          "titulo": "O Batismo no Espírito e a Santificação do Crente",
+          "data": "2025-09-07"
+        },
+        {
+          "titulo": "O Batismo no Espírito e o Testemunho da Igreja",
+          "data": "2025-09-14"
+        },
+        {
+          "titulo": "Vivendo o Avivamento Espiritual",
+          "data": "2025-09-21"
+        },
+        {
+          "titulo": "Buscando o Batismo no Espírito Santo",
+          "data": "2025-09-28"
+        }
+      ],
+      "turma_ids": [
+        "5a865ebe-e143-455e-ac5d-67ca5b60493e"
+      ],
+      "ativa": true,
+      "criada_em": "2025-08-02T23:31:17.768656"
+    },
+    {
+      "_id": "688e9fcdf189e46d7c199082",
+      "id": "a2f8f543-734a-4451-9cbc-07a30b5642f6",
+      "tema": "As aventuras de um Grande Missionário",
+      "licoes": [
+        {
+          "titulo": "O caçador de cristãos",
+          "data": "2025-07-06"
+        },
+        {
+          "titulo": "De perseguidor a missionário",
+          "data": "2025-07-13"
+        },
+        {
+          "titulo": "Paulo em sua primeira viagem missionária",
+          "data": "2025-07-20"
+        },
+        {
+          "titulo": "Um mágico enganador é desmascarado",
+          "data": "2025-07-27"
+        },
+        {
+          "titulo": "Deuses ou missionários",
+          "data": "2025-08-03"
+        },
+        {
+          "titulo": "Amizades missionárias",
+          "data": "2025-08-10"
+        },
+        {
+          "titulo": "Mudança de planos",
+          "data": "2025-08-17"
+        },
+        {
+          "titulo": "Oração e louvor causam grande tremor",
+          "data": "2025-08-24"
+        },
+        {
+          "titulo": "A grande recompensa dos missionários",
+          "data": "2025-08-31"
+        },
+        {
+          "titulo": "Os falsos missionários",
+          "data": "2025-09-07"
+        },
+        {
+          "titulo": "A ressurreição durante a pregação",
+          "data": "2025-09-14"
+        },
+        {
+          "titulo": "Paulo evangeliza um rei",
+          "data": "2025-09-21"
+        },
+        {
+          "titulo": "Fé em meio às tempestades",
+          "data": "2025-09-28"
+        }
+      ],
+      "turma_ids": [
+        "713873b4-a0ab-48a0-a652-fff67c0a4616"
+      ],
+      "ativa": true,
+      "criada_em": "2025-08-02T23:31:25.114773"
+    },
+    {
+      "_id": "688e9fd2f189e46d7c199083",
+      "id": "b55745f0-ae46-43f6-989c-7dff15a10744",
+      "tema": "A Igreja em Jerusalém — Doutrina, Comunhão e Fé: a base para o crescimento da Igreja em meio às perseguições",
+      "licoes": [
+        {
+          "titulo": "A Igreja que nasceu no Pentecostes",
+          "data": "2025-07-06"
+        },
+        {
+          "titulo": "A Igreja de Jerusalém: um modelo a ser seguido",
+          "data": "2025-07-13"
+        },
+        {
+          "titulo": "Uma Igreja fiel à pregação do Evangelho",
+          "data": "2025-07-20"
+        },
+        {
+          "titulo": "Uma Igreja cheia do Espírito Santo",
+          "data": "2025-07-27"
+        },
+        {
+          "titulo": "Uma Igreja cheia de amor",
+          "data": "2025-08-03"
+        },
+        {
+          "titulo": "Uma Igreja não conivente com a mentira",
+          "data": "2025-08-10"
+        },
+        {
+          "titulo": "Uma Igreja que não teme a perseguição",
+          "data": "2025-08-17"
+        },
+        {
+          "titulo": "Uma Igreja que enfrenta os seus problemas",
+          "data": "2025-08-24"
+        },
+        {
+          "titulo": "Uma Igreja que se arrisca",
+          "data": "2025-08-31"
+        },
+        {
+          "titulo": "A expansão da Igreja",
+          "data": "2025-09-07"
+        },
+        {
+          "titulo": "Uma igreja hebreia na casa de um estrangeiro",
+          "data": "2025-09-14"
+        },
+        {
+          "titulo": "O caráter missionário da Igreja de Jerusalém",
+          "data": "2025-09-21"
+        },
+        {
+          "titulo": "Assembleia de Jerusalém",
+          "data": "2025-09-28"
+        }
+      ],
+      "turma_ids": [
+        "15659076-7a55-4d68-bf63-e71b5b77c50c",
+        "20b541dc-5d4c-41b3-9d3e-a1748210b221",
+        "4abc9ad7-3aab-4af3-b67c-d17939f22fc2",
+        "0ffd3a09-47ee-4940-8e49-4a2e6db425a1"
+      ],
+      "ativa": true,
+      "criada_em": "2025-08-02T23:31:30.813432"
+    }
+  ],
+  "church_info": []
+}

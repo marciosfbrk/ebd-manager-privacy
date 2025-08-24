@@ -1,0 +1,46 @@
+{
+  "chamadas": [
+    {
+      "data": "2025-07-06",
+      "turma": "Jovens",
+      "ofertas": 45.5,
+      "materiais_distribuidos": 25,
+      "presencas": [
+        {
+          "aluno": "João Silva",
+          "presente": true
+        },
+        {
+          "aluno": "Maria Santos",
+          "presente": true
+        },
+        {
+          "aluno": "Pedro Oliveira",
+          "presente": false
+        }
+      ]
+    },
+    {
+      "data": "2025-07-13",
+      "turma": "Adolescentes",
+      "ofertas": 32.8,
+      "materiais_distribuidos": 18
+    },
+    {
+      "data": "2025-07-20",
+      "turma": "Adultos Unidos",
+      "ofertas": 78.3,
+      "materiais_distribuidos": 40,
+      "presencas": [
+        {
+          "aluno": "Carlos Mendes",
+          "presente": true
+        },
+        {
+          "aluno": "Ana Costa",
+          "presente": true
+        }
+      ]
+    }
+  ]
+}

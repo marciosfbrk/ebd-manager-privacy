@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Incluir dados do WebView para backup -->
+    <include domain="database" path="webview"/>
+    <include domain="database" path="webviewCache"/>
+    <include domain="sharedpref" path="WebViewChromiumPrefs.xml"/>
+    
+    <!-- Excluir dados temporários -->
+    <exclude domain="cache" path="."/>
+    <exclude domain="no_backup" path="."/>
+</full-backup-content>

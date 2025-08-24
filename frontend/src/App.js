@@ -1529,8 +1529,8 @@ function App() {
           
           // Distribuir ofertas igualmente entre os presentes (corrigido problema de precisão)
           if (att.presente && presentesCount > 0) {
-            // Usar toFixed para evitar problemas de ponto flutuante
-            oferta = parseFloat((ofertaTotal / presentesCount).toFixed(2));
+            // Usar Math.round para evitar problemas de ponto flutuante
+            oferta = Math.round((ofertaTotal / presentesCount) * 100) / 100;
           }
           
           // Dar bíblias e revistas apenas para o primeiro aluno (para não duplicar)

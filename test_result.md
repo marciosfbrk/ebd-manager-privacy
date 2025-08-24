@@ -312,6 +312,18 @@ backend:
         agent: "testing"
         comment: "CLASSES VENCEDORAS WHITELIST CORRECTION VERIFIED (2025-08-20): 🎉 COMPREHENSIVE WHITELIST TESTING SUCCESSFUL! ✅ LOGIN: Successfully logged in with admin@ebd.com / 123456. ✅ NAVIGATION: 'Relatórios Detalhados' button found and navigation working perfectly. ✅ CLASSES VENCEDORAS SECTION: 'Classes Vencedoras por Departamento' section found and accessible. ✅ WHITELIST VALIDATION PASSED: All three departments showing ONLY whitelisted classes as winners: Departamento Infantil (Genesis - valid from whitelist: Genesis, Primarios, Juniores), Departamento Jovens e Adolescentes (Adolescentes - valid from whitelist: Pré Adolescentes, Adolescentes, Jovens), Departamento Adulto (Dorcas (irmãs) - valid from whitelist: Soldados de Cristo, Dorcas, Ebenezer). ✅ EXCLUSION VALIDATION PASSED: All excluded classes (Professores e Oficiais, Total Geral, Pós Chamada, Discipulados) correctly NOT appearing as winners in any department. ✅ NORMALIZATION WORKING: Case-insensitive matching and accent removal working correctly. ✅ WHITELIST LOGIC: Range/position-based logic successfully replaced with specific whitelists. The Classes Vencedoras correction is working PERFECTLY and ready for production use!"
 
+  - task: "Interface Completa de Informações da Igreja"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implementada interface completa para gerenciamento de informações da igreja. HomeCover e Dashboard atualizados para exibir os 3 cargos de liderança (Presidente: Pr. José Felipe da Silva, Pastor Local: Pr. Henrique Ferreira Neto, Superintendente: Presb. Paulo Henrique da Silva Reis). Função updateChurchInfo expandida para suportar todos os campos. Componente ConfigIgreja atualizado com seção de Liderança da Igreja em grid responsivo, permitindo edição de todos os cargos, nome da igreja e endereço. Sistema pronto para teste completo."
+
   - task: "Interface Rankings"
     implemented: true
     working: true

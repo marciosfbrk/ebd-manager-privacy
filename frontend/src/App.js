@@ -48,6 +48,11 @@ function App() {
   const [showApp, setShowApp] = useState(false);
   const [turmas, setTurmas] = useState([]);
   const [students, setStudents] = useState([]);
+  
+  // Estados para filtros de alunos
+  const [searchFilter, setSearchFilter] = useState('');
+  const [turmaFilter, setTurmaFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('todos');
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);
   const [selectedDate, setSelectedDate] = useState(() => getLastSunday());

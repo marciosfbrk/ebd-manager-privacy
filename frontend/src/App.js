@@ -2132,7 +2132,12 @@ function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {students.map((student) => (
+                  {students
+                    .filter(student => 
+                      student.nome_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      student.contato.toLowerCase().includes(searchTerm.toLowerCase())
+                    )
+                    .map((student) => (
                     <tr key={student.id} className="hover:bg-gray-50">
                       <td className="border border-gray-300 px-4 py-2">{student.nome_completo}</td>
                       <td className="border border-gray-300 px-4 py-2">{student.data_nascimento}</td>

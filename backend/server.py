@@ -1949,6 +1949,80 @@ async def get_access_stats():
             "sessoes_ativas": 0
         }
 
+# Rotas para Informações da Igreja - NOVO
+@api_router.get("/church-info")
+async def get_church_info():
+    """Buscar informações da igreja"""
+    try:
+        church_info = await db.church_info.find_one({})
+        if not church_info:
+            # Criar informação padrão se não existir
+            church_info = {
+                "id": str(uuid.uuid4()),
+                "superintendente_nome": "Presb. Paulo Henrique da Silva Reis",
+                "superintendente_cargo": "Superintendente(EBD)",
+                "nome_igreja": "Ministério Belém",
+                "endereco": "Rua Managuá, 53 - Parque das Nações",
+                "atualizado_em": datetime.utcnow().isoformat(),
+                "atualizado_por": "system"
+            }
+            await db.church_info.insert_one(church_info)
+        
+        # Remover _id do MongoDB
+        if '_id' in church_info:
+            del church_info['_id']
+            
+        return church_info
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar informações da igreja: {str(e)}")
+
+@api_router.put("/church-info")
+async def update_church_info(
+    superintendente_nome: str, 
+    superintendente_cargo: str = "Superintendente(EBD)",
+    nome_igreja: str = "Ministério Belém",
+    endereco: str = "Rua Managuá, 53 - Parque das Nações",
+    user_id: str = Query(...)
+):
+    """Atualizar informações da igreja (apenas admin)"""
+    try:
+        # Buscar informação existente
+        church_info = await db.church_info.find_one({})
+        
+        if church_info:
+            # Atualizar informação existente
+            await db.church_info.update_one(
+                {"id": church_info["id"]},
+                {
+                    "$set": {
+                        "superintendente_nome": superintendente_nome,
+                        "superintendente_cargo": superintendente_cargo,
+                        "nome_igreja": nome_igreja,
+                        "endereco": endereco,
+                        "atualizado_em": datetime.utcnow().isoformat(),
+                        "atualizado_por": user_id
+                    }
+                }
+            )
+        else:
+            # Criar nova informação
+            new_church_info = {
+                "id": str(uuid.uuid4()),
+                "superintendente_nome": superintendente_nome,
+                "superintendente_cargo": superintendente_cargo,
+                "nome_igreja": nome_igreja,
+                "endereco": endereco,
+                "atualizado_em": datetime.utcnow().isoformat(),
+                "atualizado_por": user_id
+            }
+            await db.church_info.insert_one(new_church_info)
+        
+        return {"message": "Informações da igreja atualizadas com sucesso"}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao atualizar informações da igreja: {str(e)}")
+
 # Rotas para Configurações do Sistema - NOVO  
 @api_router.get("/system-config")
 async def get_system_config():

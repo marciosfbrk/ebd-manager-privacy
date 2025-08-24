@@ -2136,13 +2136,13 @@ function App() {
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Lista de Alunos</h2>
             
-            {/* BUSCA SIMPLES - INPUT NÃO CONTROLADO */}
+            {/* BUSCA SIMPLES - VERSÃO HÍBRIDA */}
             <div className="mb-4">
               <input
-                ref={searchInputRef}
                 type="text"
                 placeholder="🔍 Digite o nome do aluno para buscar..."
-                defaultValue=""
+                value={searchFilter}
+                onChange={handleSearchChange}
                 autoComplete="off"
                 spellCheck="false"
                 className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"

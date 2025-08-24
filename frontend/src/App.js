@@ -53,27 +53,22 @@ function App() {
   const [searchFilter, setSearchFilter] = useState('');
   const searchInputRef = React.useRef(null);
 
-  // Função de busca com input não controlado (evita re-render)
-  const handleSearchChange = () => {
-    if (searchInputRef.current) {
-      const value = searchInputRef.current.value;
-      setSearchFilter(value);
-    }
-  };
-
-  // Listener de input em tempo real
+  // Listener de input em tempo real (CORRIGIDO)
   React.useEffect(() => {
     if (searchInputRef.current) {
       const input = searchInputRef.current;
       
-      const handleInput = () => {
-        setSearchFilter(input.value);
+      const handleInput = (e) => {
+        const value = e.target.value;
+        setSearchFilter(value); // Isso vai disparar o re-render da lista filtrada
       };
       
       input.addEventListener('input', handleInput);
+      input.addEventListener('keyup', handleInput); // Backup para garantir
       
       return () => {
         input.removeEventListener('input', handleInput);
+        input.removeEventListener('keyup', handleInput);
       };
     }
   }, []);

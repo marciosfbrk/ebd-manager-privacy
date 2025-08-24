@@ -1777,8 +1777,8 @@ function App() {
                         </span>
                         <span className="text-blue-700 font-medium">
                           Frequência: {turmaAtendance.length > 0 
-                            ? ((turmaAtendance.filter(att => att.presente).length / turmaAtendance.length) * 100).toFixed(1)
-                            : 0}%
+                            ? ((turmaAtendance.filter(att => att.presente).length / turmaAtendance.length) * 100).toFixed(1).replace('.', ',')
+                            : '0,0'}%
                         </span>
                       </div>
                     </div>

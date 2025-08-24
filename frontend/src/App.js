@@ -1543,8 +1543,8 @@ function App() {
             revistas = revistasTotal;
           }
           
-          // CORREÇÃO: Respeitar a seleção do usuário, não sobrescrever automaticamente
-          // Removida lógica que forçava visitante/pos_chamada nos primeiros alunos
+          // CORREÇÃO: Aplicar visitantes e pós-chamada como registros adicionais
+          // (sem sobrescrever seleções manuais do usuário)
 
           return {
             aluno_id: att.aluno_id,

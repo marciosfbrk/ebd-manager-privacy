@@ -3070,6 +3070,10 @@ function App() {
   // Componente Configuração da Igreja - NOVO
   const ConfigIgreja = () => {
     const [localChurchInfo, setLocalChurchInfo] = useState({
+      presidente_nome: '',
+      presidente_cargo: '',
+      pastor_local_nome: '',
+      pastor_local_cargo: '',
       superintendente_nome: '',
       superintendente_cargo: '',
       nome_igreja: '',
@@ -3079,6 +3083,10 @@ function App() {
     useEffect(() => {
       if (churchInfo) {
         setLocalChurchInfo({
+          presidente_nome: churchInfo.presidente_nome || '',
+          presidente_cargo: churchInfo.presidente_cargo || '',
+          pastor_local_nome: churchInfo.pastor_local_nome || '',
+          pastor_local_cargo: churchInfo.pastor_local_cargo || '',
           superintendente_nome: churchInfo.superintendente_nome || '',
           superintendente_cargo: churchInfo.superintendente_cargo || '',
           nome_igreja: churchInfo.nome_igreja || '',

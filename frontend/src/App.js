@@ -2142,14 +2142,13 @@ function App() {
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Lista de Alunos</h2>
             
-            {/* BUSCA SIMPLES COM BOTÃO */}
+            {/* BUSCA COM INPUT NÃO CONTROLADO - CURSOR NÃO SOME */}
             <div className="mb-4 p-4 bg-gray-50 rounded-lg">
               <div className="flex gap-3">
                 <input
+                  ref={searchInputRef}
                   type="text"
                   placeholder="Digite o nome do aluno..."
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
                       handleSearch();

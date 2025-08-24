@@ -1219,7 +1219,7 @@ function App() {
                         {attendanceData.reduce((sum, row) => sum + row.pos_chamada, 0)}
                       </td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
-                        R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2)}
+                        R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2).replace('.', ',')}
                       </td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         {attendanceData.reduce((sum, row) => sum + row.total_biblias, 0)}

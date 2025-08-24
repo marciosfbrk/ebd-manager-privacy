@@ -52,7 +52,7 @@ Este é o aplicativo Android para o sistema EBD Manager, criado usando WebView p
 ## 🔧 Configurações
 
 ### URL do Sistema
-- **URL atual:** `https://sunday-bible.preview.emergentagent.com`
+- **URL atual:** `https://church-class-admin.preview.emergentagent.com`
 - **Para alterar:** Edite `MainActivity.java` → `BASE_URL`
 
 ### Logo e Ícones

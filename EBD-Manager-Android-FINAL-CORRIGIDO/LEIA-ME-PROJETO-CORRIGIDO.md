@@ -4,7 +4,7 @@
 
 ### ✅ **URL CORRIGIDA:**
 - ✅ **https://ebdad.com.br** (sistema correto)
-- ❌ ~~https://sunday-bible.preview.emergentagent.com~~ (removido)
+- ❌ ~~https://church-class-admin.preview.emergentagent.com~~ (removido)
 
 ### ✅ **ERROS CORRIGIDOS:**
 - ✅ **Lint configurado** (sem erros de backup_rules)

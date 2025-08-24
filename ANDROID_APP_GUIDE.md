@@ -32,7 +32,7 @@
 
 ### ✨ Interface
 - **Splash Screen:** 2 segundos com logo da igreja
-- **WebView:** Carrega `https://sunday-bible.preview.emergentagent.com`
+- **WebView:** Carrega `https://church-class-admin.preview.emergentagent.com`
 - **Pull-to-Refresh:** Puxar para baixo recarrega
 - **Navegação:** Botão voltar funcional
 - **Confirmação:** Dialog para sair do app
@@ -148,7 +148,7 @@ res/drawable/logo_ebd.png
 **IMPORTANTE:** O sistema web atual continua **100% intocado**. Este app é apenas um "wrapper" que carrega o sistema em uma WebView nativa Android.
 
 **URLs funcionam igual:**
-- Web: `https://sunday-bible.preview.emergentagent.com`
+- Web: `https://church-class-admin.preview.emergentagent.com`
 - App: Mesmo sistema, mesma URL, dentro do WebView
 
 **Resultado:** Usuários podem usar tanto pelo navegador quanto pelo app da Play Store! 📱🌐

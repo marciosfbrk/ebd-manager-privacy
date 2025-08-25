@@ -181,6 +181,7 @@ async def create_initial_users():
         print("   👤 Admin 1: admin@ebd.com / 123456")
         print("   👤 Admin 2: marcio@ebd.com.br / 5544%$Gg")
         print("   👨‍🏫 Prof: kell@ebd.com / 123456")
+        print("   👁️ Demo: demo@ebd.com / demo123 (APENAS VISUALIZAÇÃO)")
         
     except Exception as e:
         print(f"❌ Erro ao criar usuários iniciais: {e}")

@@ -1218,10 +1218,10 @@ function App() {
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-left">Turma</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Matric.</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Pres.</th>
+                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Pós</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">%</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Aus.</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Vis.</th>
-                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Pós</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Ofertas</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Bíb.</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Rev.</th>

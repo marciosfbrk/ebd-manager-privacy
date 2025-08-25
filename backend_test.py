@@ -1293,6 +1293,238 @@ def test_revistas_endpoints():
         except Exception as e:
             results.failure("Revista dates verification", str(e))
 
+def test_ebenezer_bug_investigation():
+    """INVESTIGAÇÃO DO BUG - TURMA EBENEZER NOS RELATÓRIOS
+    
+    PROBLEMA: A turma "Ebenezer (Obreiros)" não está sendo incluída no cálculo de "Classe Vencedora" 
+    do departamento Adulto nos relatórios detalhados.
+    
+    INVESTIGAÇÃO:
+    1. Listar todas as turmas e seus nomes exatos
+    2. Verificar configuração dos departamentos
+    3. Testar lógica de normalização
+    4. Verificar dados de teste da turma Ebenezer
+    """
+    print("\n=== INVESTIGAÇÃO DO BUG - TURMA EBENEZER NOS RELATÓRIOS ===")
+    print("PROBLEMA: Ebenezer (Obreiros) não aparece no departamento Adulto dos relatórios")
+    
+    # Primeiro, garantir que temos dados da igreja
+    try:
+        response = requests.post(f"{BASE_URL}/init-church-data")
+        if response.status_code == 200:
+            results.success("Initialize church data for Ebenezer investigation")
+        else:
+            print(f"Warning: Could not initialize church data: {response.status_code}")
+    except Exception as e:
+        print(f"Warning: Exception initializing church data: {e}")
+    
+    # INVESTIGAÇÃO 1: Listar todas as turmas e seus nomes exatos
+    print("\n--- INVESTIGAÇÃO 1: NOMES EXATOS DAS TURMAS ---")
+    turmas_dict = {}
+    ebenezer_turma = None
+    
+    try:
+        response = requests.get(f"{BASE_URL}/turmas")
+        if response.status_code == 200:
+            turmas = response.json()
+            results.success(f"GET /api/turmas - Found {len(turmas)} turmas")
+            
+            print("NOMES EXATOS DAS TURMAS:")
+            for i, turma in enumerate(turmas, 1):
+                nome = turma['nome']
+                turmas_dict[nome] = turma['id']
+                print(f"  {i:2d}. '{nome}' (ID: {turma['id']})")
+                
+                # Procurar especificamente pela turma Ebenezer
+                if 'ebenezer' in nome.lower() or 'obreiros' in nome.lower():
+                    ebenezer_turma = turma
+                    print(f"      *** ENCONTRADA TURMA EBENEZER: '{nome}' ***")
+            
+            if ebenezer_turma:
+                results.success(f"Found Ebenezer turma: '{ebenezer_turma['nome']}'")
+            else:
+                results.failure("Ebenezer turma search", "Turma Ebenezer não encontrada!")
+                
+        else:
+            results.failure("GET /api/turmas", f"Status {response.status_code}: {response.text}")
+            return
+    except Exception as e:
+        results.failure("GET /api/turmas", str(e))
+        return
+    
+    # INVESTIGAÇÃO 2: Verificar se Ebenezer tem alunos
+    if ebenezer_turma:
+        print(f"\n--- INVESTIGAÇÃO 2: ALUNOS DA TURMA EBENEZER ---")
+        try:
+            response = requests.get(f"{BASE_URL}/students", params={"turma_id": ebenezer_turma['id']})
+            if response.status_code == 200:
+                students = response.json()
+                results.success(f"GET /api/students - Ebenezer tem {len(students)} alunos")
+                
+                print(f"ALUNOS DA TURMA '{ebenezer_turma['nome']}':")
+                for i, student in enumerate(students[:10], 1):  # Mostrar apenas os primeiros 10
+                    print(f"  {i:2d}. {student['nome_completo']}")
+                if len(students) > 10:
+                    print(f"  ... e mais {len(students) - 10} alunos")
+                    
+            else:
+                results.failure("GET /api/students for Ebenezer", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("GET /api/students for Ebenezer", str(e))
+    
+    # INVESTIGAÇÃO 3: Criar dados de teste para Ebenezer
+    if ebenezer_turma and len(students) > 0:
+        print(f"\n--- INVESTIGAÇÃO 3: CRIAR DADOS DE TESTE PARA EBENEZER ---")
+        test_date = "2025-01-12"  # Um domingo
+        
+        # Criar dados de presença e oferta para Ebenezer
+        bulk_data = []
+        for i, student in enumerate(students[:5]):  # Usar apenas os primeiros 5 alunos
+            bulk_data.append({
+                "aluno_id": student['id'],
+                "status": "presente",
+                "oferta": 25.00,  # Oferta alta para competir
+                "biblias_entregues": 1,
+                "revistas_entregues": 1
+            })
+        
+        try:
+            response = requests.post(f"{BASE_URL}/attendance/bulk/{ebenezer_turma['id']}", 
+                                   params={"data": test_date, "user_tipo": "admin", "user_id": "test-admin"},
+                                   json=bulk_data)
+            if response.status_code == 200:
+                results.success(f"POST /api/attendance/bulk - Criados dados de teste para Ebenezer ({len(bulk_data)} presentes, R$ {25.00 * len(bulk_data):.2f} total)")
+            else:
+                results.failure("POST /api/attendance/bulk for Ebenezer", f"Status {response.status_code}: {response.text}")
+        except Exception as e:
+            results.failure("POST /api/attendance/bulk for Ebenezer", str(e))
+    
+    # INVESTIGAÇÃO 4: Verificar relatórios detalhados
+    print(f"\n--- INVESTIGAÇÃO 4: VERIFICAR RELATÓRIOS DETALHADOS ---")
+    try:
+        response = requests.get(f"{BASE_URL}/reports/detailed", params={"data": test_date})
+        if response.status_code == 200:
+            detailed_report = response.json()
+            results.success("GET /api/reports/detailed - Relatório obtido com sucesso")
+            
+            # Procurar por Ebenezer nos dados
+            ebenezer_found_in_data = False
+            ebenezer_found_in_adulto = False
+            
+            print("ANÁLISE DO RELATÓRIO DETALHADO:")
+            
+            # Verificar dados consolidados
+            if 'consolidacao' in detailed_report:
+                consolidacao = detailed_report['consolidacao']
+                print(f"  - Dados de consolidação: {len(consolidacao)} turmas")
+                
+                for turma_data in consolidacao:
+                    if 'ebenezer' in turma_data.get('turma_nome', '').lower():
+                        ebenezer_found_in_data = True
+                        print(f"    *** EBENEZER ENCONTRADO NOS DADOS: {turma_data['turma_nome']} ***")
+                        print(f"        Matriculados: {turma_data.get('matriculados', 0)}")
+                        print(f"        Presentes: {turma_data.get('presentes', 0)}")
+                        print(f"        Ofertas: R$ {turma_data.get('total_ofertas', 0):.2f}")
+            
+            # Verificar departamentos
+            if 'departamentos' in detailed_report:
+                departamentos = detailed_report['departamentos']
+                print(f"  - Departamentos: {len(departamentos)}")
+                
+                for dept_name, dept_data in departamentos.items():
+                    print(f"    Departamento: {dept_name}")
+                    
+                    if dept_name.lower() == 'adulto':
+                        print(f"      *** ANALISANDO DEPARTAMENTO ADULTO ***")
+                        
+                        # Verificar classe vencedora de frequência
+                        if 'classe_vencedora_frequencia' in dept_data:
+                            freq_winner = dept_data['classe_vencedora_frequencia']
+                            print(f"      Classe Vencedora Frequência: {freq_winner.get('nome', 'N/A')} ({freq_winner.get('percentual', 0):.1f}%)")
+                            
+                            if 'ebenezer' in freq_winner.get('nome', '').lower():
+                                ebenezer_found_in_adulto = True
+                                print(f"        *** EBENEZER É VENCEDOR EM FREQUÊNCIA! ***")
+                        
+                        # Verificar classe vencedora de oferta
+                        if 'classe_vencedora_oferta' in dept_data:
+                            offer_winner = dept_data['classe_vencedora_oferta']
+                            print(f"      Classe Vencedora Oferta: {offer_winner.get('nome', 'N/A')} (R$ {offer_winner.get('valor', 0):.2f})")
+                            
+                            if 'ebenezer' in offer_winner.get('nome', '').lower():
+                                ebenezer_found_in_adulto = True
+                                print(f"        *** EBENEZER É VENCEDOR EM OFERTA! ***")
+                        
+                        # Verificar todas as turmas do departamento Adulto
+                        if 'turmas' in dept_data:
+                            turmas_adulto = dept_data['turmas']
+                            print(f"      Turmas no departamento Adulto: {len(turmas_adulto)}")
+                            for turma_adulto in turmas_adulto:
+                                nome_turma = turma_adulto.get('nome', 'N/A')
+                                print(f"        - {nome_turma}")
+                                if 'ebenezer' in nome_turma.lower():
+                                    ebenezer_found_in_adulto = True
+                                    print(f"          *** EBENEZER ENCONTRADO NO DEPARTAMENTO ADULTO! ***")
+            
+            # Resultados da investigação
+            if ebenezer_found_in_data:
+                results.success("Ebenezer investigation - Turma encontrada nos dados consolidados")
+            else:
+                results.failure("Ebenezer investigation", "Turma Ebenezer NÃO encontrada nos dados consolidados")
+            
+            if ebenezer_found_in_adulto:
+                results.success("Ebenezer investigation - Turma encontrada no departamento Adulto")
+            else:
+                results.failure("Ebenezer investigation", "Turma Ebenezer NÃO encontrada no departamento Adulto - BUG CONFIRMADO!")
+                
+        else:
+            results.failure("GET /api/reports/detailed", f"Status {response.status_code}: {response.text}")
+    except Exception as e:
+        results.failure("GET /api/reports/detailed", str(e))
+    
+    # INVESTIGAÇÃO 5: Testar normalização de texto
+    print(f"\n--- INVESTIGAÇÃO 5: TESTAR NORMALIZAÇÃO DE TEXTO ---")
+    if ebenezer_turma:
+        nome_original = ebenezer_turma['nome']
+        print(f"Nome original: '{nome_original}'")
+        
+        # Simular normalização que deveria acontecer no código
+        nome_normalizado = nome_original.lower().replace(' ', '').replace('(', '').replace(')', '').replace('ã', 'a').replace('ç', 'c')
+        print(f"Nome normalizado: '{nome_normalizado}'")
+        
+        # Verificar se corresponde ao esperado no código
+        expected_normalized = 'ebenezer(obreiros)'.lower().replace(' ', '').replace('(', '').replace(')', '')
+        print(f"Esperado no código: '{expected_normalized}'")
+        
+        if nome_normalizado == expected_normalized:
+            results.success("Text normalization - Ebenezer name matches expected pattern")
+        else:
+            results.failure("Text normalization", f"Ebenezer name '{nome_normalizado}' does not match expected '{expected_normalized}' - NORMALIZAÇÃO PODE SER O PROBLEMA!")
+    
+    # INVESTIGAÇÃO 6: Verificar configuração dos departamentos no código
+    print(f"\n--- INVESTIGAÇÃO 6: CONFIGURAÇÃO DOS DEPARTAMENTOS ---")
+    print("Departamento Adulto deveria incluir:")
+    print("  - 'soldados de cristo'")
+    print("  - 'dorcas (irmas)'") 
+    print("  - 'ebenezer(obreiros)'")
+    
+    # Verificar se essas turmas existem
+    adulto_turmas_found = []
+    expected_adulto = ['soldados de cristo', 'dorcas', 'ebenezer']
+    
+    for turma_nome in turmas_dict.keys():
+        nome_lower = turma_nome.lower()
+        for expected in expected_adulto:
+            if expected in nome_lower:
+                adulto_turmas_found.append(turma_nome)
+                print(f"  ✓ Encontrada: '{turma_nome}' (corresponde a '{expected}')")
+                break
+    
+    if len(adulto_turmas_found) == 3:
+        results.success("Department configuration - All 3 expected Adulto turmas found")
+    else:
+        results.failure("Department configuration", f"Expected 3 Adulto turmas, found {len(adulto_turmas_found)}: {adulto_turmas_found}")
+
 def test_jovens_ebenezer_attendance_bug():
     """Test specific bug fix for Jovens and Ebenezer (Obreiros) attendance calls"""
     print("\n=== TESTING JOVENS AND EBENEZER ATTENDANCE BUG FIX ===")

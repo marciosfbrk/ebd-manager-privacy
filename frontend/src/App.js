@@ -598,7 +598,7 @@ function App() {
                 <p className="text-gray-600">Estatísticas do último domingo</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-gray-500">Data: {selectedDate}</p>
+                <p className="text-sm text-gray-500">Data: {new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR')}</p>
                 <button
                   onClick={loadDashboard}
                   className="mt-1 px-4 py-2 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-lg hover:from-indigo-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200 text-sm"

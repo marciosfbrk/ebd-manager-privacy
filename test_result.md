@@ -425,6 +425,21 @@ test_plan:
         agent: "testing"
         comment: "TESTED (2025-08-25): 🎉 SISTEMA DE VISITANTES E PÓS-CHAMADA FUNCIONANDO PERFEITAMENTE! Todos os testes específicos da solicitação de revisão foram bem-sucedidos: ✅ TESTE 1 - SALVAMENTO COM VISITANTES: Simulada chamada com visitantesTotal = 3, verificado que 3 registros com status 'visitante' foram criados, confirmado que alunos marcados manualmente não foram afetados (4 presentes + 3 visitantes = 7 registros totais). ✅ TESTE 2 - SALVAMENTO COM PÓS-CHAMADA: Simulada chamada com posChamadaTotal = 2, verificado que 2 registros com status 'pos_chamada' foram criados, confirmado que alunos marcados manualmente não foram afetados (4 presentes + 2 pós-chamada = 6 registros totais). ✅ TESTE 3 - CENÁRIO COMBINADO: Testado cenário recomendado com Turma Jovens - primeiros 4 alunos presentes (Abmael, Almir, Ana, Emanuel) + 2 visitantes + 1 pós-chamada = 7 registros totais, TODOS os registros salvos corretamente sem afetar uns aos outros. ✅ TESTE 4 - CONTADORES DO DASHBOARD: Verificado que contadores refletem todos os tipos (4 presentes, 2 visitantes, 1 pós-chamada, R$ 21,00 ofertas totais). ✅ TESTE 5 - TURMA EBENEZER (OBREIROS): Testado com primeiros 4 alunos + 1 visitante + 2 pós-chamada, confirmado que primeiros alunos mantêm suas seleções manuais. ✅ ENDPOINTS VERIFICADOS: POST /api/attendance/bulk/{turma_id} (salvamento), GET /api/attendance?turma_id=X&data=Y (verificação), GET /api/reports/dashboard?data=Y (contadores). Sistema de visitantes e pós-chamada está 100% funcional e pronto para produção!"
 
+  - task: "Investigação Cálculo de Presença nos Relatórios"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "user"
+        comment: "PERGUNTA DO USUÁRIO: 'você esta somando a presença + pos chamada para fazer a %?' - Solicitada investigação sobre como o campo 'presentes' é calculado nos relatórios e se inclui registros com status 'pos_chamada' na porcentagem de presença."
+      - working: true
+        agent: "testing"
+        comment: "INVESTIGATED (2025-08-25): 🎉 INVESTIGAÇÃO COMPLETA DO CÁLCULO DE PRESENÇA REALIZADA! Pergunta respondida com precisão: ✅ RESPOSTA: NÃO - O sistema NÃO está somando pós-chamada na porcentagem de presença. ✅ TESTE REALIZADO: Criado cenário com turma Ebenezer (22 matriculados) - 4 alunos status='presente' + 3 alunos status='pos_chamada' + 2 visitantes. ✅ RESULTADO DASHBOARD: Presentes: 4, Pós-chamada: 3, Visitantes: 2, Ausentes: 18. ✅ PORCENTAGEM ATUAL: 18.2% (4/22 * 100) - usa APENAS status='presente'. ✅ PORCENTAGEM SE INCLUIR PÓS-CHAMADA: 31.8% (7/22 * 100). ✅ CÓDIGO FONTE CONFIRMADO: Linha 561 do backend - presentes = len([a for a in attendance_records if a['status'] == 'presente']). ✅ LÓGICA ATUAL: Campo 'presentes' conta apenas registros com status='presente', campo 'pos_chamada' é calculado separadamente. ✅ FÓRMULA PORCENTAGEM: (presentes / matriculados) * 100, onde 'presentes' = apenas status='presente'. Sistema funcionando conforme implementado - pós-chamada NÃO é incluída na porcentagem de presença."
+
 agent_communication:
   - agent: "main"
     message: "Implementado sistema EBD Manager completo com backend FastAPI e frontend React. Sistema inclui: CRUD de turmas e alunos, sistema de chamada com validação de domingos, registro de ofertas e materiais, relatórios consolidados. Dados iniciais com nomes fornecidos pelo usuário. Precisa testar todos os endpoints antes de testar frontend."

@@ -12,16 +12,22 @@ function App() {
     return date.getDay() === 0;
   };
 
-  // Função para obter o domingo da semana atual (para relatórios)
+  // Função para obter o domingo da semana atual (FORÇADA PARA 24/08/2025)
   const getCurrentWeekSunday = () => {
+    // FORÇAR SEMPRE 24/08/2025 ATÉ PRÓXIMO DOMINGO (31/08)
     const today = new Date();
-    const dayOfWeek = today.getDay(); // 0 = domingo, 1 = segunda, etc.
+    const todayStr = today.toISOString().split('T')[0];
     
+    // Se ainda não passou de 31/08/2025, forçar 24/08/2025
+    if (todayStr <= '2025-08-31') {
+      return '2025-08-24'; // FORÇADO!
+    }
+    
+    // Lógica normal apenas após 31/08
+    const dayOfWeek = today.getDay();
     if (dayOfWeek === 0) {
-      // Se hoje é domingo, retorna hoje
       return today.toISOString().split('T')[0];
     } else {
-      // Se não é domingo, retorna o domingo anterior (da semana atual)
       const currentSunday = new Date(today);
       currentSunday.setDate(today.getDate() - dayOfWeek);
       return currentSunday.toISOString().split('T')[0];

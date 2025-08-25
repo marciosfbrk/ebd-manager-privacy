@@ -1095,7 +1095,7 @@ function App() {
     const departamentos = {
       'Infantil': ['genesis', 'primarios', 'juniores'],
       'Jovens e Adolescentes': ['pre adolescentes', 'adolescentes', 'jovens'],
-      'Adulto': ['soldados de cristo', 'dorcas (irmas)', 'ebenezer(obreiros)']
+      'Adulto': ['soldados de cristo', 'dorcas (irmas)', 'ebenezer (obreiros)']
     };
 
     // Turmas a excluir sempre (normalizadas)

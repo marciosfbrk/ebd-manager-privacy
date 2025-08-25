@@ -1253,6 +1253,9 @@ function App() {
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
                       </td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
+                        {attendanceData.reduce((sum, row) => sum + row.pos_chamada, 0)}
+                      </td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center font-semibold text-purple-600">
                         {(() => {
                           const totalMatriculados = attendanceData.reduce((sum, row) => sum + row.matriculados, 0);
@@ -1268,9 +1271,6 @@ function App() {
                       </td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         {attendanceData.reduce((sum, row) => sum + row.visitantes, 0)}
-                      </td>
-                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
-                        {attendanceData.reduce((sum, row) => sum + row.pos_chamada, 0)}
                       </td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2).replace('.', ',')}

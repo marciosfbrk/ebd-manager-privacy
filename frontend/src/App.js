@@ -54,7 +54,7 @@ function App() {
   const searchInputRef = React.useRef(null);
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(() => getLastSunday());
+  const [selectedDate, setSelectedDate] = useState(() => getCurrentWeekSunday());
   const [loading, setLoading] = useState(false);
   
   // Estados de ranking

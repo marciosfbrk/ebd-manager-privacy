@@ -569,3 +569,21 @@ backend:
       - working: true
         agent: "testing"
         comment: "TESTED (2025-01-19): 🎉 BUG FIX COMPLETAMENTE VERIFICADO E FUNCIONANDO! Todos os testes específicos do bug foram bem-sucedidos: ✅ TURMA JOVENS VERIFICADA: Turma existe com 23 alunos, primeiros 4 estudantes encontrados (Abmael, Almir, Ana, Emanuel). ✅ TURMA EBENEZER VERIFICADA: Turma 'Ebenezer (Obreiros)' existe com 22 alunos, primeiros 4 estudantes identificados. ✅ CENÁRIO DO BUG ORIGINAL TESTADO: Marcados primeiros 4 alunos como 'presente', adicionados visitantes (visitantesTotal=3) e pós-chamada (posChamada=1), salvamento realizado com sucesso. ✅ BUG FIX CONFIRMADO - JOVENS: Todos os 4 primeiros estudantes mantiveram status 'presente' após salvamento (Abmael ✓, Almir ✓, Ana ✓, Emanuel ✓). ✅ BUG FIX CONFIRMADO - EBENEZER: Todos os 4 primeiros estudantes mantiveram status 'presente' após salvamento (Coop Antônio ✓, Coop Denys ✓, Coop Elias Barbosa ✓, Coop Emanuel ✓). ✅ VISITANTES E PÓS-CHAMADA: Salvos corretamente sem interferir nos primeiros alunos (3 visitantes, 1 pós-chamada). ✅ FUNCIONALIDADE NORMAL: Outras turmas não foram afetadas, sistema funciona normalmente para operações sem visitantes/pós-chamada. ✅ ENDPOINTS TESTADOS: GET /api/turmas, GET /api/students?turma_id=X, POST /api/attendance/bulk/{turma_id}, GET /api/attendance?turma_id=X&data=Y. ✅ TESTES COMPLETOS: 39/39 testes passaram com zero falhas. O bug foi COMPLETAMENTE CORRIGIDO e o sistema está funcionando perfeitamente!"
+
+  - task: "Bug Investigation - Turma Ebenezer nos Relatórios"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "INVESTIGAÇÃO COMPLETA DO BUG EBENEZER (2025-08-25): 🐛 BUG CRÍTICO IDENTIFICADO! Investigação detalhada revelou que 'Ebenezer (Obreiros)' não aparece no departamento Adulto devido a erro de formatação na whitelist do frontend. CAUSA RAIZ: App.js linha 1098 tem 'ebenezer(obreiros)' na whitelist mas a normalização produz 'ebenezer (obreiros)' (com espaço antes dos parênteses). SOLUÇÃO: Alterar whitelist de 'ebenezer(obreiros)' para 'ebenezer (obreiros)' (adicionar espaço). Esta correção de 1 caractere resolverá completamente o problema."
+      - working: false
+        agent: "testing"
+        comment: "BUG CONFIRMED (2025-08-25): ❌ TURMA EBENEZER NÃO APARECE NO DEPARTAMENTO ADULTO DOS RELATÓRIOS. Root cause identified: Frontend whitelist format mismatch. Turma 'Ebenezer (Obreiros)' normalizes to 'ebenezer (obreiros)' but whitelist expects 'ebenezer(obreiros)' (no space before parentheses). Fix required in App.js line 1098: change 'ebenezer(obreiros)' to 'ebenezer (obreiros)'. All backend APIs working correctly - issue is purely frontend whitelist configuration."
+
+  - agent: "testing"
+    message: "BUG EBENEZER INVESTIGATION COMPLETED (2025-08-25): 🐛 CRITICAL BUG IDENTIFIED AND ROOT CAUSE FOUND! Comprehensive investigation of why 'Ebenezer (Obreiros)' doesn't appear in Adult department reports: ✅ INVESTIGATION 1 - TURMA NAMES: Found all 11 turmas including 'Ebenezer (Obreiros)' with 22 students. ✅ INVESTIGATION 2 - TEST DATA: Successfully created attendance data for Ebenezer (5 students present, R$ 125.00 total offers). ✅ INVESTIGATION 3 - ENDPOINT ANALYSIS: Confirmed /api/reports/detailed doesn't exist - logic is in frontend App.js. ✅ INVESTIGATION 4 - NORMALIZATION BUG FOUND: Frontend normalizes 'Ebenezer (Obreiros)' to 'ebenezer (obreiros)' but whitelist expects 'ebenezer(obreiros)' (missing space before parentheses). ✅ INVESTIGATION 5 - DEPARTMENT CONFIG: All 3 Adult department turmas exist but Ebenezer fails whitelist match due to space. ✅ ROOT CAUSE: App.js line 1098 whitelist has 'ebenezer(obreiros)' but should be 'ebenezer (obreiros)' (with space). ✅ SOLUTION: Change frontend whitelist from 'ebenezer(obreiros)' to 'ebenezer (obreiros)' to match normalized name format. This single character fix will make Ebenezer appear correctly in Adult department reports!"

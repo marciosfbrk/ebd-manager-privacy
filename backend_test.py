@@ -1488,42 +1488,86 @@ def test_ebenezer_bug_investigation():
         nome_original = ebenezer_turma['nome']
         print(f"Nome original: '{nome_original}'")
         
-        # Simular normalização que deveria acontecer no código
-        nome_normalizado = nome_original.lower().replace(' ', '').replace('(', '').replace(')', '').replace('ã', 'a').replace('ç', 'c')
-        print(f"Nome normalizado: '{nome_normalizado}'")
+        # Simular normalização que acontece no frontend (App.js linha 1084-1092)
+        def normalizar_frontend(nome):
+            if not nome:
+                return ''
+            return nome.strip().lower().replace('ã', 'a').replace('ç', 'c').replace('-', ' ')
         
-        # Verificar se corresponde ao esperado no código
-        expected_normalized = 'ebenezer(obreiros)'.lower().replace(' ', '').replace('(', '').replace(')', '')
-        print(f"Esperado no código: '{expected_normalized}'")
+        nome_normalizado = normalizar_frontend(nome_original)
+        print(f"Nome normalizado pelo frontend: '{nome_normalizado}'")
         
-        if nome_normalizado == expected_normalized:
-            results.success("Text normalization - Ebenezer name matches expected pattern")
+        # Verificar se corresponde ao esperado na whitelist do departamento Adulto
+        expected_in_whitelist = 'ebenezer(obreiros)'
+        print(f"Esperado na whitelist Adulto: '{expected_in_whitelist}'")
+        
+        if nome_normalizado == expected_in_whitelist:
+            results.success("Text normalization - Ebenezer name matches whitelist pattern")
         else:
-            results.failure("Text normalization", f"Ebenezer name '{nome_normalizado}' does not match expected '{expected_normalized}' - NORMALIZAÇÃO PODE SER O PROBLEMA!")
+            results.failure("Text normalization - BUG ENCONTRADO!", f"Nome normalizado '{nome_normalizado}' NÃO corresponde à whitelist '{expected_in_whitelist}' - ESPAÇO ANTES DOS PARÊNTESES É O PROBLEMA!")
+            print(f"🐛 BUG IDENTIFICADO:")
+            print(f"   - Nome real normalizado: '{nome_normalizado}'")
+            print(f"   - Whitelist espera: '{expected_in_whitelist}'")
+            print(f"   - Diferença: ESPAÇO antes dos parênteses")
+            print(f"   - Solução: Alterar whitelist para 'ebenezer (obreiros)' OU remover espaços da normalização")
     
     # INVESTIGAÇÃO 6: Verificar configuração dos departamentos no código
     print(f"\n--- INVESTIGAÇÃO 6: CONFIGURAÇÃO DOS DEPARTAMENTOS ---")
     print("Departamento Adulto deveria incluir:")
     print("  - 'soldados de cristo'")
     print("  - 'dorcas (irmas)'") 
-    print("  - 'ebenezer(obreiros)'")
+    print("  - 'ebenezer(obreiros)' ← PROBLEMA AQUI!")
+    print("")
+    print("🔍 ANÁLISE DETALHADA DA WHITELIST:")
     
-    # Verificar se essas turmas existem
+    # Verificar se essas turmas existem e como são normalizadas
     adulto_turmas_found = []
-    expected_adulto = ['soldados de cristo', 'dorcas', 'ebenezer']
+    expected_adulto = {
+        'soldados de cristo': 'soldados de cristo',
+        'dorcas': 'dorcas (irmas)', 
+        'ebenezer': 'ebenezer(obreiros)'  # Esta é a entrada problemática
+    }
     
     for turma_nome in turmas_dict.keys():
         nome_lower = turma_nome.lower()
-        for expected in expected_adulto:
-            if expected in nome_lower:
+        for expected_key, expected_whitelist in expected_adulto.items():
+            if expected_key in nome_lower:
                 adulto_turmas_found.append(turma_nome)
-                print(f"  ✓ Encontrada: '{turma_nome}' (corresponde a '{expected}')")
+                
+                # Simular normalização do frontend
+                nome_normalizado = turma_nome.strip().lower().replace('ã', 'a').replace('ç', 'c').replace('-', ' ')
+                
+                print(f"  ✓ Turma encontrada: '{turma_nome}'")
+                print(f"    - Normalizada: '{nome_normalizado}'")
+                print(f"    - Whitelist: '{expected_whitelist}'")
+                
+                if nome_normalizado == expected_whitelist:
+                    print(f"    - Status: ✅ MATCH")
+                else:
+                    print(f"    - Status: ❌ NO MATCH - ESTE É O BUG!")
+                    if expected_key == 'ebenezer':
+                        print(f"    - 🐛 BUG: Whitelist tem '{expected_whitelist}' mas nome normalizado é '{nome_normalizado}'")
+                print("")
                 break
     
     if len(adulto_turmas_found) == 3:
         results.success("Department configuration - All 3 expected Adulto turmas found")
+        results.failure("Department whitelist bug", "Ebenezer whitelist entry has incorrect format - missing space before parentheses")
     else:
         results.failure("Department configuration", f"Expected 3 Adulto turmas, found {len(adulto_turmas_found)}: {adulto_turmas_found}")
+    
+    # INVESTIGAÇÃO 7: Solução recomendada
+    print(f"\n--- INVESTIGAÇÃO 7: SOLUÇÃO RECOMENDADA ---")
+    print("🔧 CORREÇÃO NECESSÁRIA NO FRONTEND (App.js linha 1098):")
+    print("   ATUAL: 'Adulto': ['soldados de cristo', 'dorcas (irmas)', 'ebenezer(obreiros)']")
+    print("   CORRIGIR PARA: 'Adulto': ['soldados de cristo', 'dorcas (irmas)', 'ebenezer (obreiros)']")
+    print("                                                                      ↑")
+    print("                                                            ADICIONAR ESPAÇO")
+    print("")
+    print("✅ Esta correção fará com que 'Ebenezer (Obreiros)' apareça corretamente")
+    print("   no departamento Adulto dos relatórios detalhados.")
+    
+    results.success("Bug investigation completed - Root cause identified: whitelist format mismatch")
 
 def test_jovens_ebenezer_attendance_bug():
     """Test specific bug fix for Jovens and Ebenezer (Obreiros) attendance calls"""

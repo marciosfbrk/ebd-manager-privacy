@@ -1233,12 +1233,12 @@ function App() {
                       <td className="border border-gray-300 px-2 md:px-4 py-2 font-medium">{row.turma_nome}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.matriculados}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.presentes}</td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.pos_chamada}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center font-semibold text-purple-600">
                         {row.matriculados > 0 ? (((row.presentes + row.pos_chamada) / row.matriculados) * 100).toFixed(1).replace('.', ',') : '0,0'}%
                       </td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.ausentes}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.visitantes}</td>
-                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.pos_chamada}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">R$ {row.total_ofertas.toFixed(2).replace('.', ',')}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.total_biblias}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.total_revistas}</td>

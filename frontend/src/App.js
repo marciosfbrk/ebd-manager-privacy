@@ -111,21 +111,15 @@ function App() {
     }
   }, []);
 
-  // Atualizar data automaticamente baseado na view atual  
+  // Atualizar data automaticamente baseado na view atual (NUCLEAR - SEMPRE 24/08)
   useEffect(() => {
     console.log('🔍 DEBUG: currentView mudou para:', currentView);
     
-    if (currentView === 'chamada') {
-      // Para chamadas, usar o domingo atual/próximo
-      const chamadaDate = getCurrentSunday();
-      console.log('📅 DEBUG: Definindo data para chamada:', chamadaDate);
-      setSelectedDate(chamadaDate);
-    } else if (currentView === 'dashboard' || currentView === 'reports' || currentView === 'relatorios') {
-      // Para relatórios, usar o domingo da semana atual
-      const relatorioDate = getCurrentWeekSunday();
-      console.log('📊 DEBUG: Definindo data para relatórios:', relatorioDate);
-      setSelectedDate(relatorioDate);
-    }
+    // NUCLEAR: SEMPRE FORÇAR 24/08/2025 ATÉ 31/08/2025
+    const FORCED_DATE = '2025-08-24';
+    console.log('💀 NUCLEAR: FORÇANDO DATA PARA:', FORCED_DATE);
+    setSelectedDate(FORCED_DATE);
+    
   }, [currentView]);
 
   // Função de login

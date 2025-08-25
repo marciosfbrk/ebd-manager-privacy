@@ -60,7 +60,7 @@ function App() {
   const searchInputRef = React.useRef(null);
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(() => getCurrentWeekSunday());
+  const [selectedDate, setSelectedDate] = useState('2025-08-24'); // FORÇADO PARA 24/08/2025
   const [loading, setLoading] = useState(false);
   
   // Estados de ranking

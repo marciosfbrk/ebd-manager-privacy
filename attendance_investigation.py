@@ -25,7 +25,10 @@ def get_backend_url():
             for line in f:
                 if line.startswith('REACT_APP_BACKEND_URL='):
                     backend_url = line.split('=')[1].strip()
-                    if not backend_url.endswith('/api'):
+                    # If it's just /api, prepend localhost
+                    if backend_url == '/api':
+                        return "http://localhost:8001/api"
+                    elif not backend_url.endswith('/api'):
                         backend_url = backend_url + '/api'
                     return backend_url
     except:

@@ -54,6 +54,12 @@ async def ensure_deploy_ready():
                 "nome": "Kelliane Ferreira",
                 "tipo": "professor", 
                 "senha": "123456"
+            },
+            {
+                "email": "demo@ebd.com",
+                "nome": "Usuário Demonstração",
+                "tipo": "visitante", 
+                "senha": "demo123"
             }
         ]
         

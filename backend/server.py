@@ -557,11 +557,14 @@ async def get_dashboard_report(data: Optional[str] = None):
             "data": data
         }).to_list(1000)
         
-        # Calcular estatísticas
-        presentes = len([a for a in attendance_records if a["status"] == "presente"])
+        # Calcular estatísticas (RELATÓRIOS: presente + pós-chamada na porcentagem)
+        presentes_puro = len([a for a in attendance_records if a["status"] == "presente"])
         visitantes = len([a for a in attendance_records if a["status"] == "visitante"])
         pos_chamada = len([a for a in attendance_records if a["status"] == "pos_chamada"])
-        ausentes = matriculados - presentes
+        
+        # Para RELATÓRIOS: somar presente + pós-chamada na porcentagem
+        presentes = presentes_puro + pos_chamada
+        ausentes = matriculados - presentes_puro  # Ausentes baseado apenas em "presente"
         
         total_ofertas = round(sum(a.get("oferta", 0) for a in attendance_records), 2)
         total_biblias = sum(a.get("biblias_entregues", 0) for a in attendance_records)

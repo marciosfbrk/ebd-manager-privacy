@@ -12,8 +12,8 @@ function App() {
     return date.getDay() === 0;
   };
 
-  // Função para obter o último domingo (para relatórios)
-  const getLastSunday = () => {
+  // Função para obter o domingo da semana atual (para relatórios)
+  const getCurrentWeekSunday = () => {
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0 = domingo, 1 = segunda, etc.
     
@@ -21,10 +21,10 @@ function App() {
       // Se hoje é domingo, retorna hoje
       return today.toISOString().split('T')[0];
     } else {
-      // Se não é domingo, retorna o domingo anterior
-      const lastSunday = new Date(today);
-      lastSunday.setDate(today.getDate() - dayOfWeek);
-      return lastSunday.toISOString().split('T')[0];
+      // Se não é domingo, retorna o domingo anterior (da semana atual)
+      const currentSunday = new Date(today);
+      currentSunday.setDate(today.getDate() - dayOfWeek);
+      return currentSunday.toISOString().split('T')[0];
     }
   };
 

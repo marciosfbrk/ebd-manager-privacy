@@ -3407,12 +3407,12 @@ def test_visitors_and_post_call_functionality():
 def main():
     """Run all tests in sequence"""
     print("=== EBD MANAGER BACKEND TEST SUITE ===\n")
-    print("🎯 PRIORITY TEST: VISITORS AND POST-CALL FUNCTIONALITY")
-    print("Focus: Testing specific functionality for visitantes and pós-chamada as separate additional records\n")
+    print("🎯 INVESTIGAÇÃO PRIORITÁRIA: BUG TURMA EBENEZER NOS RELATÓRIOS")
+    print("Focus: Investigar por que 'Ebenezer (Obreiros)' não aparece no departamento Adulto\n")
     
-    # PRIORITY TEST: Test specific visitors and post-call functionality
-    print("🔥 PRIORITY: Testing Visitors and Post-Call Functionality...")
-    test_visitors_and_post_call_functionality()
+    # INVESTIGAÇÃO PRIORITÁRIA: Bug da turma Ebenezer
+    print("🔥 INVESTIGAÇÃO PRIORITÁRIA: Bug Turma Ebenezer...")
+    test_ebenezer_bug_investigation()
     
     # Initialize sample data for other tests
     print("\n0. Initializing sample data for additional tests...")

@@ -1295,6 +1295,231 @@ def test_revistas_endpoints():
         except Exception as e:
             results.failure("Revista dates verification", str(e))
 
+def test_percentage_calculation_correction():
+    """TEST SPECIFIC: CORREÇÃO DE PORCENTAGEM NOS RELATÓRIOS
+    
+    ALTERAÇÃO TESTADA: Nos relatórios, agora "presentes" = "presente" + "pos_chamada" para cálculo da porcentagem.
+    
+    CENÁRIO DE TESTE:
+    - Turma Ebenezer com 22 alunos matriculados
+    - 4 alunos com status "presente" 
+    - 3 alunos com status "pos_chamada"
+    - ANTES: 18.2% (4/22 * 100) - só "presente"
+    - DEPOIS: 31.8% (7/22 * 100) - "presente" + "pos_chamada"
+    """
+    print("\n=== TESTE DA CORREÇÃO DE PORCENTAGEM NOS RELATÓRIOS ===")
+    print("ALTERAÇÃO: presentes = presente + pos_chamada para cálculo da %")
+    
+    # Primeiro, garantir que temos dados da igreja com turma Ebenezer
+    try:
+        response = requests.post(f"{BASE_URL}/init-church-data")
+        if response.status_code == 200:
+            results.success("Initialize church data for percentage test")
+        else:
+            print(f"Warning: Could not initialize church data: {response.status_code}")
+    except Exception as e:
+        print(f"Warning: Exception initializing church data: {e}")
+    
+    # Encontrar turma Ebenezer
+    ebenezer_turma = None
+    try:
+        response = requests.get(f"{BASE_URL}/turmas")
+        if response.status_code == 200:
+            turmas = response.json()
+            for turma in turmas:
+                if "Ebenezer" in turma["nome"]:
+                    ebenezer_turma = turma
+                    break
+            
+            if ebenezer_turma:
+                results.success(f"Found Ebenezer turma: {ebenezer_turma['nome']} (ID: {ebenezer_turma['id']})")
+            else:
+                results.failure("Find Ebenezer turma", "Turma Ebenezer not found")
+                return
+        else:
+            results.failure("GET /api/turmas for percentage test", f"Status {response.status_code}: {response.text}")
+            return
+    except Exception as e:
+        results.failure("GET /api/turmas for percentage test", str(e))
+        return
+    
+    # Verificar quantos alunos matriculados na turma Ebenezer
+    try:
+        response = requests.get(f"{BASE_URL}/students", params={"turma_id": ebenezer_turma["id"]})
+        if response.status_code == 200:
+            students = response.json()
+            matriculados_count = len(students)
+            print(f"Turma Ebenezer tem {matriculados_count} alunos matriculados")
+            
+            if matriculados_count >= 22:
+                results.success(f"Ebenezer has {matriculados_count} students (≥22 required for test)")
+            else:
+                results.failure("Ebenezer student count", f"Expected ≥22 students, got {matriculados_count}")
+                return
+        else:
+            results.failure("GET /api/students for Ebenezer", f"Status {response.status_code}: {response.text}")
+            return
+    except Exception as e:
+        results.failure("GET /api/students for Ebenezer", str(e))
+        return
+    
+    # Criar cenário de teste: 4 presentes + 3 pós-chamada + 2 visitantes
+    test_date = "2025-01-26"  # Domingo para teste
+    
+    # Preparar dados de chamada conforme especificado no teste
+    bulk_data = []
+    
+    # Primeiros 4 alunos: status "presente"
+    for i in range(4):
+        if i < len(students):
+            bulk_data.append({
+                "aluno_id": students[i]["id"],
+                "status": "presente",
+                "oferta": 5.0,
+                "biblias_entregues": 0,
+                "revistas_entregues": 0
+            })
+    
+    # Próximos 3 alunos: status "pos_chamada"
+    for i in range(4, 7):
+        if i < len(students):
+            bulk_data.append({
+                "aluno_id": students[i]["id"],
+                "status": "pos_chamada",
+                "oferta": 3.0,
+                "biblias_entregues": 0,
+                "revistas_entregues": 0
+            })
+    
+    # Adicionar 2 visitantes (registros adicionais sem aluno específico)
+    # Criar IDs fictícios para visitantes
+    for i in range(2):
+        bulk_data.append({
+            "aluno_id": str(uuid.uuid4()),  # ID fictício para visitante
+            "status": "visitante",
+            "oferta": 2.0,
+            "biblias_entregues": 0,
+            "revistas_entregues": 0
+        })
+    
+    print(f"Criando cenário de teste:")
+    print(f"  - 4 alunos com status 'presente'")
+    print(f"  - 3 alunos com status 'pos_chamada'")
+    print(f"  - 2 visitantes")
+    print(f"  - Total de {matriculados_count} matriculados")
+    
+    # Salvar dados de chamada
+    try:
+        response = requests.post(f"{BASE_URL}/attendance/bulk/{ebenezer_turma['id']}", 
+                               params={"data": test_date, "user_tipo": "admin", "user_id": "test-admin"},
+                               json=bulk_data)
+        if response.status_code == 200:
+            results.success("POST /api/attendance/bulk - Save test attendance data for Ebenezer")
+        else:
+            results.failure("POST /api/attendance/bulk for Ebenezer", f"Status {response.status_code}: {response.text}")
+            return
+    except Exception as e:
+        results.failure("POST /api/attendance/bulk for Ebenezer", str(e))
+        return
+    
+    # TESTE PRINCIPAL: Verificar cálculo nos relatórios
+    try:
+        response = requests.get(f"{BASE_URL}/reports/dashboard", params={"data": test_date})
+        if response.status_code == 200:
+            reports = response.json()
+            
+            # Encontrar relatório da turma Ebenezer
+            ebenezer_report = None
+            for report in reports:
+                if report["turma_id"] == ebenezer_turma["id"]:
+                    ebenezer_report = report
+                    break
+            
+            if ebenezer_report:
+                matriculados = ebenezer_report["matriculados"]
+                presentes = ebenezer_report["presentes"]
+                pos_chamada = ebenezer_report["pos_chamada"]
+                visitantes = ebenezer_report["visitantes"]
+                
+                print(f"\n--- RESULTADO DO TESTE ---")
+                print(f"Turma: {ebenezer_report['turma_nome']}")
+                print(f"Matriculados: {matriculados}")
+                print(f"Presentes: {presentes}")
+                print(f"Pós-chamada: {pos_chamada}")
+                print(f"Visitantes: {visitantes}")
+                
+                # Calcular porcentagem
+                if matriculados > 0:
+                    porcentagem = (presentes / matriculados) * 100
+                    print(f"Porcentagem calculada: {porcentagem:.1f}%")
+                    
+                    # VERIFICAÇÃO PRINCIPAL: A porcentagem deve ser 31.8% (7/22 * 100)
+                    # Isso significa que "presentes" deve incluir "presente" + "pos_chamada"
+                    expected_presentes = 4 + 3  # presente + pos_chamada
+                    expected_percentage = (expected_presentes / matriculados) * 100
+                    
+                    print(f"Esperado: {expected_presentes} presentes = {expected_percentage:.1f}%")
+                    
+                    if presentes == expected_presentes:
+                        results.success(f"✅ CORREÇÃO CONFIRMADA: presentes = {presentes} (presente + pos_chamada)")
+                        
+                        if abs(porcentagem - expected_percentage) < 0.1:
+                            results.success(f"✅ PORCENTAGEM CORRETA: {porcentagem:.1f}% (esperado {expected_percentage:.1f}%)")
+                        else:
+                            results.failure("Percentage calculation", f"Expected {expected_percentage:.1f}%, got {porcentagem:.1f}%")
+                    else:
+                        results.failure("Presentes calculation", f"Expected {expected_presentes} (4+3), got {presentes}")
+                        print(f"❌ CORREÇÃO NÃO APLICADA: presentes ainda não inclui pós-chamada")
+                    
+                    # Verificar se pós-chamada é contado separadamente
+                    if pos_chamada == 3:
+                        results.success("✅ Pós-chamada contado separadamente: 3")
+                    else:
+                        results.failure("Pos-chamada count", f"Expected 3, got {pos_chamada}")
+                    
+                    # Verificar visitantes
+                    if visitantes == 2:
+                        results.success("✅ Visitantes contados corretamente: 2")
+                    else:
+                        results.failure("Visitantes count", f"Expected 2, got {visitantes}")
+                        
+                else:
+                    results.failure("Percentage test", "No matriculados found for calculation")
+                    
+            else:
+                results.failure("Find Ebenezer report", "No report found for Ebenezer turma")
+                
+        else:
+            results.failure("GET /api/reports/dashboard for percentage test", f"Status {response.status_code}: {response.text}")
+            
+    except Exception as e:
+        results.failure("Percentage calculation test", str(e))
+    
+    # TESTE ADICIONAL: Verificar que outros endpoints não foram afetados
+    try:
+        response = requests.get(f"{BASE_URL}/attendance", 
+                              params={"turma_id": ebenezer_turma["id"], "data": test_date})
+        if response.status_code == 200:
+            attendance_records = response.json()
+            
+            presente_count = len([r for r in attendance_records if r["status"] == "presente"])
+            pos_chamada_count = len([r for r in attendance_records if r["status"] == "pos_chamada"])
+            visitante_count = len([r for r in attendance_records if r["status"] == "visitante"])
+            
+            print(f"\n--- VERIFICAÇÃO DE OUTROS ENDPOINTS ---")
+            print(f"GET /api/attendance - Presente: {presente_count}, Pós-chamada: {pos_chamada_count}, Visitantes: {visitante_count}")
+            
+            if presente_count == 4 and pos_chamada_count == 3 and visitante_count == 2:
+                results.success("✅ Outros endpoints não afetados - dados individuais corretos")
+            else:
+                results.failure("Other endpoints check", f"Expected 4/3/2, got {presente_count}/{pos_chamada_count}/{visitante_count}")
+                
+        else:
+            results.failure("GET /api/attendance verification", f"Status {response.status_code}: {response.text}")
+            
+    except Exception as e:
+        results.failure("Other endpoints verification", str(e))
+
 def test_ebenezer_bug_investigation():
     """INVESTIGAÇÃO DO BUG - TURMA EBENEZER NOS RELATÓRIOS
     

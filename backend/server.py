@@ -113,6 +113,12 @@ async def create_initial_users():
                 "nome": "Kelliane Ferreira",
                 "tipo": "professor",
                 "senha": "123456"
+            },
+            {
+                "email": "demo@ebd.com", 
+                "nome": "Usuário Demonstração",
+                "tipo": "visitante",
+                "senha": "demo123"
             }
         ]
         

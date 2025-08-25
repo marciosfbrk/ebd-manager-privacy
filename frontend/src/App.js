@@ -105,14 +105,20 @@ function App() {
     }
   }, []);
 
-  // Atualizar data automaticamente baseado na view atual
+  // Atualizar data automaticamente baseado na view atual  
   useEffect(() => {
+    console.log('🔍 DEBUG: currentView mudou para:', currentView);
+    
     if (currentView === 'chamada') {
       // Para chamadas, usar o domingo atual/próximo
-      setSelectedDate(getCurrentSunday());
+      const chamadaDate = getCurrentSunday();
+      console.log('📅 DEBUG: Definindo data para chamada:', chamadaDate);
+      setSelectedDate(chamadaDate);
     } else if (currentView === 'dashboard' || currentView === 'reports' || currentView === 'relatorios') {
       // Para relatórios, usar o domingo da semana atual
-      setSelectedDate(getCurrentWeekSunday());
+      const relatorioDate = getCurrentWeekSunday();
+      console.log('📊 DEBUG: Definindo data para relatórios:', relatorioDate);
+      setSelectedDate(relatorioDate);
     }
   }, [currentView]);
 

@@ -110,9 +110,9 @@ function App() {
     if (currentView === 'chamada') {
       // Para chamadas, usar o domingo atual/próximo
       setSelectedDate(getCurrentSunday());
-    } else if (currentView === 'dashboard' || currentView === 'reports') {
-      // Para relatórios, usar o último domingo
-      setSelectedDate(getLastSunday());
+    } else if (currentView === 'dashboard' || currentView === 'reports' || currentView === 'relatorios') {
+      // Para relatórios, usar o domingo da semana atual
+      setSelectedDate(getCurrentWeekSunday());
     }
   }, [currentView]);
 

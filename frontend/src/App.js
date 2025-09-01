@@ -3869,13 +3869,13 @@ function App() {
       case 'chamada':
         return isLoggedIn ? <Chamada /> : <HomeCover />;
       case 'relatorios':
-        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <Relatorios /> : <Dashboard />;
+        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador' || currentUser?.tipo === 'visitante') ? <Relatorios /> : <Dashboard />;
       case 'ranking':
-        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <Rankings /> : <Dashboard />;
+        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador' || currentUser?.tipo === 'visitante') ? <Rankings /> : <Dashboard />;
       case 'alunos':
-        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <Alunos /> : <Dashboard />;
+        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador' || currentUser?.tipo === 'visitante') ? <Alunos /> : <Dashboard />;
       case 'turmas':
-        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <Turmas /> : <Dashboard />;
+        return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador' || currentUser?.tipo === 'visitante') ? <Turmas /> : <Dashboard />;
       case 'usuarios':
         return isLoggedIn && (currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') ? <Usuarios /> : <Dashboard />;
       case 'alterar-senha':

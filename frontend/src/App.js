@@ -687,11 +687,16 @@ function App() {
                       {currentUser?.tipo === 'visitante' ? 'Ver Alunos' : 'Gerenciar Alunos'}
                     </button>
                     <button
-                      onClick={() => setCurrentView('turmas')}
+                      onClick={() => {
+                        if (currentUser?.tipo === 'visitante') {
+                          alert('👁️ MODO DEMONSTRAÇÃO: Você pode apenas visualizar as turmas.');
+                        }
+                        setCurrentView('turmas');
+                      }}
                       className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
                     >
                       <span className="text-xl mr-2">🏫</span>
-                      Gerenciar Turmas
+                      {currentUser?.tipo === 'visitante' ? 'Ver Turmas' : 'Gerenciar Turmas'}
                     </button>
                     <button
                       onClick={() => setCurrentView('usuarios')}

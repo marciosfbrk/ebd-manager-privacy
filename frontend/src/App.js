@@ -643,16 +643,11 @@ function App() {
               </h3>
               <div className="space-y-4">
                 <button
-                  onClick={() => {
-                    if (currentUser?.tipo === 'visitante') {
-                      alert('👁️ MODO DEMONSTRAÇÃO: Você pode apenas visualizar as chamadas, não fazer alterações.');
-                    }
-                    setCurrentView('chamada');
-                  }}
+                  onClick={() => setCurrentView('chamada')}
                   className="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
                 >
                   <span className="text-xl mr-2">✅</span>
-                  {currentUser?.tipo === 'visitante' ? 'Ver Chamadas' : 'Fazer Chamada'}
+                  Fazer Chamada
                 </button>
                 
                 {(currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') && (
@@ -675,28 +670,18 @@ function App() {
                       Rankings
                     </button>
                     <button
-                      onClick={() => {
-                        if (currentUser?.tipo === 'visitante') {
-                          alert('👁️ MODO DEMONSTRAÇÃO: Você pode apenas visualizar os alunos, não fazer alterações.');
-                        }
-                        setCurrentView('alunos');
-                      }}
+                      onClick={() => setCurrentView('alunos')}
                       className="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-lg hover:from-blue-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
                     >
                       <span className="text-xl mr-2">👥</span>
-                      {currentUser?.tipo === 'visitante' ? 'Ver Alunos' : 'Gerenciar Alunos'}
+                      Gerenciar Alunos
                     </button>
                     <button
-                      onClick={() => {
-                        if (currentUser?.tipo === 'visitante') {
-                          alert('👁️ MODO DEMONSTRAÇÃO: Você pode apenas visualizar as turmas, não fazer alterações.');
-                        }
-                        setCurrentView('turmas');
-                      }}
+                      onClick={() => setCurrentView('turmas')}
                       className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
                     >
                       <span className="text-xl mr-2">🏫</span>
-                      {currentUser?.tipo === 'visitante' ? 'Ver Turmas' : 'Gerenciar Turmas'}
+                      Gerenciar Turmas
                     </button>
                     <button
                       onClick={() => setCurrentView('usuarios')}
@@ -2535,7 +2520,6 @@ function App() {
                       <option value="professor">Professor</option>
                       <option value="moderador">Moderador</option>
                       <option value="admin">Administrador</option>
-                      <option value="visitante">Demonstração</option>
                     </select>
                   </div>
                 </div>

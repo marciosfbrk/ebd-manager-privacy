@@ -2520,6 +2520,7 @@ function App() {
                       <option value="professor">Professor</option>
                       <option value="moderador">Moderador</option>
                       <option value="admin">Administrador</option>
+                      <option value="visitante">Demonstração</option>
                     </select>
                   </div>
                 </div>

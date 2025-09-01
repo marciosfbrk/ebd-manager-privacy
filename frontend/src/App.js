@@ -12,25 +12,19 @@ function App() {
     return date.getDay() === 0;
   };
 
-  // Função para obter o domingo da semana atual (FORÇADA PARA 24/08/2025)
-  const getCurrentWeekSunday = () => {
-    // FORÇAR SEMPRE 24/08/2025 ATÉ PRÓXIMO DOMINGO (31/08)
+  // Função para obter o último domingo (para relatórios)
+  const getLastSunday = () => {
     const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
+    const dayOfWeek = today.getDay(); // 0 = domingo, 1 = segunda, etc.
     
-    // Se ainda não passou de 31/08/2025, forçar 24/08/2025
-    if (todayStr <= '2025-08-31') {
-      return '2025-08-24'; // FORÇADO!
-    }
-    
-    // Lógica normal apenas após 31/08
-    const dayOfWeek = today.getDay();
     if (dayOfWeek === 0) {
+      // Se hoje é domingo, retorna hoje
       return today.toISOString().split('T')[0];
     } else {
-      const currentSunday = new Date(today);
-      currentSunday.setDate(today.getDate() - dayOfWeek);
-      return currentSunday.toISOString().split('T')[0];
+      // Se não é domingo, retorna o domingo anterior
+      const lastSunday = new Date(today);
+      lastSunday.setDate(today.getDate() - dayOfWeek);
+      return lastSunday.toISOString().split('T')[0];
     }
   };
 
@@ -54,13 +48,9 @@ function App() {
   const [showApp, setShowApp] = useState(false);
   const [turmas, setTurmas] = useState([]);
   const [students, setStudents] = useState([]);
-  
-  // Busca SEM React interferindo
-  const [searchFilter, setSearchFilter] = useState(''); // Só para mostrar resultado
-  const searchInputRef = React.useRef(null);
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedTurma, setSelectedTurma] = useState(null);
-  const [selectedDate, setSelectedDate] = useState('2025-08-24'); // FORÇADO PARA 24/08/2025
+  const [selectedDate, setSelectedDate] = useState(() => getLastSunday());
   const [loading, setLoading] = useState(false);
   
   // Estados de ranking
@@ -111,15 +101,15 @@ function App() {
     }
   }, []);
 
-  // Atualizar data automaticamente baseado na view atual (NUCLEAR - SEMPRE 24/08)
+  // Atualizar data automaticamente baseado na view atual
   useEffect(() => {
-    console.log('🔍 DEBUG: currentView mudou para:', currentView);
-    
-    // NUCLEAR: SEMPRE FORÇAR 24/08/2025 ATÉ 31/08/2025
-    const FORCED_DATE = '2025-08-24';
-    console.log('💀 NUCLEAR: FORÇANDO DATA PARA:', FORCED_DATE);
-    setSelectedDate(FORCED_DATE);
-    
+    if (currentView === 'chamada') {
+      // Para chamadas, usar o domingo atual/próximo
+      setSelectedDate(getCurrentSunday());
+    } else if (currentView === 'dashboard' || currentView === 'reports') {
+      // Para relatórios, usar o último domingo
+      setSelectedDate(getLastSunday());
+    }
   }, [currentView]);
 
   // Função de login
@@ -223,42 +213,6 @@ function App() {
     } catch (error) {
       console.error('Erro ao carregar alunos:', error);
     }
-  };
-
-  // Função de busca PURA - sem React mexer no input
-  const handleSearch = () => {
-    if (searchInputRef.current) {
-      const value = searchInputRef.current.value;
-      setSearchFilter(value);
-    }
-  };
-
-  // Função para limpar busca
-  const handleClearSearch = () => {
-    if (searchInputRef.current) {
-      searchInputRef.current.value = '';
-    }
-    setSearchFilter('');
-  };
-
-  // Função para normalizar texto (remove acentos e deixa minúsculo)
-  const normalizeText = (text) => {
-    return text
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, ''); // Remove acentos
-  };
-
-  // Filtro aplicado apenas quando clica no botão (SEM CASE SENSITIVE + SEM ACENTOS)
-  const getFilteredStudents = () => {
-    if (!searchFilter) return students;
-    
-    const normalizedSearch = normalizeText(searchFilter);
-    
-    return students.filter(student => {
-      const normalizedName = normalizeText(student.nome_completo);
-      return normalizedName.includes(normalizedSearch);
-    });
   };
 
   const loadRevistas = async () => {
@@ -598,7 +552,7 @@ function App() {
                 <p className="text-gray-600">Estatísticas do último domingo</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-gray-500">Data: {new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR')}</p>
+                <p className="text-sm text-gray-500">Data: {selectedDate}</p>
                 <button
                   onClick={loadDashboard}
                   className="mt-1 px-4 py-2 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-lg hover:from-indigo-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200 text-sm"
@@ -629,10 +583,7 @@ function App() {
                   {(() => {
                     const totalMatriculados = attendanceData.reduce((sum, row) => sum + row.matriculados, 0);
                     const totalPresentes = attendanceData.reduce((sum, row) => sum + row.presentes, 0);
-                    const totalPosChamada = attendanceData.reduce((sum, row) => sum + row.pos_chamada, 0);
-                    // PORCENTAGEM: incluir presente + pós-chamada
-                    const totalParaPercentual = totalPresentes + totalPosChamada;
-                    return totalMatriculados > 0 ? ((totalParaPercentual / totalMatriculados) * 100).toFixed(1).replace('.', ',') : '0,0';
+                    return totalMatriculados > 0 ? ((totalPresentes / totalMatriculados) * 100).toFixed(1).replace('.', ',') : '0,0';
                   })()}%
                 </div>
                 <div className="text-sm text-purple-500 font-medium">Frequência</div>
@@ -657,9 +608,9 @@ function App() {
                       {(() => {
                         const melhorFrequencia = attendanceData
                           .filter(row => row.matriculados > 0)
-                          .sort((a, b) => ((b.presentes + b.pos_chamada) / b.matriculados) - ((a.presentes + a.pos_chamada) / a.matriculados))[0];
+                          .sort((a, b) => (b.presentes / b.matriculados) - (a.presentes / a.matriculados))[0];
                         return melhorFrequencia ? 
-                          `${melhorFrequencia.turma_nome} (${(((melhorFrequencia.presentes + melhorFrequencia.pos_chamada) / melhorFrequencia.matriculados) * 100).toFixed(1).replace('.', ',')}%)` : 
+                          `${melhorFrequencia.turma_nome} (${((melhorFrequencia.presentes / melhorFrequencia.matriculados) * 100).toFixed(1).replace('.', ',')}%)` : 
                           'Nenhuma turma';
                       })()}
                     </div>
@@ -1104,7 +1055,7 @@ function App() {
     const departamentos = {
       'Infantil': ['genesis', 'primarios', 'juniores'],
       'Jovens e Adolescentes': ['pre adolescentes', 'adolescentes', 'jovens'],
-      'Adulto': ['soldados de cristo', 'dorcas (irmas)', 'ebenezer (obreiros)']
+      'Adulto': ['soldados de cristo', 'dorcas (irmas)', 'ebenezer(obreiros)']
     };
 
     // Turmas a excluir sempre (normalizadas)
@@ -1218,10 +1169,10 @@ function App() {
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-left">Turma</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Matric.</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Pres.</th>
-                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Pós</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">%</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Aus.</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Vis.</th>
+                    <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Pós</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Ofertas</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Bíb.</th>
                     <th className="border border-gray-300 px-2 md:px-4 py-2 text-center">Rev.</th>
@@ -1233,12 +1184,12 @@ function App() {
                       <td className="border border-gray-300 px-2 md:px-4 py-2 font-medium">{row.turma_nome}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.matriculados}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.presentes}</td>
-                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.pos_chamada}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center font-semibold text-purple-600">
-                        {row.matriculados > 0 ? (((row.presentes + row.pos_chamada) / row.matriculados) * 100).toFixed(1).replace('.', ',') : '0,0'}%
+                        {row.matriculados > 0 ? ((row.presentes / row.matriculados) * 100).toFixed(1).replace('.', ',') : '0,0'}%
                       </td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.ausentes}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.visitantes}</td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.pos_chamada}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">R$ {row.total_ofertas.toFixed(2).replace('.', ',')}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.total_biblias}</td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">{row.total_revistas}</td>
@@ -1253,17 +1204,11 @@ function App() {
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         {attendanceData.reduce((sum, row) => sum + row.presentes, 0)}
                       </td>
-                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
-                        {attendanceData.reduce((sum, row) => sum + row.pos_chamada, 0)}
-                      </td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center font-semibold text-purple-600">
                         {(() => {
                           const totalMatriculados = attendanceData.reduce((sum, row) => sum + row.matriculados, 0);
                           const totalPresentes = attendanceData.reduce((sum, row) => sum + row.presentes, 0);
-                          const totalPosChamada = attendanceData.reduce((sum, row) => sum + row.pos_chamada, 0);
-                          // PORCENTAGEM TOTAL: incluir presente + pós-chamada
-                          const totalParaPercentual = totalPresentes + totalPosChamada;
-                          return totalMatriculados > 0 ? ((totalParaPercentual / totalMatriculados) * 100).toFixed(1).replace('.', ',') : '0,0';
+                          return totalMatriculados > 0 ? ((totalPresentes / totalMatriculados) * 100).toFixed(1).replace('.', ',') : '0,0';
                         })()}%
                       </td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
@@ -1271,6 +1216,9 @@ function App() {
                       </td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         {attendanceData.reduce((sum, row) => sum + row.visitantes, 0)}
+                      </td>
+                      <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
+                        {attendanceData.reduce((sum, row) => sum + row.pos_chamada, 0)}
                       </td>
                       <td className="border border-gray-300 px-2 md:px-4 py-2 text-center">
                         R$ {attendanceData.reduce((sum, row) => sum + row.total_ofertas, 0).toFixed(2).replace('.', ',')}
@@ -2165,45 +2113,6 @@ function App() {
 
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Lista de Alunos</h2>
-            
-            {/* BUSCA COM INPUT NÃO CONTROLADO - CURSOR NÃO SOME */}
-            <div className="mb-4 p-4 bg-gray-50 rounded-lg">
-              <div className="flex gap-3">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  placeholder="Digite o nome do aluno..."
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      handleSearch();
-                    }
-                  }}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <button
-                  onClick={handleSearch}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  🔍 Buscar
-                </button>
-                <button
-                  onClick={handleClearSearch}
-                  className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                >
-                  🧹 Limpar
-                </button>
-              </div>
-              
-              {/* Resultado da busca */}
-              <div className="mt-2 text-sm text-gray-600">
-                {searchFilter && (
-                  <div className="mb-2 p-2 bg-blue-50 rounded border border-blue-200">
-                    🔍 Buscando por: <strong>"{searchFilter}"</strong>
-                  </div>
-                )}
-                <strong>{getFilteredStudents().length}</strong> de <strong>{students.length}</strong> alunos {searchFilter ? 'encontrados' : 'no total'}
-              </div>
-            </div>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-200">
                 <thead>
@@ -2216,7 +2125,7 @@ function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {getFilteredStudents().map((student) => (
+                  {students.map((student) => (
                     <tr key={student.id} className="hover:bg-gray-50">
                       <td className="border border-gray-300 px-4 py-2">{student.nome_completo}</td>
                       <td className="border border-gray-300 px-4 py-2">{student.data_nascimento}</td>

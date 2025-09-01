@@ -54,12 +54,6 @@ async def ensure_deploy_ready():
                 "nome": "Kelliane Ferreira",
                 "tipo": "professor", 
                 "senha": "123456"
-            },
-            {
-                "email": "demo@ebd.com",
-                "nome": "Usuário Demonstração",
-                "tipo": "visitante", 
-                "senha": "demo123"
             }
         ]
         
@@ -119,12 +113,6 @@ async def create_initial_users():
                 "nome": "Kelliane Ferreira",
                 "tipo": "professor",
                 "senha": "123456"
-            },
-            {
-                "email": "demo@ebd.com", 
-                "nome": "Usuário Demonstração",
-                "tipo": "visitante",
-                "senha": "demo123"
             }
         ]
         
@@ -181,7 +169,6 @@ async def create_initial_users():
         print("   👤 Admin 1: admin@ebd.com / 123456")
         print("   👤 Admin 2: marcio@ebd.com.br / 5544%$Gg")
         print("   👨‍🏫 Prof: kell@ebd.com / 123456")
-        print("   👁️ Demo: demo@ebd.com / demo123 (APENAS VISUALIZAÇÃO)")
         
     except Exception as e:
         print(f"❌ Erro ao criar usuários iniciais: {e}")
@@ -570,8 +557,8 @@ async def get_dashboard_report(data: Optional[str] = None):
             "data": data
         }).to_list(1000)
         
-        # Calcular estatísticas (CORREÇÃO: só a porcentagem inclui pós-chamada)
-        presentes = len([a for a in attendance_records if a["status"] == "presente"])  # Campo presentes = só "presente"
+        # Calcular estatísticas
+        presentes = len([a for a in attendance_records if a["status"] == "presente"])
         visitantes = len([a for a in attendance_records if a["status"] == "visitante"])
         pos_chamada = len([a for a in attendance_records if a["status"] == "pos_chamada"])
         ausentes = matriculados - presentes

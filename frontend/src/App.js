@@ -650,10 +650,15 @@ function App() {
                   Fazer Chamada
                 </button>
                 
-                {(currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador') && (
+                {(currentUser?.tipo === 'admin' || currentUser?.tipo === 'moderador' || currentUser?.tipo === 'visitante') && (
                   <>
                     <button
-                      onClick={() => setCurrentView('relatorios')}
+                      onClick={() => {
+                        if (currentUser?.tipo === 'visitante') {
+                          alert('👁️ MODO DEMONSTRAÇÃO: Você pode apenas visualizar os relatórios.');
+                        }
+                        setCurrentView('relatorios');
+                      }}
                       className="w-full px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg transition-all duration-200 flex items-center justify-center text-lg font-semibold"
                     >
                       <span className="text-xl mr-2">📊</span>
